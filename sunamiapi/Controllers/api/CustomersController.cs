@@ -344,16 +344,28 @@ namespace sunamiapi.Controllers.api
             return getSunamiControllers();
         }
 
-        [HttpGet]
-        public string unlinkController(string id)
+        [HttpPost]
+        public string unlinkController([FromBody]JArray id)
         {
+            string imei = "";
+            string user = "";
+            JToken token = JObject.Parse(id[0].ToString());
+            try
+            {
+                imei = token.SelectToken("id").ToString();
+                user = token.SelectToken("user").ToString();
+            }
+            catch { }
+
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             try
             {
-                tbl_system sc = se.tbl_system.FirstOrDefault(r => r.imei_number == id);
-       
+                tbl_system sc = se.tbl_system.FirstOrDefault(r => r.imei_number == imei);
+
+                logevent(user, sc.customer_id, DateTime.Today, "unlinked imei: " + id, "unlink controller");
                 se.tbl_system.Remove(sc);
                 se.SaveChanges();
+                
             }
             catch
             {
@@ -675,6 +687,7 @@ namespace sunamiapi.Controllers.api
             List<object> mp = new List<object>(from i in list1
                                                select new
                                                {
+                                                   Id = i.Id,
                                                    Customer_Id = i.customer_id,
                                                    Customer_Name = se.tbl_customer.FirstOrDefault(h4 => h4.customer_id == i.customer_id).customer_name,
                                                    Date = i.payment_date,
@@ -696,6 +709,7 @@ namespace sunamiapi.Controllers.api
             List<object> mp = new List<object>(from i in list1
                                                select new
                                                {
+                                                   Id = i.Id,
                                                    Customer_Id = i.customer_id,
                                                    Customer_Name = se.tbl_customer.FirstOrDefault(h4 => h4.customer_id == i.customer_id).customer_name,
                                                    Date = i.payment_date,
@@ -709,6 +723,36 @@ namespace sunamiapi.Controllers.api
             return mp;
         }
 
+
+        [HttpPost]
+        public string deletePayment([FromBody]JArray id)
+        {
+            int id1 = 0;
+            string user = "";
+            JToken token = JObject.Parse(id[0].ToString());
+            try
+            {
+                id1 = int.Parse(token.SelectToken("id").ToString());
+                user = token.SelectToken("user").ToString();
+            }
+            catch { }
+            
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            try
+            {
+                tbl_payments sc = se.tbl_payments.FirstOrDefault(r => r.Id == id1);
+                logevent(user, sc.customer_id, DateTime.Today, "deleted payment amount: " + sc.amount_payed + " ref: " + sc.transaction_code+" method: "+sc.payment_method, "delete payment");
+                se.tbl_payments.Remove(sc);
+                se.SaveChanges();
+                
+            }
+            catch
+            {
+            }
+            se.Dispose();
+            return "successfully deleted payment";
+        }
+
         public List<Object> getMpesaRecords()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
@@ -718,6 +762,7 @@ namespace sunamiapi.Controllers.api
             List<object> mp = new List<object>(from i in list1
                                                select new
                                                {
+                                                   Id = i.Id,
                                                    Customer_Id = i.customer_id,
                                                    Customer_Name = se.tbl_customer.FirstOrDefault(h4 => h4.customer_id == i.customer_id).customer_name,
                                                    Date = i.payment_date,
