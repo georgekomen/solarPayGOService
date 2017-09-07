@@ -52,7 +52,6 @@ namespace sunamiapi.Controllers.api
             return gdl.getCustomerLocations();
         }
 
-
         public List<paymentRatesClassPerClient> GetPaymentActiveRates()
         {
             try
@@ -64,7 +63,6 @@ namespace sunamiapi.Controllers.api
             { }
             return calcInvoiceBtwnDatesm(beginDate, end1, true).OrderByDescending(g => g.Percent).ToList();
         }
-
 
         public List<paymentRatesClassPerClient> GetPaymentInactiveRates()
         {
@@ -78,7 +76,6 @@ namespace sunamiapi.Controllers.api
             { }
             return calcInvoiceBtwnDatesm(beginDate, end1, false).OrderByDescending(g => g.Percent).ToList();
         }
-
 
         public List<paymentRatesClassPerClient> calcInvoiceBtwnDatesm(DateTime start, DateTime end, bool getbaddebts)
         {
@@ -240,13 +237,11 @@ namespace sunamiapi.Controllers.api
             return li;
         }
 
-
         public int? GetCalcPayRate(DateTime start, DateTime end)
         {
             calcInvoiceBtwnDates civ = new calcInvoiceBtwnDates();
             return civ.calcPayRate(start, end);
         }
-
 
         public List<paychartclass> getPaymentChart()
         {
@@ -312,9 +307,7 @@ namespace sunamiapi.Controllers.api
             }
             return gdl.getPaymentSummaryReport(monthStart, monthend1, beginDate);
         }
-
-      
-
+     
         [HttpPost]
         public List<object> postAddController([FromBody]JArray value)
         {
@@ -373,8 +366,6 @@ namespace sunamiapi.Controllers.api
             se.Dispose();
             return "successfully unlinked controller";
         }
-
-
 
         [HttpPost]
         public string PostSMS([FromBody]JArray value)
@@ -508,7 +499,6 @@ namespace sunamiapi.Controllers.api
             se.Dispose();
             return li;
         }
-
 
         public string getSwitch(string id, string id1)
         {
@@ -723,7 +713,6 @@ namespace sunamiapi.Controllers.api
             return mp;
         }
 
-
         [HttpPost]
         public string deletePayment([FromBody]JArray id)
         {
@@ -816,7 +805,6 @@ namespace sunamiapi.Controllers.api
             se.Dispose();
             return mp;
         }
-
 
         public List<payRecordClass2> getPaymentPerCustomer(string id)
         {
@@ -936,7 +924,6 @@ namespace sunamiapi.Controllers.api
         //        return mso.ToArray();
         //    }
         //}
-
 
         public static void CopyTo(Stream src, Stream dest)
         {
@@ -1172,7 +1159,6 @@ namespace sunamiapi.Controllers.api
             return res;
         }
 
-
         public List<object> getIssues()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
@@ -1195,7 +1181,6 @@ namespace sunamiapi.Controllers.api
             se.Dispose();
             return list;
         }
-
 
         [HttpPost]
         public string postNewIssues([FromBody]JArray value)
@@ -1668,8 +1653,15 @@ namespace sunamiapi.Controllers.api
                     bankname = token.SelectToken("bankname").ToString();
                 }catch { }
 
+                if (PayMode == "mpesa")
+                {
+                    tbl_mpesa_payments tmp = se.tbl_mpesa_payments.FirstOrDefault(g => g.transaction_code == Code);
+                    pr.Mdate = DateTime.Parse(tmp.date.ToString());
+                    pr.Mpesa_amount = tmp.amount;
+                }
 
-                if (PayMode == "cash")
+
+                else if (PayMode == "cash")
                 {
                     pr.Mdate = getDate(token.SelectToken("date1").ToString());
                     pr.Mpesa_amount = token.SelectToken("amount").ToString();
@@ -1679,7 +1671,7 @@ namespace sunamiapi.Controllers.api
                     }
                 }
 
-                if (PayMode == "bank")
+                else if(PayMode == "bank")
                 {
                     pr.Mdate = getDate(token.SelectToken("date1").ToString());
                     pr.Mpesa_amount = token.SelectToken("amount").ToString();
@@ -1689,12 +1681,7 @@ namespace sunamiapi.Controllers.api
                     }
                 }
 
-                if (PayMode == "mpesa")
-                {
-                    tbl_mpesa_payments tmp = se.tbl_mpesa_payments.FirstOrDefault(g => g.transaction_code == Code);
-                    pr.Mdate = DateTime.Parse(tmp.date.ToString());
-                    pr.Mpesa_amount = tmp.amount;
-                }
+                
 
                 pr.Loggedin = loggedUser;
                 pr.PayMode = PayMode;
