@@ -961,22 +961,28 @@ namespace sunamiapi.Controllers.api
             }
             string res = "recorded";
             JToken token = JObject.Parse(value[0].ToString());
-            try
+
+            // only record if message is from mpesa
+            if (token.SelectToken("address").ToString() == "MPESA")
             {
-                string imei_no = token.SelectToken("imei").ToString();
-                string msg1 = token.SelectToken("msg").ToString();
-                int tblm = se.tbl_mpesa_phone_imei.Where(i => i.imei == imei_no).Count();
-                if (tblm < 1)
+                try
                 {
-                    return "phone invalid";
+                    string imei_no = token.SelectToken("imei").ToString();
+                    string msg1 = token.SelectToken("msg").ToString();
+                    int tblm = se.tbl_mpesa_phone_imei.Where(i => i.imei == imei_no).Count();
+                    if (tblm < 1)
+                    {
+                        return "phone invalid";
+                    }
+                    else
+                    {
+                        res = record_mpesa_msg_phone(msg1, imei_no);
+                    }
                 }
-                else
-                {
-                    res = record_mpesa_msg_phone(msg1, imei_no);
-                }
+                catch (Exception k)
+                { }
             }
-            catch (Exception k)
-            { }
+
             se.Dispose();
             return res;
         }
