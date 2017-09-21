@@ -1072,6 +1072,30 @@ namespace sunamiapi.Controllers.api
             return list;
         }
 
+        public object getSingleCustomerDetails(string id)
+        {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            tbl_customer i = se.tbl_customer.FirstOrDefault(t1 => t1.customer_id == id);
+            object customer = (new {
+                Name = i.customer_name,
+                ID = i.customer_id,
+                Occupation = i.occupation,
+                Mobile = i.phone_numbers,
+                Mobile2 = i.phone_numbers2,
+                Mobile3 = i.phone_numbers3,
+                village = i.village_name,
+                location = i.location,
+                city = i.city,
+                installdate = i.install_date,
+                Witness = i.next_of_kin,
+                Witness_ID = i.nok_mobile,
+                status = i.active_status
+            });
+                
+            se.Dispose();
+            return customer;
+        }
+
         public List<object> getSystemDetails()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
