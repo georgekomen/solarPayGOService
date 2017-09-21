@@ -1086,10 +1086,11 @@ namespace sunamiapi.Controllers.api
                 village = i.village_name,
                 location = i.location,
                 city = i.city,
-                installdate = i.install_date,
+                installdate = i.install_date.Value.Date,
                 Witness = i.next_of_kin,
                 Witness_ID = i.nok_mobile,
-                status = i.active_status
+                status = i.active_status,
+                Package = i.package_type
             });
                 
             se.Dispose();
