@@ -368,6 +368,47 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpPost]
+        public string deleteController([FromBody]JArray id)
+        {
+            string imei = "";
+            string user = "";
+            JToken token = JObject.Parse(id[0].ToString());
+            try
+            {
+                imei = token.SelectToken("id").ToString();
+                user = token.SelectToken("user").ToString();
+            }
+            catch { }
+
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            try
+            {
+                if (se.tbl_system.Where(r1 => r1.imei_number == imei).Count() > 0)
+                {
+                    se.Dispose();
+                    return "cannot delete controller, it is currently linked to a customer. You need to unlink it before deleting";
+                }
+                else
+                {
+                    tbl_sunami_controller sc = se.tbl_sunami_controller.FirstOrDefault(r => r.imei == imei);
+
+                    logevent(user, sc.sim_no+","+sc.provider+","+sc.version, DateTime.Today, "deleted imei: " + id, "deleted controller");
+                    se.tbl_sunami_controller.Remove(sc);
+                    se.SaveChanges();
+                    se.Dispose();
+                    return "successfully deleted controller";
+                }
+
+            }
+            catch
+            {
+                se.Dispose();
+                return "error occured. please contact system admin";
+            }
+            
+        }
+
+        [HttpPost]
         public string PostSMS([FromBody]JArray value)
         {
             db_a0a592_sunamiEntities se1;
