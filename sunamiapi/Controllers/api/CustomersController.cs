@@ -1722,7 +1722,7 @@ namespace sunamiapi.Controllers.api
         public string postmakePayment([FromBody]JArray value)
         {
             string res = "";
-            Thread.Sleep(1000);
+            // Thread.Sleep(1000);
             db_a0a592_sunamiEntities se;
             try
             {

@@ -159,9 +159,6 @@ namespace sunamiapi.classes
                     mpesa_amount = mpesa_amount.Substring(5, d - 5).ToString().Replace(@",", @"");
 
 
-
-
-
                     if (se.tbl_mpesa_payments.Select(r1 => r1.transaction_code).Contains(code))
                     {
                         json = "unprocessed transaction recorded";
@@ -189,9 +186,6 @@ namespace sunamiapi.classes
                     }
 
 
-
-
-
                 }
                 else if(msg.Contains("Confirmed.on"))
                 {
@@ -209,6 +203,7 @@ namespace sunamiapi.classes
                     mpesa_amount = mpesa_amount.Substring(5, d - 5).ToString().Replace(@",", @"");
                     paynumber = md[8].ToString();
                     paynumber = "0" + paynumber.Substring(3, paynumber.Length - 3).ToString();
+
 
                     if(se.tbl_payments.Select(r1 => r1.transaction_code).Contains(code))
                     {
