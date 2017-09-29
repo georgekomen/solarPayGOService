@@ -311,6 +311,7 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public List<object> postAddController([FromBody]JArray value)
         {
+            List<object> controllers = new List<object>();
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             try
             {
@@ -321,20 +322,41 @@ namespace sunamiapi.Controllers.api
                 string provider = token.SelectToken("provider").ToString();
                 string version = token.SelectToken("version").ToString();
                 string loogeduser = token.SelectToken("loogeduser").ToString();
-                tbl_sunami_controller sc = new tbl_sunami_controller();
-                sc.imei = imei;
-                sc.sim_no = sim;
-                sc.provider = provider;
-                sc.version = version;
-                sc.recorded_by = loogeduser;
-                se.tbl_sunami_controller.Add(sc);
-                se.SaveChanges();
+                string action = token.SelectToken("action").ToString();
+
+                if (!se.tbl_sunami_controller.Select(h => h.imei).Contains(imei) && action == "create")
+                {
+                    tbl_sunami_controller sc = new tbl_sunami_controller();
+                    sc.imei = imei;
+                    sc.sim_no = sim;
+                    sc.provider = provider;
+                    sc.version = version;
+                    sc.recorded_by = loogeduser;
+                    se.tbl_sunami_controller.Add(sc);
+                    se.SaveChanges();
+                    
+                    controllers.Add(new { message = "successfully created new controller" });
+                    controllers.Add(new { content = getSunamiControllers() });
+                } else if(se.tbl_sunami_controller.Select(h => h.imei).Contains(imei) && action == "modify")
+                {
+                    tbl_sunami_controller sc = se.tbl_sunami_controller.FirstOrDefault(g => g.imei == imei);
+                    sc.sim_no = sim;
+                    sc.provider = provider;
+                    sc.version = version;
+                    sc.recorded_by = loogeduser;
+                    se.SaveChanges();
+                    this.logevent(loogeduser, "controller imei" + imei, DateTime.Today, "modified controller details", "system controller");
+                    
+                    controllers.Add(new { message = "successfully modified controller" });
+                    controllers.Add(new { content = getSunamiControllers() });
+                }
             }
             catch
             {
             }
             se.Dispose();
-            return getSunamiControllers();
+            
+            return controllers;
         }
 
         [HttpPost]
