@@ -157,21 +157,24 @@ namespace sunamiapi.classes
                     mpesa_amount = md[5].ToString();
                     int d = mpesa_amount.IndexOf('.');
                     mpesa_amount = mpesa_amount.Substring(5, d - 5).ToString().Replace(@",", @"");
-                    try
+
+
+
+
+
+                    if (se.tbl_mpesa_payments.Select(r1 => r1.transaction_code).Contains(code))
                     {
-                        string k1 = se.tbl_mpesa_payments.FirstOrDefault(i => i.transaction_code == code).transaction_code;
                         json = "unprocessed transaction recorded";
                         return;
                     }
-                    catch
+                    else
                     {
-                        try
+                        if (se.tbl_payments.Select(r1 => r1.transaction_code).Contains(code))
                         {
-                            string k4 = se.tbl_payments.FirstOrDefault(i => i.transaction_code == code).transaction_code;
                             json = "transaction code already recorded";
                             return;
                         }
-                        catch
+                        else
                         {
                             tbl_mpesa_payments tm = new tbl_mpesa_payments();
                             tm.message = msg;
@@ -184,6 +187,10 @@ namespace sunamiapi.classes
                             json = "not received money message";
                         }
                     }
+
+
+
+
 
                 }
                 else if(msg.Contains("Confirmed.on"))
@@ -202,21 +209,19 @@ namespace sunamiapi.classes
                     mpesa_amount = mpesa_amount.Substring(5, d - 5).ToString().Replace(@",", @"");
                     paynumber = md[8].ToString();
                     paynumber = "0" + paynumber.Substring(3, paynumber.Length - 3).ToString();
-                    try
+
+                    if(se.tbl_payments.Select(r1 => r1.transaction_code).Contains(code))
                     {
-                        string k4 = se.tbl_payments.FirstOrDefault(i => i.transaction_code == code).transaction_code;                       
                         json = "payment already recorded";
                         return;
                     }
-                    catch
+                    else
                     {
-                        try
+                        if(se.tbl_mpesa_payments.Select(r1 => r1.transaction_code).Contains(code))
                         {
-                            string k = se.tbl_mpesa_payments.FirstOrDefault(i => i.transaction_code == code).transaction_code;
                             json = "message already recorded";
-
                         }
-                        catch
+                        else
                         {
                             tbl_mpesa_payments tm = new tbl_mpesa_payments();
                             tm.date = mdate;
@@ -230,8 +235,10 @@ namespace sunamiapi.classes
                         }
                         //record in payments
                         process_transaction(se);
-                        se.Dispose();
+                        se.Dispose();                   
                     }
+
+
                 }
             }
             catch (Exception k)
