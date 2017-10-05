@@ -96,7 +96,6 @@ namespace sunamiapi.Controllers.api
                 Count = 0;
                 int Pack_amount = 0;
                 Paid = 0;
-                int System_deposit = 0;
                 int days = 0;
                 bool? status = false;
                 //get begin date --- start
@@ -125,17 +124,9 @@ namespace sunamiapi.Controllers.api
                     string package_type = tc1.pt.ToString();
                     Pack_amount = se.tbl_packages.FirstOrDefault(t => t.type == package_type).amount_per_day;
 
-                    //check if he is supposed to pay deposit
-                    DateTime dep_date = se.tbl_packages.FirstOrDefault(r => r.type == package_type).date_deposit;
-                    if (instal_d >= dep_date)
-                    {
-                        //invoice installation deposit
-                        System_deposit = se.tbl_packages.FirstOrDefault(t => t.type == package_type).deposit;
-                        Comment += "\nInstallation deposit";
-                    }
+                    
                     //add up all
                     Count = Pack_amount * days;
-                    Count += System_deposit;
                     //show period
                     St = instal_d.Value.Date.ToString("dd/MM/yyyy");
 
@@ -158,20 +149,12 @@ namespace sunamiapi.Controllers.api
                         //if not active - days= uninstall date - install date
                         DateTime un_date = se.tbl_uninstalled_systems.FirstOrDefault(r => r.customer_id == tc1.id).uninstall_date;
                         days = (un_date - instal_d).Value.Days;
-                        Comment += "\nUninstalled";
+                        // Comment += "\nUninstalled";
                     }
                     //get how much he should pay per day
                     string package_type = tc1.pt.ToString();
                     Pack_amount = se.tbl_packages.FirstOrDefault(t => t.type == package_type).amount_per_day;
-
-                    //check if he is supposed to pay deposit
-                    DateTime dep_date = se.tbl_packages.FirstOrDefault(r => r.type == package_type).date_deposit;
-                    if (instal_d >= dep_date)
-                    {
-                        //invoice installation deposit
-                        System_deposit = se.tbl_packages.FirstOrDefault(t => t.type == package_type).deposit;
-                        Comment += "\nInstallation deposit";
-                    }
+                    
 
                     //add up all
                     Count = Pack_amount * days;
