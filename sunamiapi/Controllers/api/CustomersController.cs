@@ -117,7 +117,7 @@ namespace sunamiapi.Controllers.api
                         //if not active - days= uninstall date - install date
                         DateTime un_date = se.tbl_uninstalled_systems.FirstOrDefault(r => r.customer_id == tc1.id).uninstall_date;
                         days = (un_date - instal_d).Value.Days;
-                        Comment += "\nUninstalled";
+                        //Comment += "\nUninstalled";
                         En = un_date.Date.ToString("dd/MM/yyyy");
                     }
                     //get how much he should pay per day
