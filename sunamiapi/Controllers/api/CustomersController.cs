@@ -220,6 +220,49 @@ namespace sunamiapi.Controllers.api
             return li;
         }
 
+        [HttpGet]
+        public List<object> invoiceItems()
+        {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            return new List<object>(se.tbl_extra_item.Select(r => new { Item = r.item, Deposit = r.deposit, Amount = r.amount_per_day, PayDays = r.extra_pay_period }));
+        }
+
+        [HttpPost]
+        public string invoiceCustomer([FromBody]JArray value)
+        {
+            string result = "";
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            try
+            {
+                JToken token = JObject.Parse(value[0].ToString());
+                string customerId = token.SelectToken("customerId").ToString();
+                string item = token.SelectToken("item").ToString();
+                if (!se.tbl_extra_package_customers.Where(r => r.customer_id == customerId).Select(t => t.item).Contains(item))
+                {
+                    tbl_extra_package_customers epc = new tbl_extra_package_customers();
+                    epc.customer_id = customerId;
+                    epc.item = item;
+                    epc.date_given = DateTime.Today;
+                    se.tbl_extra_package_customers.Add(epc);
+                    se.SaveChanges();
+                    result = "successfully invoiced customer";
+                }
+                else
+                {
+                    result = "this item had already been invoiced to this customer";
+                }
+            }
+            catch
+            {
+                result = "error invoicing customer";
+            }
+            finally
+            {
+                se.Dispose();               
+            }
+            return result;
+        }
+
         public int? GetCalcPayRate(DateTime start, DateTime end)
         {
             calcInvoiceBtwnDates civ = new calcInvoiceBtwnDates();
