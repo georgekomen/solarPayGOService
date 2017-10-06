@@ -237,6 +237,7 @@ namespace sunamiapi.Controllers.api
                 JToken token = JObject.Parse(value[0].ToString());
                 string customerId = token.SelectToken("customerId").ToString();
                 string item = token.SelectToken("item").ToString();
+                string loogedUser = token.SelectToken("loogedUser").ToString();
                 if (!se.tbl_extra_package_customers.Where(r => r.customer_id == customerId).Select(t => t.item).Contains(item))
                 {
                     tbl_extra_package_customers epc = new tbl_extra_package_customers();
@@ -246,6 +247,7 @@ namespace sunamiapi.Controllers.api
                     se.tbl_extra_package_customers.Add(epc);
                     se.SaveChanges();
                     result = "successfully invoiced customer";
+                    this.logevent(loogedUser, customerId, DateTime.Today, "Invoiced customer a " + item, "Invoice Customer");
                 }
                 else
                 {
