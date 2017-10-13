@@ -257,12 +257,14 @@ namespace sunamiapi.Controllers.api
                 string customerId = token.SelectToken("customerId").ToString();
                 string item = token.SelectToken("item").ToString();
                 string loogedUser = token.SelectToken("loogedUser").ToString();
+                string invoiceDate = token.SelectToken("invoiceDate").ToString();
+
                 if (!se.tbl_extra_package_customers.Where(r => r.customer_id == customerId).Select(t => t.item).Contains(item))
                 {
                     tbl_extra_package_customers epc = new tbl_extra_package_customers();
                     epc.customer_id = customerId;
                     epc.item = item;
-                    epc.date_given = DateTime.Today;
+                    epc.date_given = getDate(invoiceDate);
                     se.tbl_extra_package_customers.Add(epc);
                     se.SaveChanges();
                     result = "successfully invoiced customer";
@@ -1692,6 +1694,7 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public string postNewCustomer([FromBody]JArray value)
         {
+            string item = "";
             string res = "error";
             JToken token = JObject.Parse(value[0].ToString());
             try
@@ -1734,6 +1737,33 @@ namespace sunamiapi.Controllers.api
                 }
                 rc.record();
                 res = rc.Confirm;
+
+
+
+                // invoice new customer
+                //TODO - call invoice function - avoid duplication of code
+                db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+                if (rc.Package == "single(100)")
+                {
+                    item = "DEPOSIT_SINGLE(100)";
+                }
+                else if (rc.Package == "double(200)")
+                {
+                    item = "DEPOSIT_DOUBLE(200)";
+                }
+                
+                if (!se.tbl_extra_package_customers.Where(r => r.customer_id == rc.Id).Select(t => t.item).Contains(item))
+                {
+                    tbl_extra_package_customers epc = new tbl_extra_package_customers();
+                    epc.customer_id = rc.Id;
+                    epc.item = item;
+                    epc.date_given = DateTime.Today;
+                    se.tbl_extra_package_customers.Add(epc);
+                    se.SaveChanges();
+                    this.logevent(rc.RecordedBy, rc.Id, DateTime.Today, "Invoiced customer a " + item, "Invoice Customer");
+                }
+                // end of invoicing
+
             }
             catch (Exception kk)
             {
