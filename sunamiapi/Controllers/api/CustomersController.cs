@@ -52,28 +52,67 @@ namespace sunamiapi.Controllers.api
             return gdl.getCustomerLocations();
         }
 
-        public List<paymentRatesClassPerClient> GetPaymentActiveRates()
+        [HttpPost]
+        public List<paymentRatesClassPerClient> GetPaymentActiveRates([FromBody] JArray value)
         {
             try
             {
-                string enddate = DateTime.Today.ToString();
-                end1 = Convert.ToDateTime(enddate, info);
+                JToken token = JObject.Parse(value[0].ToString());
+                string startDate = token.SelectToken("startDate").ToString();
+                string endDate = token.SelectToken("endDate").ToString();
+                try
+                {
+                    //yyyy-mm-dd e.g. 2017-04-05 - date1
+                     beginDate = getDate(startDate);
+                     end1 = getDate(endDate);
+                    
+                }
+                catch
+                { }
             }
             catch
-            { }
+            {
+                try
+                {
+                    string enddate = DateTime.Today.ToString();
+                    end1 = Convert.ToDateTime(enddate, info);
+                }
+                catch
+                { }
+            }
+
+            
             return calcInvoiceBtwnDatesm(beginDate, end1, true).OrderByDescending(g => g.Percent).ToList();
         }
 
-        public List<paymentRatesClassPerClient> GetPaymentInactiveRates()
+        [HttpPost]
+        public List<paymentRatesClassPerClient> GetPaymentInactiveRates([FromBody] JArray value)
         {
             try
             {
-                string enddate = DateTime.Today.ToString();
-                end1 = Convert.ToDateTime(enddate, info);
+                JToken token = JObject.Parse(value[0].ToString());
+                string startDate = token.SelectToken("startDate").ToString();
+                string endDate = token.SelectToken("endDate").ToString();
+                try
+                {
+                    //yyyy-mm-dd e.g. 2017-04-05 - date1
+                    beginDate = getDate(startDate);
+                    end1 = getDate(endDate);
 
+                }
+                catch
+                { }
             }
             catch
-            { }
+            {
+                try
+                {
+                    string enddate = DateTime.Today.ToString();
+                    end1 = Convert.ToDateTime(enddate, info);
+                }
+                catch
+                { }
+            }
             return calcInvoiceBtwnDatesm(beginDate, end1, false).OrderByDescending(g => g.Percent).ToList();
         }
 
@@ -126,7 +165,7 @@ namespace sunamiapi.Controllers.api
                 }
                 else
                 {
-                    //if installation date is greater than the start picked date---it had not been
+                    //if installation date is less than the start picked date---it had been
                     //installed by then
                     if (tc1.active == true)
                     {
@@ -145,7 +184,7 @@ namespace sunamiapi.Controllers.api
 
                     //get extra package amount
                     extraPackageInvoicing ep = new classes.extraPackageInvoicing();
-                    Count += ep.extr_invoice(instal_d, end, tc1.id);
+                    Count += ep.extr_invoice(start, end, tc1.id);
                     Comment += "\n" + ep.Comment;
                 }
                 int? Percent = 0;

@@ -49,6 +49,7 @@ namespace sunamiapi.classes
 
         public int extr_invoice(DateTime? start, DateTime end, string Id)
         {
+            int days = 0;
             int deposit = 0;
             int cumm_invoice = 0;
             comment = null;
@@ -65,10 +66,16 @@ namespace sunamiapi.classes
                     {
                         //string item = se.tbl_extra_package_customers.FirstOrDefault(r => r.customer_id == Id && r.date_given <= end).item;
                         //get deposit
-                        deposit += se.tbl_extra_item.FirstOrDefault(g => g.item == item).deposit;
+                        if (start >= tp.date_given)
+                        {
+                            deposit += se.tbl_extra_item.FirstOrDefault(g => g.item == item).deposit;
+                            days = (end - start).Value.Days;
+                        }
+                        else
+                        {
+                            days = 0;
+                        }
                         //get cumm_invoice -- get date given item
-                        DateTime date_given = se.tbl_extra_package_customers.FirstOrDefault(t => t.customer_id == Id).date_given;
-                        int days = (end - date_given).Days;
                         //get how much he pays per day
                         int per_day = se.tbl_extra_item.FirstOrDefault(e => e.item == item).amount_per_day;
                         //get cumm invoice
