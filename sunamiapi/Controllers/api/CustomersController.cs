@@ -60,25 +60,16 @@ namespace sunamiapi.Controllers.api
                 JToken token = JObject.Parse(value[0].ToString());
                 string startDate = token.SelectToken("startDate").ToString();
                 string endDate = token.SelectToken("endDate").ToString();
-                try
-                {
-                    //yyyy-mm-dd e.g. 2017-04-05 - date1
-                     beginDate = getDate(startDate);
-                     end1 = getDate(endDate);
-                    
-                }
-                catch
-                { }
+
+                //yyyy-mm-dd e.g. 2017-04-05 - date1
+                beginDate = getDate(startDate);
+                end1 = getDate(endDate);
+                
             }
             catch
             {
-                try
-                {
-                    string enddate = DateTime.Today.ToString();
-                    end1 = Convert.ToDateTime(enddate, info);
-                }
-                catch
-                { }
+                string enddate = DateTime.Today.ToString();
+                end1 = Convert.ToDateTime(enddate, info);
             }
 
             
@@ -93,25 +84,15 @@ namespace sunamiapi.Controllers.api
                 JToken token = JObject.Parse(value[0].ToString());
                 string startDate = token.SelectToken("startDate").ToString();
                 string endDate = token.SelectToken("endDate").ToString();
-                try
-                {
-                    //yyyy-mm-dd e.g. 2017-04-05 - date1
-                    beginDate = getDate(startDate);
-                    end1 = getDate(endDate);
 
-                }
-                catch
-                { }
+                //yyyy-mm-dd e.g. 2017-04-05 - date1
+                beginDate = getDate(startDate);
+                end1 = getDate(endDate);
             }
             catch
             {
-                try
-                {
-                    string enddate = DateTime.Today.ToString();
-                    end1 = Convert.ToDateTime(enddate, info);
-                }
-                catch
-                { }
+                string enddate = DateTime.Today.ToString();
+                end1 = Convert.ToDateTime(enddate, info);
             }
             return calcInvoiceBtwnDatesm(beginDate, end1, false).OrderByDescending(g => g.Percent).ToList();
         }
