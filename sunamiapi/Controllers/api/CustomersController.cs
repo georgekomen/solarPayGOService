@@ -82,8 +82,8 @@ namespace sunamiapi.Controllers.api
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             List<paymentRatesClassPerClient> li = new List<paymentRatesClassPerClient>();
             string Comment;
-            int Count;//invoice
             int? Paid;
+            int Count;
             string St;
             string En;
 
@@ -94,9 +94,7 @@ namespace sunamiapi.Controllers.api
                 //check if active or uninstalled
                 Comment = null;
                 Count = 0;
-                int Pack_amount = 0;
                 Paid = 0;
-                int days = 0;
                 bool? status = false;
                 //get begin date --- start
                 //get end date ----end
@@ -109,24 +107,15 @@ namespace sunamiapi.Controllers.api
                     if (tc1.active == true)
                     {
                         //if system is active then get number of days (end-install date)
-                        days = (end - instal_d).Value.Days;
                         En = end.Date.ToString("dd/MM/yyyy");
                     }
                     else
                     {
                         //if not active - days= uninstall date - install date
                         DateTime un_date = se.tbl_uninstalled_systems.FirstOrDefault(r => r.customer_id == tc1.id).uninstall_date;
-                        days = (un_date - instal_d).Value.Days;
                         //Comment += "\nUninstalled";
                         En = un_date.Date.ToString("dd/MM/yyyy");
                     }
-                    //get how much he should pay per day
-                    string package_type = tc1.pt.ToString();
-                    Pack_amount = se.tbl_packages.FirstOrDefault(t => t.type == package_type).amount_per_day;
-
-                    
-                    //add up all
-                    Count = Pack_amount * days;
                     //show period
                     St = instal_d.Value.Date.ToString("dd/MM/yyyy");
 
@@ -142,22 +131,13 @@ namespace sunamiapi.Controllers.api
                     if (tc1.active == true)
                     {
                         //if system is active then get number of days (end-install date)
-                        days = (end - start).Days;
                     }
                     else
                     {
                         //if not active - days= uninstall date - install date
                         DateTime un_date = se.tbl_uninstalled_systems.FirstOrDefault(r => r.customer_id == tc1.id).uninstall_date;
-                        days = (un_date - instal_d).Value.Days;
                         // Comment += "\nUninstalled";
                     }
-                    //get how much he should pay per day
-                    string package_type = tc1.pt.ToString();
-                    Pack_amount = se.tbl_packages.FirstOrDefault(t => t.type == package_type).amount_per_day;
-                    
-
-                    //add up all
-                    Count = Pack_amount * days;
                     //show period
                     St = start.Date.ToString("dd/MM/yyyy");
                     En = end.Date.ToString("dd/MM/yyyy");
