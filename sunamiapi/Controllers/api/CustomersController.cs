@@ -55,6 +55,7 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public List<paymentRatesClassPerClient> GetPaymentActiveRates([FromBody] JArray value)
         {
+            List<paymentRatesClassPerClient> list = new List<paymentRatesClassPerClient>();
             try
             {
                 JToken token = JObject.Parse(value[0].ToString());
@@ -64,21 +65,23 @@ namespace sunamiapi.Controllers.api
                 //yyyy-mm-dd e.g. 2017-04-05 - date1
                 beginDate = getDate(startDate);
                 end1 = getDate(endDate);
-                
+                list = calcInvoiceBtwnDatesm(beginDate, end1, true).OrderByDescending(g => g.Percent).ToList();
             }
             catch
             {
                 string enddate = DateTime.Today.ToString();
                 end1 = Convert.ToDateTime(enddate, info);
+                list = calcInvoiceBtwnDatesm(beginDate, end1, true).OrderByDescending(g => g.Percent).ToList();
             }
-
             
-            return calcInvoiceBtwnDatesm(beginDate, end1, true).OrderByDescending(g => g.Percent).ToList();
+            return list;
+
         }
 
         [HttpPost]
         public List<paymentRatesClassPerClient> GetPaymentInactiveRates([FromBody] JArray value)
         {
+            List<paymentRatesClassPerClient> list = new List<paymentRatesClassPerClient>();
             try
             {
                 JToken token = JObject.Parse(value[0].ToString());
@@ -88,13 +91,16 @@ namespace sunamiapi.Controllers.api
                 //yyyy-mm-dd e.g. 2017-04-05 - date1
                 beginDate = getDate(startDate);
                 end1 = getDate(endDate);
+                list = calcInvoiceBtwnDatesm(beginDate, end1, false).OrderByDescending(g => g.Percent).ToList();
             }
             catch
             {
                 string enddate = DateTime.Today.ToString();
                 end1 = Convert.ToDateTime(enddate, info);
+                list = calcInvoiceBtwnDatesm(beginDate, end1, false).OrderByDescending(g => g.Percent).ToList();
             }
-            return calcInvoiceBtwnDatesm(beginDate, end1, false).OrderByDescending(g => g.Percent).ToList();
+
+            return list;
         }
 
         public List<paymentRatesClassPerClient> calcInvoiceBtwnDatesm(DateTime start, DateTime end, bool getbaddebts)
@@ -135,6 +141,7 @@ namespace sunamiapi.Controllers.api
                         DateTime un_date = se.tbl_uninstalled_systems.FirstOrDefault(r => r.customer_id == tc1.id).uninstall_date;
                         //Comment += "\nUninstalled";
                         En = un_date.Date.ToString("dd/MM/yyyy");
+                        end = un_date;
                     }
                     //show period
                     St = instal_d.Value.Date.ToString("dd/MM/yyyy");
@@ -151,16 +158,19 @@ namespace sunamiapi.Controllers.api
                     if (tc1.active == true)
                     {
                         //if system is active then get number of days (end-install date)
+                        En = end.Date.ToString("dd/MM/yyyy");
                     }
                     else
                     {
                         //if not active - days= uninstall date - install date
                         DateTime un_date = se.tbl_uninstalled_systems.FirstOrDefault(r => r.customer_id == tc1.id).uninstall_date;
                         // Comment += "\nUninstalled";
+                        En = un_date.Date.ToString("dd/MM/yyyy");
+                        end = un_date;
                     }
                     //show period
                     St = start.Date.ToString("dd/MM/yyyy");
-                    En = end.Date.ToString("dd/MM/yyyy");
+                    
                     Paid = se.tbl_payments.Where(g => g.customer_id == tc1.id && g.payment_date >= start && g.payment_date <= end).Sum(t => t.amount_payed);
 
                     //get extra package amount
