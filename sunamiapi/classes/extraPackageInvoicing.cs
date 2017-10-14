@@ -66,15 +66,19 @@ namespace sunamiapi.classes
                     {
                         //string item = se.tbl_extra_package_customers.FirstOrDefault(r => r.customer_id == Id && r.date_given <= end).item;
                         //get deposit
-                        if (start >= tp.date_given)
-                        {
+
+
+
+
+
+                            //TODO - calcuate invoice in span of a period here
                             deposit += se.tbl_extra_item.FirstOrDefault(g => g.item == item).deposit;
-                            days = (end - start).Value.Days;
-                        }
-                        else
-                        {
-                            days = 0;
-                        }
+                            days = (end - tp.date_given).Days;
+
+
+
+
+                        
                         //get cumm_invoice -- get date given item
                         //get how much he pays per day
                         int per_day = se.tbl_extra_item.FirstOrDefault(e => e.item == item).amount_per_day;
