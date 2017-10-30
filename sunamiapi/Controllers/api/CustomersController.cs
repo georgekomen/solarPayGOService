@@ -1685,6 +1685,7 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public string postNewCustomer([FromBody]JArray value)
         {
+            DateTime date2;
             string item = "";
             string res = "error";
             JToken token = JObject.Parse(value[0].ToString());
@@ -1716,7 +1717,7 @@ namespace sunamiapi.Controllers.api
                 
                 rc.Country = "Kenya";
                 
-                DateTime date2 = getDate(token.SelectToken("date1").ToString());//yyyy-mm-dd e.g. 2017-04-05 - date1
+                date2 = getDate(token.SelectToken("date1").ToString());//yyyy-mm-dd e.g. 2017-04-05 - date1
                 rc.Install_date = date2;
                 try
                 {
@@ -1752,6 +1753,11 @@ namespace sunamiapi.Controllers.api
                     se.tbl_extra_package_customers.Add(epc);
                     se.SaveChanges();
                     this.logevent(rc.RecordedBy, rc.Id, DateTime.Today, "Invoiced customer a " + item, "Invoice Customer");
+                } else
+                {
+                    tbl_extra_package_customers tepc = se.tbl_extra_package_customers.FirstOrDefault(f => f.customer_id == rc.Id && f.item == item);
+                    tepc.date_given = date2;
+                    se.SaveChanges();
                 }
                 // end of invoicing
 
