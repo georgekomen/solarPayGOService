@@ -410,7 +410,7 @@ namespace sunamiapi.classes
 
                     }
                     se.SaveChanges();
-                    confirm += "Successfully modified an existing customer data";
+                    confirm += "modified an existing customer data";
 
                 }
                 else if (g < 1)
@@ -472,7 +472,7 @@ namespace sunamiapi.classes
                     }
                     se.tbl_customer.Add(tc);
                     se.SaveChanges();
-                    confirm += "successfully registered new customer";
+                    confirm += "registered new customer";
                 }
             }
             catch (Exception kk)

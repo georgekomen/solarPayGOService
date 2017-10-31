@@ -1685,7 +1685,7 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public string postNewCustomer([FromBody]JArray value)
         {
-            DateTime date2;
+            DateTime date2 = DateTime.Today;
             string item = "";
             string res = "error";
             JToken token = JObject.Parse(value[0].ToString());
@@ -1716,9 +1716,13 @@ namespace sunamiapi.Controllers.api
                 }
                 
                 rc.Country = "Kenya";
-                
-                date2 = getDate(token.SelectToken("date1").ToString());//yyyy-mm-dd e.g. 2017-04-05 - date1
-                rc.Install_date = date2;
+
+                try
+                {
+                    date2 = getDate(token.SelectToken("date1").ToString());//yyyy-mm-dd e.g. 2017-04-05 - date1
+                    rc.Install_date = date2;
+                }
+                catch { }
                 try
                 {
                     rc.Location = token.SelectToken("location").ToString();
@@ -1752,7 +1756,7 @@ namespace sunamiapi.Controllers.api
                     epc.date_given = DateTime.Today;
                     se.tbl_extra_package_customers.Add(epc);
                     se.SaveChanges();
-                    this.logevent(rc.RecordedBy, rc.Id, DateTime.Today, "Invoiced customer a " + item, "Invoice Customer");
+                    // this.logevent(rc.RecordedBy, rc.Id, DateTime.Today, "Invoiced customer a " + item, "Invoice Customer");
                 } else
                 {
                     tbl_extra_package_customers tepc = se.tbl_extra_package_customers.FirstOrDefault(f => f.customer_id == rc.Id && f.item == item);
@@ -1767,7 +1771,10 @@ namespace sunamiapi.Controllers.api
                 //res = "Error retrieving info from json sent";
                 res = kk.Message;
             }
-            logevent(token.SelectToken("recordedBy").ToString(), token.SelectToken("id").ToString(), DateTime.Now, res, "customer registration");
+            if (!res.Contains("registered new customer"))
+            {
+                logevent(token.SelectToken("recordedBy").ToString(), token.SelectToken("id").ToString(), DateTime.Now, res, "customer registration");
+            }
             return res;
         }
 
