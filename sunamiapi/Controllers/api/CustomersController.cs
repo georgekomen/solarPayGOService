@@ -1062,7 +1062,7 @@ namespace sunamiapi.Controllers.api
                 return g.Message;
 
             }
-            string res = "recorded";
+            string res = "";
             JToken token = JObject.Parse(value[0].ToString());
 
             // only record if message is from mpesa
@@ -1075,7 +1075,7 @@ namespace sunamiapi.Controllers.api
                     int tblm = se.tbl_mpesa_phone_imei.Where(i => i.imei == imei_no).Count();
                     if (tblm < 1)
                     {
-                        return "phone invalid";
+                        res =  "";
                     }
                     else
                     {
@@ -1707,14 +1707,14 @@ namespace sunamiapi.Controllers.api
                 rc.Witnessid = token.SelectToken("witnessid").ToString();
                 rc.Description = token.SelectToken("description").ToString();
                 rc.RecordedBy = token.SelectToken("recordedBy").ToString();
-                if(string.IsNullOrEmpty(token.SelectToken("package").ToString())) {
+
+                try {
+                    rc.Package = token.SelectToken("package").ToString();
+                }
+                catch {
                     rc.Package = "single(100)";
                 }
-                else {
-                    rc.Package = token.SelectToken("package").ToString();
-                   
-                }
-                
+
                 rc.Country = "Kenya";
 
                 try
