@@ -1891,7 +1891,7 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpGet]
-        public List<Object> eventlogs()
+        public List<object> eventlogs()
         {
             List<object> list = new List<object>();
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
