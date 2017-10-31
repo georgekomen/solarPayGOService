@@ -1707,16 +1707,15 @@ namespace sunamiapi.Controllers.api
                 rc.Witnessid = token.SelectToken("witnessid").ToString();
                 rc.Description = token.SelectToken("description").ToString();
                 rc.RecordedBy = token.SelectToken("recordedBy").ToString();
+                rc.Country = "Kenya";
 
-                try {
+                try
+                {
                     rc.Package = token.SelectToken("package").ToString();
                 }
                 catch {
                     rc.Package = "single(100)";
                 }
-
-                rc.Country = "Kenya";
-
                 try
                 {
                     date2 = getDate(token.SelectToken("date1").ToString());//yyyy-mm-dd e.g. 2017-04-05 - date1
