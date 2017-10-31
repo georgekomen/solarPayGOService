@@ -1891,6 +1891,22 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpGet]
+        public List<Object> eventlogs()
+        {
+            List<object> list = new List<object>();
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            list = new List<object>(from t in se.tbl_event_logs select new
+            {
+                Category = t.category_affected,
+                CustomerId = t.customer_id,
+                Date = t.date,
+                Event = t.@event,
+                LoggedInUser = t.loggedin_user
+            });
+            return list;
+        }
+
+        [HttpGet]
         public List<object> getInventory(string id)
         {
             try
