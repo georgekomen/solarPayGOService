@@ -1075,7 +1075,7 @@ namespace sunamiapi.Controllers.api
                     int tblm = se.tbl_mpesa_phone_imei.Where(i => i.imei == imei_no).Count();
                     if (tblm < 1)
                     {
-                        res =  "";
+                        res = null;
                     }
                     else
                     {
@@ -1685,6 +1685,7 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public string postNewCustomer([FromBody]JArray value)
         {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             DateTime date2 = DateTime.Today;
             string item = "";
             string res = "error";
@@ -1706,7 +1707,14 @@ namespace sunamiapi.Controllers.api
                 rc.Witness = token.SelectToken("witness").ToString();
                 rc.Witnessid = token.SelectToken("witnessid").ToString();
                 rc.Description = token.SelectToken("description").ToString();
-                rc.RecordedBy = token.SelectToken("recordedBy").ToString();
+                try
+                {
+                    rc.RecordedBy = token.SelectToken("recordedBy").ToString();
+                }
+                catch
+                {
+                    rc.RecordedBy = "anonymous";
+                }
                 rc.Country = "Kenya";
 
                 try
@@ -1721,7 +1729,9 @@ namespace sunamiapi.Controllers.api
                     date2 = getDate(token.SelectToken("date1").ToString());//yyyy-mm-dd e.g. 2017-04-05 - date1
                     rc.Install_date = date2;
                 }
-                catch { }
+                catch {
+                    
+                }
                 try
                 {
                     rc.Location = token.SelectToken("location").ToString();
@@ -1737,7 +1747,6 @@ namespace sunamiapi.Controllers.api
 
                 // invoice new customer
                 //TODO - call invoice function - avoid duplication of code
-                db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
                 if (rc.Package == "single(100)")
                 {
                     item = "DEPOSIT_SINGLE(100)";
@@ -1769,11 +1778,13 @@ namespace sunamiapi.Controllers.api
             {
                 //res = "Error retrieving info from json sent";
                 res = kk.Message;
+
             }
             if (!res.Contains("registered new customer"))
             {
                 logevent(token.SelectToken("recordedBy").ToString(), token.SelectToken("id").ToString(), DateTime.Now, res, "customer registration");
             }
+            se.Dispose();
             return res;
         }
 
