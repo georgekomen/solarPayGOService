@@ -70,15 +70,17 @@ namespace sunamiapi.classes
 
 
 
-
-                            //TODO - calcuate invoice in span of a period here
-                            deposit += se.tbl_extra_item.FirstOrDefault(g => g.item == item).deposit;
-                            days = (end - tp.date_given).Days;
-
-
-
-
                         
+                        //TODO - calcuate invoice in span of a period here
+                        //if date given is greater than start date, include deposit otherwise do not
+                        //if startdate if before date given .... calculate days from date given to end date .... otherwise use startdate
+                        deposit += se.tbl_extra_item.FirstOrDefault(g => g.item == item).deposit;
+                        days = (end - tp.date_given).Days;
+
+
+
+
+
                         //get cumm_invoice -- get date given item
                         //get how much he pays per day
                         int per_day = se.tbl_extra_item.FirstOrDefault(e => e.item == item).amount_per_day;
@@ -91,11 +93,7 @@ namespace sunamiapi.classes
                         }
                     }
                     else
-                    {
-
-                    }
-
-
+                    { }
                 }
                 catch
                 {
@@ -104,7 +102,6 @@ namespace sunamiapi.classes
                 }
             }
             invoice = deposit + cumm_invoice;
-
             return invoice;
         }
     }
