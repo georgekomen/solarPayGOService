@@ -305,7 +305,15 @@ namespace sunamiapi.classes
                 string ts = se.tbl_customer.FirstOrDefault(o => o.customer_id == tc.customer_id).package_type;
                 int amount_per_daya = se.tbl_packages.FirstOrDefault(k => k.type == ts).amount_per_day;
                 tbl_payments tp = new tbl_payments();
-                tp.payment_date = mdate;
+                //if payment was made before installation then credit payment as made on that installation date
+                if (tc.install_date > mdate)
+                {
+                    tp.payment_date = tc.install_date;
+                }
+                else
+                {
+                    tp.payment_date = mdate;
+                }
                 tp.amount_payed = mpesa_amount1;
                 tp.customer_id = id;
                 tp.payment_method = payMode;
@@ -330,6 +338,7 @@ namespace sunamiapi.classes
                 {
                     tp.date_recorded = DateTime.Now;
                 }
+                             
                 //calculate number of days from amount payed
                 try
                 {
@@ -362,24 +371,7 @@ namespace sunamiapi.classes
                         tp.balance = bal_record;
                     }
                     //handle balances-----------------------------------------------------------------------------
-
-                    //if payment date is earlier than installation date, change installation date
-                    //record there installation dates
-                    try
-                    {
-                        tbl_customer ts2 = se.tbl_customer.FirstOrDefault(u => u.customer_id == id);
-                        DateTime? insd = ts2.install_date;
-
-                        if (insd > mdate)
-                        {
-
-                            //record there installation dates
-                            tbl_customer ts3 = se.tbl_customer.FirstOrDefault(u => u.customer_id == id);
-                            ts3.install_date = mdate;
-                            se.SaveChanges();
-                        }
-                    }
-                    catch { }
+                   
                 }
                 catch
                 {
