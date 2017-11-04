@@ -85,9 +85,9 @@ namespace sunamiapi.classes
                         //get cumm invoice
                         ext_daily_invoice += tep.amount_per_day;
                         invoice += (days * tep.amount_per_day) + tep.deposit;
-                        if (se.tbl_extra_item.FirstOrDefault(g => g.item == item).amount_per_day >= 0)
+                        if (tep.deposit >= 0)
                         {
-                            comment += "\n" + item + " of KES" + tep.deposit + ", ";
+                            comment += "\nDeposit of KES" + tep.deposit + " for " + item + ",";
                         }
 
                         if(days > 0 && tep.extra_pay_period > 0)

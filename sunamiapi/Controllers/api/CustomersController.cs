@@ -1745,14 +1745,7 @@ namespace sunamiapi.Controllers.api
 
                 // invoice new customer
                 //TODO - call invoice function - avoid duplication of code
-                if (rc.Package == "single(100)")
-                {
-                    item = "DEPOSIT_SINGLE(100)";
-                }
-                else if (rc.Package == "double(200)")
-                {
-                    item = "DEPOSIT_DOUBLE(200)";
-                }
+                item = rc.Package;
                 
                 if (!se.tbl_extra_package_customers.Where(r => r.customer_id == rc.Id).Select(t => t.item).Contains(item))
                 {
