@@ -218,7 +218,7 @@ namespace sunamiapi.Controllers.api
                     Amount = Paid,
                     Invoice = Count,
                     Percent = Percent,
-                    Comment = Comment.ToUpper(),
+                    Comment = Comment,
                     Phone = tc1.phone + "\n" + tc1.phone2 + "\n" + tc1.phone3,
                     Village = tc1.village.ToUpper(),
                     Status = status
@@ -949,9 +949,7 @@ namespace sunamiapi.Controllers.api
                     }
                 }
                 catch
-                {
-
-                }
+                { }
             }
             catch { }
             List<payRecordClass2> prc2 = new List<payRecordClass2>();
