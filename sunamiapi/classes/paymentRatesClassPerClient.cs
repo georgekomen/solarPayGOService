@@ -7,6 +7,7 @@ namespace sunamiapi.classes
 {
     public class paymentRatesClassPerClient
     {
+        private string description;
         private string name;
         private string id;
         private int? amount;
@@ -159,6 +160,19 @@ namespace sunamiapi.classes
             set
             {
                 village = value;
+            }
+        }
+
+        public string Description
+        {
+            get
+            {
+                return description;
+            }
+
+            set
+            {
+                description = value;
             }
         }
     }

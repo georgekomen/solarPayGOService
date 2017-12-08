@@ -49,6 +49,8 @@ namespace sunamiapi.classes
 
         public int extr_invoice(DateTime? start, DateTime end, string Id)
         {
+            int days_switched_off = 0;
+            
             int days = 0;
             comment = null;
             //GET LIST OF ALL EXTRa items a customer has
@@ -67,24 +69,30 @@ namespace sunamiapi.classes
                         //get deposit
 
 
-
-
-
+                        
                         //TODO - calcuate invoice in span of a period here
                         //if date given is greater than start date, include deposit otherwise do not
                         //if startdate if before date given .... calculate days from date given to end date .... otherwise use startdate
                         days = (end - tp.date_given).Days;
 
 
-
+                        //get days switched off
+                        var tsl = se.tbl_switch_logs.Where(r => r.customer_id == Id).ToList();
+                        foreach (var i in tsl)
+                        {
+                            days_switched_off += (i.switch_on_date - i.switch_off_date).Value.Days;
+                        }
+                        if (days_switched_off > 0)
+                        {
+                            comment += "\nDeduction of KES" + (days_switched_off * tep.amount_per_day)+ " for "+days_switched_off +" days switched off, ";
+                        }
 
 
                         //get cumm_invoice -- get date given item
                         //get how much he pays per day
-                        
                         //get cumm invoice
                         ext_daily_invoice += tep.amount_per_day;
-                        invoice += (days * tep.amount_per_day) + tep.deposit;
+                        invoice += ((days - days_switched_off) * tep.amount_per_day) + tep.deposit;
                         if (tep.deposit >= 0)
                         {
                             comment += "\nDeposit of KES" + tep.deposit + " for " + item + ",";
@@ -92,7 +100,7 @@ namespace sunamiapi.classes
 
                         if(days > 0 && tep.extra_pay_period > 0)
                         {
-                            comment += "\nDaily payment of KES" + tep.amount_per_day + " for " + item + " for " + days + " day(s), ";
+                            comment += "\nDaily payment of KES" + tep.amount_per_day + " for " + item + " for " + (days-days_switched_off) + " day(s), ";
                         }
                     }
                     else

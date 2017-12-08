@@ -81,7 +81,7 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public List<paymentRatesClassPerClient> GetPaymentInactiveRates([FromBody] JArray value)
         {
-            List<paymentRatesClassPerClient> list = new List<paymentRatesClassPerClient>();
+            /*List<paymentRatesClassPerClient> list = new List<paymentRatesClassPerClient>();
             try
             {
                 JToken token = JObject.Parse(value[0].ToString());
@@ -100,11 +100,13 @@ namespace sunamiapi.Controllers.api
                 list = calcInvoiceBtwnDatesm(beginDate, end1, false).OrderByDescending(g => g.Percent).ToList();
             }
 
-            return list;
+            return list;*/
+            return null;
         }
 
         public List<paymentRatesClassPerClient> calcInvoiceBtwnDatesm(DateTime start, DateTime end, bool getbaddebts)
         {
+            tbl_customer tableCustomer;
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             List<paymentRatesClassPerClient> li = new List<paymentRatesClassPerClient>();
             string Comment;
@@ -117,6 +119,7 @@ namespace sunamiapi.Controllers.api
             var list2 = se.tbl_customer.Where(g => g.install_date <= end && g.active_status == getbaddebts).Select(h => new { active = h.active_status, name = h.customer_name, id = h.customer_id, ind = h.install_date, pt = h.package_type, phone = h.phone_numbers, phone2 = h.phone_numbers2, phone3 = h.phone_numbers3, village = h.village_name }).ToList();
             foreach (var tc1 in list2)
             {
+                tableCustomer = se.tbl_customer.FirstOrDefault(g => g.customer_id == tc1.id);
                 //check if active or uninstalled
                 Comment = null;
                 Count = 0;
@@ -221,7 +224,8 @@ namespace sunamiapi.Controllers.api
                     Comment = Comment,
                     Phone = tc1.phone + "\n" + tc1.phone2 + "\n" + tc1.phone3,
                     Village = tc1.village.ToUpper(),
-                    Status = status
+                    Status = status,
+                    Description = tableCustomer.Description
                 });
             }
             //List<paymentRatesClass> li2 = new List<paymentRatesClass>();
