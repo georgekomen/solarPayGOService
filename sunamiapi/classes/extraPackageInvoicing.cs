@@ -76,16 +76,26 @@ namespace sunamiapi.classes
                         days = (end - tp.date_given).Days;
 
 
+
                         //get days switched off
+                        //TODO - narrow down to this dates
                         var tsl = se.tbl_switch_logs.Where(r => r.customer_id == Id).ToList();
                         foreach (var i in tsl)
                         {
-                            days_switched_off += (i.switch_on_date - i.switch_off_date).Value.Days;
+                            if(i.switch_on_date != null)
+                            {
+                                days_switched_off += (i.switch_on_date - i.switch_off_date).Value.Days;
+                            }
+                            else
+                            {
+                                days_switched_off += (DateTime.Today - i.switch_off_date).Value.Days;
+                            }
                         }
                         if (days_switched_off > 0)
                         {
-                            comment += "\nDeduction of KES" + (days_switched_off * tep.amount_per_day)+ " for "+days_switched_off +" days switched off, ";
+                            comment += "\nDeduction of KES" + (days_switched_off * tep.amount_per_day).ToString() + " for " + days_switched_off.ToString() +" days " + item + "switched off, ";
                         }
+
 
 
                         //get cumm_invoice -- get date given item
@@ -100,14 +110,15 @@ namespace sunamiapi.classes
 
                         if(days > 0 && tep.extra_pay_period > 0)
                         {
-                            comment += "\nDaily payment of KES" + tep.amount_per_day + " for " + item + " for " + (days-days_switched_off) + " day(s), ";
+                            comment += "\nDaily payment of KES" + tep.amount_per_day + " for " + item + " for " + (days-days_switched_off).ToString() + " day(s), ";
                         }
                     }
                     else
                     { }
                 }
-                catch
+                catch(Exception e)
                 {
+                    comment += "\n Error " + e.ToString() + e.StackTrace.ToString();
                     //customer not in extra package scheme
                     continue;
                 }
