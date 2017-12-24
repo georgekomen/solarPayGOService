@@ -646,7 +646,7 @@ namespace sunamiapi.Controllers.api
                         if (allowsendsms == true)
                         {
                             sendSms ss = new sendSms();
-                            ss.sendSmsThroughGateway(sim_no, "$0%$0%");
+                            ss.sendSmsThroughGateway(sim_no, "smsc$0%$0%");
                         }
                         int sl1 = se.tbl_switch_logs.Where(h => h.customer_id == customer_id).Max(j => j.Id);
                         tbl_switch_logs sl = se.tbl_switch_logs.FirstOrDefault(h => h.customer_id == customer_id && h.Id == sl1);
@@ -674,7 +674,7 @@ namespace sunamiapi.Controllers.api
                         if (allowsendsms == true)
                         {
                             sendSms ss = new sendSms();
-                            ss.sendSmsThroughGateway(sim_no, "$1%$1%");
+                            ss.sendSmsThroughGateway(sim_no, "smsc$1%$1%");
                         }
 
                         tbl_switch_logs sl = new tbl_switch_logs();
