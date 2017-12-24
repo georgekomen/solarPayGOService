@@ -388,16 +388,16 @@ namespace sunamiapi.classes
 
                 response1.Add("message", message1);
                 response1.Add("number", paynumber);
-                //preparesms(); 
+                preparesms(se); 
             }
             catch (Exception kl)
             {
                 //failed to process payment-payment number not in db
                 //sending sms to unrecorded phone numbers
-                //message1 = "We just received Ksh" + mpesa_amount + ".However this number is not registered in our database. Please contact us concerning this payment";
+                message = "Sunami imepoke malipo Ksh" + mpesa_amount + " kutoka kwa nambari hili. Tafadhali tupigie simu ili utueleze accounti yako";
                 //response1.Add("message", message1);
                 //response1.Add("number", paynumber);
-                //sendsms();
+                sendSmsThroughGateway();
             }
         }
 
@@ -432,12 +432,12 @@ namespace sunamiapi.classes
                     int? days2 = paid / pack_amount;
                     //get next pay day
                     DateTime? nxtPay = instd.Value.AddDays(days2.Value);
-                    message = "Asanti kwa malipo yako ya shillingi " + mpesa_amount + ". Umelipia hadi tarehe " + nxtPay.Value.Date.ToString("dd/MM/yyyy");
+                    message = "Sunami inakushukuru kwa malipo yako ya shillingi " + mpesa_amount + ". Umelipia hadi tarehe " + nxtPay.Value.Date.ToString("dd/MM/yyyy");
                 }
 
                 else
                 {
-                    message = "Asanti kwa malipo yako ya shillingi " + mpesa_amount + ". Bado unadaiwa shillingi " + bal + " ya siku zilizopita";
+                    message = "Sunami inakushukuru kwa malipo yako ya shillingi " + mpesa_amount + ". Bado unadaiwa shillingi " + bal + " ya siku zilizopita";
                 }
                 sendSmsThroughGateway();
             }
