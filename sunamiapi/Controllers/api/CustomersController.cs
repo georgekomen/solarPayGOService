@@ -1725,7 +1725,7 @@ namespace sunamiapi.Controllers.api
                     rc.Package = token.SelectToken("package").ToString();
                 }
                 catch {
-                    rc.Package = "single(100)";
+                    rc.Package = "single_2018(100)";
                 }
                 try
                 {

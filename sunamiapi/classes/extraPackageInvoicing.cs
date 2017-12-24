@@ -49,8 +49,8 @@ namespace sunamiapi.classes
 
         public int extr_invoice(DateTime? start, DateTime end, string Id)
         {
-            int days_switched_off = 0;
-            
+            int days_switched_off = 0;         
+
             int days = 0;
             comment = null;
             //GET LIST OF ALL EXTRa items a customer has
@@ -77,24 +77,43 @@ namespace sunamiapi.classes
 
 
 
+
+                        //stop invoicing when switched off
+                        days_switched_off = 0;                   
                         //get days switched off
                         //TODO - narrow down to this dates
                         var tsl = se.tbl_switch_logs.Where(r => r.customer_id == Id).ToList();
                         foreach (var i in tsl)
                         {
-                            if(i.switch_on_date != null)
+                            if (i.switch_off_date >= tp.date_given)
                             {
-                                days_switched_off += (i.switch_on_date - i.switch_off_date).Value.Days;
+                                if (i.switch_on_date != null)
+                                {
+                                    days_switched_off += (i.switch_on_date - i.switch_off_date).Value.Days;
+                                }
+                                else
+                                {
+                                    days_switched_off += (DateTime.Today - i.switch_off_date).Value.Days;
+                                }
                             }
                             else
                             {
-                                days_switched_off += (DateTime.Today - i.switch_off_date).Value.Days;
+                                if (i.switch_on_date != null)
+                                {
+                                    days_switched_off += (i.switch_on_date - tp.date_given).Value.Days;
+                                }
+                                else
+                                {
+                                    days_switched_off += (DateTime.Today - tp.date_given).Days;
+                                }
                             }
                         }
                         if (days_switched_off > 0)
                         {
-                            comment += "\nDeduction of KES" + (days_switched_off * tep.amount_per_day).ToString() + " for " + days_switched_off.ToString() +" days " + item + "switched off, ";
+                            comment += "\nDeduction of KES" + (days_switched_off * tep.amount_per_day).ToString() + " for " + days_switched_off.ToString() + " days for " + item + " switched off, ";
                         }
+
+
 
 
 
