@@ -412,13 +412,7 @@ namespace sunamiapi.classes
                 //get when he should make next payment -- get todays date
                 DateTime toda = DateTime.Today;
                 //get invoice to date...............................
-                //get package type
-                string packtype = se.tbl_customer.FirstOrDefault(g => g.customer_id == id).package_type;
-                int pack_amount = se.tbl_packages.FirstOrDefault(t => t.type == packtype).amount_per_day;
-                //get invoice
-                int days = (toda - instd).Value.Days;
-                int invoice = pack_amount * days;
-                //add incase in an advanced package
+                int invoice = 0;
                 extra_package_invoicing ep = new classes.extra_package_invoicing();
                 invoice += ep.extr_invoice(instd, toda, id);
                 //or how much he still needs to buy
@@ -426,13 +420,7 @@ namespace sunamiapi.classes
 
                 if (bal <= 0)
                 {
-                    //get extra daily invoice from extra package class
-                    pack_amount += ep.Ext_daily_invoice;
-                    //get days paid for
-                    int? days2 = paid / pack_amount;
-                    //get next pay day
-                    DateTime? nxtPay = instd.Value.AddDays(days2.Value);
-                    message = "Sunami inakushukuru kwa malipo yako ya shillingi " + mpesa_amount + ". Umelipia hadi tarehe " + nxtPay.Value.Date.ToString("dd/MM/yyyy");
+                    message = "Sunami inakushukuru kwa malipo yako ya shillingi " + mpesa_amount + ".";
                 }
 
                 else
