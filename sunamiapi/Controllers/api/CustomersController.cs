@@ -1765,7 +1765,7 @@ namespace sunamiapi.Controllers.api
                     tbl_extra_package_customers epc = new tbl_extra_package_customers();
                     epc.customer_id = rc.Id;
                     epc.item = item;
-                    epc.date_given = DateTime.Today;
+                    epc.date_given = date2;
                     se.tbl_extra_package_customers.Add(epc);
                     se.SaveChanges();
                     // this.logevent(rc.RecordedBy, rc.Id, DateTime.Today, "Invoiced customer a " + item, "Invoice Customer");
