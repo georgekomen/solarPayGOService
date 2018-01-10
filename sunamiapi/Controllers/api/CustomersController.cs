@@ -654,8 +654,16 @@ namespace sunamiapi.Controllers.api
                         sl.switched_on_by = loogeduser;
                         sl.switch_on_date = DateTime.Today;
                         calcInvoiceBtwnDates2 cpr = new calcInvoiceBtwnDates2();
-                        cpr.idcalcInvoiceBtwnDates(beginDate, DateTime.Today, customer_id);
-                        sl.switch_on_payrate = cpr.Percent1.Value.ToString();
+                        try
+                        {
+                            cpr.idcalcInvoiceBtwnDates(beginDate, DateTime.Today, customer_id);
+                            sl.switch_on_payrate = cpr.Percent1.Value.ToString();
+                        }
+                        catch
+                        {
+                            sl.switch_on_payrate = "0";
+                        }
+                        
 
                     }
                     catch (Exception g)
