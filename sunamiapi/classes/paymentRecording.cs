@@ -27,6 +27,8 @@ namespace sunamiapi.classes
         private DateTime to_this_day;
         private Dictionary<string, string> response1;//hold parameters for message reply
         private string phone_imei;
+        private string mpesa_number;
+        private string customer_name;
         public string Json
         {
             get
@@ -253,7 +255,12 @@ namespace sunamiapi.classes
                     try
                     {
                         tbl_customer tc1 = se.tbl_customer.FirstOrDefault(i => i.phone_numbers == paynumber || i.phone_numbers2 == paynumber || i.phone_numbers3 == paynumber);
+
+                        mpesa_number = paynumber;
                         id = tc1.customer_id;
+                        var customernames = tc1.customer_name.Split(' ');
+                        customer_name = customernames[0];
+
                     }
                     catch(Exception g)
                     {
@@ -394,10 +401,10 @@ namespace sunamiapi.classes
             {
                 //failed to process payment-payment number not in db
                 //sending sms to unrecorded phone numbers
-                message = "Sunami imepoke malipo Ksh" + mpesa_amount + " kutoka kwa nambari hili. Tafadhali tupigie simu ili utueleze accounti yako";
+                message = "Sunami solar imepokea malipo yako ya Ksh" + mpesa_amount + " .Tafadhali tupigie simu ili utueleze accounti yako";
                 //response1.Add("message", message1);
                 //response1.Add("number", paynumber);
-                sendSmsThroughGateway();
+                sendSmsThroughGateway(mpesa_number);
             }
         }
 
@@ -420,14 +427,14 @@ namespace sunamiapi.classes
 
                 if (bal <= 0)
                 {
-                    message = "Sunami inakushukuru kwa malipo yako ya shillingi " + mpesa_amount + ".";
+                    message = customer_name+" Sunami solar inakushukuru kwa malipo yako ya Ksh" + mpesa_amount;
                 }
 
                 else
                 {
-                    message = "Sunami inakushukuru kwa malipo yako ya shillingi " + mpesa_amount + ". Bado unadaiwa shillingi " + bal + " ya siku zilizopita";
+                    message = customer_name +" Sunami solar inakushukuru kwa malipo yako ya Ksh" + mpesa_amount + ".Bado unadaiwa Ksh" + bal + " ya siku zilizopita";
                 }
-                sendSmsThroughGateway();
+                sendSmsThroughGateway(paynumber);
             }
             catch { }
 
@@ -440,10 +447,10 @@ namespace sunamiapi.classes
             json = JsonConvert.SerializeObject(response1, Formatting.Indented);
         }
 
-        public void sendSmsThroughGateway()
+        public void sendSmsThroughGateway(string num)
         {
             sendSms ss = new sendSms();
-            ss.sendSmsThroughGateway(paynumber, message);
+            ss.sendSmsThroughGateway(num, message);
         }
 
     }
