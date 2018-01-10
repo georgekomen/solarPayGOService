@@ -427,12 +427,12 @@ namespace sunamiapi.classes
 
                 if (bal <= 0)
                 {
-                    message = customer_name+" Sunami solar inakushukuru kwa malipo yako ya Ksh" + mpesa_amount;
+                    message = customer_name+", Sunami solar inakushukuru kwa malipo yako ya Ksh" + mpesa_amount;
                 }
 
                 else
                 {
-                    message = customer_name +" Sunami solar inakushukuru kwa malipo yako ya Ksh" + mpesa_amount + ".Bado unadaiwa Ksh" + bal + " ya siku zilizopita";
+                    message = customer_name +", Sunami solar inakushukuru kwa malipo yako ya Ksh" + mpesa_amount + ".Bado unadaiwa Ksh" + bal + " ya siku zilizopita";
                 }
                 sendSmsThroughGateway(paynumber);
             }

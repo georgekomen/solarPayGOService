@@ -638,74 +638,11 @@ namespace sunamiapi.Controllers.api
                 }
                 if (ts.active_status == true)
                 {
-                    try
-                    {
-                        //switch on
-                        ts.active_status = false;
-
-                        if (allowsendsms == true)
-                        {
-                            sendSms ss = new sendSms();
-                            ss.sendSmsThroughGateway(sim_no, "smsc$0%$0%");
-                        }
-                        int sl1 = se.tbl_switch_logs.Where(h => h.customer_id == customer_id).Max(j => j.Id);
-                        tbl_switch_logs sl = se.tbl_switch_logs.FirstOrDefault(h => h.customer_id == customer_id && h.Id == sl1);
-                        sl.customer_id = customer_id;
-                        sl.switched_on_by = loogeduser;
-                        sl.switch_on_date = DateTime.Today;
-                        calcInvoiceBtwnDates2 cpr = new calcInvoiceBtwnDates2();
-                        try
-                        {
-                            cpr.idcalcInvoiceBtwnDates(beginDate, DateTime.Today, customer_id);
-                            sl.switch_on_payrate = cpr.Percent1.Value.ToString();
-                        }
-                        catch
-                        {
-                            sl.switch_on_payrate = "0";
-                        }
-                        
-
-                    }
-                    catch (Exception g)
-                    {
-                        res = g.Message;
-                        return res;
-                    }
+                    res = switchOn(ts, sim_no, se, customer_id, loogeduser);
                 }
                 else
                 {
-                    try
-                    {
-                        //switch off
-                        ts.active_status = true;
-
-                        if (allowsendsms == true)
-                        {
-                            sendSms ss = new sendSms();
-                            ss.sendSmsThroughGateway(sim_no, "smsc$1%$1%");
-                        }
-
-                        tbl_switch_logs sl = new tbl_switch_logs();
-                        sl.customer_id = customer_id;
-                        sl.switched_off_by = loogeduser;
-                        sl.switch_off_date = DateTime.Today;
-                        calcInvoiceBtwnDates2 cpr = new calcInvoiceBtwnDates2();
-                        try
-                        {
-                            cpr.idcalcInvoiceBtwnDates(beginDate, DateTime.Today, customer_id);
-                            sl.switch_off_payrate = cpr.Percent1.Value.ToString();
-                        }
-                        catch
-                        {
-                            sl.switch_off_payrate = "0";
-                        }                      
-                        se.tbl_switch_logs.Add(sl);
-                    }
-                    catch (Exception g)
-                    {
-                        res = g.Message;
-                        return res;
-                    }
+                    res = switchOff(ts, sim_no, se, customer_id, loogeduser);
                 }
                 res = "successfully toggled";
             }
@@ -715,6 +652,94 @@ namespace sunamiapi.Controllers.api
             }
             se.SaveChanges();
             se.Dispose();
+            return res;
+        }
+
+        public string switchOff(tbl_system ts, string sim_no, db_a0a592_sunamiEntities se, string customer_id, string loogeduser)
+        {
+            string res;
+            try
+            {
+                //switch off
+                ts.active_status = true;
+
+                if (allowsendsms == true)
+                {
+                    sendSms ss = new sendSms();
+                    ss.sendSmsThroughGateway(sim_no, "smsc$1%$1%");
+
+                    //notify the customer that he has been put on
+                    tbl_customer tc = se.tbl_customer.FirstOrDefault(g => g.customer_id == customer_id);
+                    var customernames = tc.customer_name.Split(' ');
+                    ss.sendSmsThroughGateway(tc.phone_numbers, customernames[0] + ", Sunami solar inakujulisha kuwa solar yako imewashwa");
+                }
+
+                tbl_switch_logs sl = new tbl_switch_logs();
+                sl.customer_id = customer_id;
+                sl.switched_off_by = loogeduser;
+                sl.switch_off_date = DateTime.Today;
+                calcInvoiceBtwnDates2 cpr = new calcInvoiceBtwnDates2();
+                try
+                {
+                    cpr.idcalcInvoiceBtwnDates(beginDate, DateTime.Today, customer_id);
+                    sl.switch_off_payrate = cpr.Percent1.Value.ToString();
+                }
+                catch
+                {
+                    sl.switch_off_payrate = "0";
+                }
+                se.tbl_switch_logs.Add(sl);
+                res = "";
+            }
+            catch (Exception g)
+            {
+                res = g.Message;
+            }
+            return res;
+
+        }
+
+        public string switchOn(tbl_system ts, string sim_no, db_a0a592_sunamiEntities se, string customer_id, string loogeduser)
+        {
+            string res;
+            try
+            {
+                //switch on
+                ts.active_status = false;
+
+                if (allowsendsms == true)
+                {
+                    sendSms ss = new sendSms();
+                    ss.sendSmsThroughGateway(sim_no, "smsc$0%$0%");
+
+                    //notify the customer that he has been switched off
+                    tbl_customer tc = se.tbl_customer.FirstOrDefault(g => g.customer_id == customer_id);
+                    var customernames = tc.customer_name.Split(' ');
+                    ss.sendSmsThroughGateway(tc.phone_numbers, customernames[0] + ", Sunami solar inakujulisha kuwa solar yako inazimwa leo kutokana na deni. Tafadhali lipa ili iwashwe tena");
+                }
+                int sl1 = se.tbl_switch_logs.Where(h => h.customer_id == customer_id).Max(j => j.Id);
+                tbl_switch_logs sl = se.tbl_switch_logs.FirstOrDefault(h => h.customer_id == customer_id && h.Id == sl1);
+                sl.customer_id = customer_id;
+                sl.switched_on_by = loogeduser;
+                sl.switch_on_date = DateTime.Today;
+                calcInvoiceBtwnDates2 cpr = new calcInvoiceBtwnDates2();
+                try
+                {
+                    cpr.idcalcInvoiceBtwnDates(beginDate, DateTime.Today, customer_id);
+                    sl.switch_on_payrate = cpr.Percent1.Value.ToString();
+                }
+                catch
+                {
+                    sl.switch_on_payrate = "0";
+                }
+
+                res = "";
+            }
+            catch (Exception g)
+            {
+                res = g.Message;
+                
+            }
             return res;
         }
 
