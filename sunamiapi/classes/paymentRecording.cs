@@ -132,7 +132,7 @@ namespace sunamiapi.classes
             }
         }
 
-        public void recordpayment(string msg, db_a0a592_sunamiEntities se)
+        public void recordpayment(string msg, db_a0a592_sunamiEntities se, bool sendNotification)
         {
             //if its from phone or mledger the paymode is mpesa
             payMode = "mpesa";
@@ -228,7 +228,7 @@ namespace sunamiapi.classes
                             se.SaveChanges();
                         }
                         //record in payments
-                        process_transaction(se);
+                        process_transaction(se, sendNotification);
                     }
                 }
             }
@@ -238,7 +238,7 @@ namespace sunamiapi.classes
             }
         }
 
-        public void process_transaction(db_a0a592_sunamiEntities se)
+        public void process_transaction(db_a0a592_sunamiEntities se, bool sendNotification)
         {
             tbl_customer tc1 = new tbl_customer();
             try
@@ -263,7 +263,7 @@ namespace sunamiapi.classes
                         message = "Sunami solar imepokea malipo yako ya Ksh" + mpesa_amount + " .Tafadhali tupigie simu ili utueleze accounti yako";
                         //response1.Add("message", message1);
                         //response1.Add("number", paynumber);
-                        sendSmsThroughGateway(mpesa_number);
+                        sendSmsThroughGateway(mpesa_number, sendNotification);
                         return;
                     }
                 }
@@ -344,10 +344,7 @@ namespace sunamiapi.classes
                 tp.balance = 0;                               
                 se.tbl_payments.Add(tp);
                 se.SaveChanges();
-                message1 = "Thank you for your payment of Ksh" + mpesa_amount;
-                response1.Add("message", message1);
-                response1.Add("number", paynumber);
-                preparesms(se);
+                preparesms(se, sendNotification);
                 json = "successfully recorded payment";
             }
             catch (Exception kl)
@@ -356,7 +353,7 @@ namespace sunamiapi.classes
             }
         }
 
-        private void preparesms(db_a0a592_sunamiEntities se)
+        private void preparesms(db_a0a592_sunamiEntities se, bool sendNotification)
         {
             int? paid = 0;
             int invoice = 0;
@@ -386,12 +383,11 @@ namespace sunamiapi.classes
                 {
                     message = customer_name +", Sunami solar inakushukuru kwa malipo yako ya Ksh" + mpesa_amount + ".Bado unadaiwa Ksh" + bal + " ya siku zilizopita";
                 }
-                sendSmsThroughGateway(paynumber);
+                sendSmsThroughGateway(paynumber, sendNotification);
             }
             catch { }
 
         }
-
 
         private void sendSmsThroughPhone()
         {
@@ -399,10 +395,14 @@ namespace sunamiapi.classes
             json = JsonConvert.SerializeObject(response1, Formatting.Indented);
         }
 
-        public void sendSmsThroughGateway(string num)
+        public void sendSmsThroughGateway(string num, bool sendNotification)
         {
-            sendSms ss = new sendSms();
-            ss.sendSmsThroughGateway(num, message);
+            if(sendNotification == true)
+            {
+                sendSms ss = new sendSms();
+                ss.sendSmsThroughGateway(num, message);
+            }
+            
         }
 
     }

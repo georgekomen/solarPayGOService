@@ -796,7 +796,7 @@ namespace sunamiapi.Controllers.api
                     {
                         //process unprocessed payments
                         paymentRecording pr = new paymentRecording();
-                        pr.recordpayment(tmp.Message.ToString(), se);
+                        pr.recordpayment(tmp.Message.ToString(), se, false);
                     }
                     mp.Add(new
                     {
@@ -934,7 +934,7 @@ namespace sunamiapi.Controllers.api
                     {
                         //process unprocessed payments
                         paymentRecording pr = new paymentRecording();
-                        pr.recordpayment(tmp.Message.ToString(), se);
+                        pr.recordpayment(tmp.Message.ToString(), se, false);
                     }
                     mp.Add(new
                     {
@@ -1086,7 +1086,7 @@ namespace sunamiapi.Controllers.api
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             //find in class
             paymentRecording pr = new classes.paymentRecording();
-            pr.recordpayment(msg1, se);
+            pr.recordpayment(msg1, se, false);
             string res = pr.Json;
             se.Dispose();
         }
@@ -1147,7 +1147,7 @@ namespace sunamiapi.Controllers.api
 
             }
             pr.Phone_imei = imei_no;
-            pr.recordpayment(msg1, se);
+            pr.recordpayment(msg1, se, true);
             string res = pr.Json;
             se.Dispose();
             return res;
@@ -1910,9 +1910,9 @@ namespace sunamiapi.Controllers.api
                 pr.PayMode = PayMode;
                 pr.Code = Code;
                 pr.Id = Id;
-                pr.process_transaction(se);
+                pr.process_transaction(se, true);
                 res += pr.Json;
-                se.Dispose();
+                //se.Dispose();
                 return res;
 
             }
