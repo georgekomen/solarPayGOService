@@ -19,12 +19,9 @@ namespace sunamiapi.classes
         private string id;
         private string payMode;
         private string json;
-        private int bal_record;
-        private int? bal;
         private DateTime mdate; //mpesa message date
         private string mpesa_amount;
         private string paynumber;
-        private DateTime to_this_day;
         private Dictionary<string, string> response1;//hold parameters for message reply
         private string phone_imei;
         private string mpesa_number;
@@ -309,8 +306,6 @@ namespace sunamiapi.classes
                 }
                 //if not already recorded get package amount-calculate balances and dates
                 tbl_customer tc = se.tbl_customer.FirstOrDefault(i => i.customer_id == id);
-                string ts = se.tbl_customer.FirstOrDefault(o => o.customer_id == tc.customer_id).package_type;
-                int amount_per_daya = se.tbl_packages.FirstOrDefault(k => k.type == ts).amount_per_day;
                 tbl_payments tp = new tbl_payments();
                 //if payment was made before installation then credit payment as made on that installation date
                 if (tc.install_date > mdate)
@@ -345,53 +340,14 @@ namespace sunamiapi.classes
                 {
                     tp.date_recorded = DateTime.Now;
                 }
-                             
-                //calculate number of days from amount payed
-                try
-                {
 
-                    //continuing payment
-                    int tp1 = se.tbl_payments.Where(i => i.customer_id == id).Max(i => i.Id);
-                    tbl_payments tpp = se.tbl_payments.FirstOrDefault(i => i.Id == tp1);
-                    //handle balances--------------------------------------------------------------------------
-                    try
-                    {
-                        //get balance-catch if bal is null
-                        bal = tpp.balance;
-                    }
-                    catch
-                    {
-                        bal = 0;
-                    }
-                    string bal1 = bal.ToString();
-                    int total2 = (mpesa_amount1 + int.Parse(bal1));
-                    int add_days = total2 / amount_per_daya;
-                    //get balance
-                    bal_record = total2 % amount_per_daya; //get modulus---balance
-                    //save balance
-                    if (total2 < amount_per_daya)
-                    {
-                        tp.balance = total2;
-                    }
-                    else
-                    {
-                        tp.balance = bal_record;
-                    }
-                    //handle balances-----------------------------------------------------------------------------
-                   
-                }
-                catch
-                {
-                    //handle balances-----------------------------------------------------------------------------
-                    bal_record = mpesa_amount1 % amount_per_daya; //get modulus---balance
-                    //save balance
-                    tp.balance = bal_record;
-                    //handle balances-----------------------------------------------------------------------------
-                }
+                tp.balance = 0;
+                
+                 
                 se.tbl_payments.Add(tp);
                 se.SaveChanges();
                 json = "successfully recorded payment";
-                message1 = "Thank you for your payment of Ksh" + mpesa_amount + ". Your system will be active till " + to_this_day.ToString();
+                message1 = "Thank you for your payment of Ksh" + mpesa_amount;
 
                 response1.Add("message", message1);
                 response1.Add("number", paynumber);
@@ -399,6 +355,7 @@ namespace sunamiapi.classes
             }
             catch (Exception kl)
             {
+                json = kl.StackTrace;
                 //failed to process payment-payment number not in db
                 //sending sms to unrecorded phone numbers
                 message = "Sunami solar imepokea malipo yako ya Ksh" + mpesa_amount + " .Tafadhali tupigie simu ili utueleze accounti yako";
