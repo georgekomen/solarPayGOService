@@ -356,7 +356,7 @@ namespace sunamiapi.classes
             }
             catch (Exception kl)
             {
-               json = kl.ToString();                
+                         
             }
         }
 
