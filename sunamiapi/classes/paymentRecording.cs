@@ -16,7 +16,7 @@ namespace sunamiapi.classes
         private string code;
         private string message1;
         private string message;//sms
-        private string id;
+        private string customer_id;
         private string payMode;
         private string json;
         private DateTime mdate; //mpesa message date
@@ -62,7 +62,7 @@ namespace sunamiapi.classes
         {
             set
             {
-                id = value;
+                customer_id = value;
             }
         }
 
@@ -244,6 +244,7 @@ namespace sunamiapi.classes
 
         public void process_transaction(db_a0a592_sunamiEntities se)
         {
+            tbl_customer tc1 = new tbl_customer();
             try
             {
                 if (!string.IsNullOrEmpty(paynumber) || !string.IsNullOrWhiteSpace(paynumber))
@@ -251,39 +252,45 @@ namespace sunamiapi.classes
                     //get customer id- for mpesa and mledger from their phone numbers
                     try
                     {
-                        tbl_customer tc1 = se.tbl_customer.FirstOrDefault(i => i.phone_numbers == paynumber || i.phone_numbers2 == paynumber || i.phone_numbers3 == paynumber);
-
+                        tc1 = se.tbl_customer.FirstOrDefault(i => i.phone_numbers == paynumber || i.phone_numbers2 == paynumber || i.phone_numbers3 == paynumber);
                         mpesa_number = paynumber;
-                        id = tc1.customer_id;
+                        customer_id = tc1.customer_id;
                         var customernames = tc1.customer_name.Split(' ');
                         customer_name = customernames[0];
-
                     }
                     catch(Exception g)
                     {
                         //phone number making payments not found in db
                         json = g.Message;
+                        //failed to process payment-payment number not in db
+                        //sending sms to unrecorded phone numbers
+                        message = "Sunami solar imepokea malipo yako ya Ksh" + mpesa_amount + " .Tafadhali tupigie simu ili utueleze accounti yako";
+                        //response1.Add("message", message1);
+                        //response1.Add("number", paynumber);
+                        sendSmsThroughGateway(mpesa_number);
                         return;
                     }
                 }
-
                 //get number of customer from cash payment's id number-number that receives sms
                 try
                 {
-                    tbl_customer tc1 = se.tbl_customer.FirstOrDefault(i => i.customer_id == id);
+                    tc1 = se.tbl_customer.FirstOrDefault(i => i.customer_id == customer_id);
+                    customer_id = tc1.customer_id;
+                    var customernames = tc1.customer_name.Split(' ');
+                    customer_name = customernames[0];
                     paynumber = tc1.phone_numbers;
                 }
                 catch (Exception g)
                 {
                     json = g.Message;
+                    return;
                 }
-
                 int mpesa_amount1 = int.Parse(mpesa_amount);
                 //paymode
                 //check if same payment had been recorded
                 try
                 {
-                    int tpp1 = se.tbl_payments.Where(i => i.amount_payed == mpesa_amount1 && i.payment_date == mdate && i.customer_id == id && i.transaction_code == code).Count();
+                    int tpp1 = se.tbl_payments.Where(i => i.amount_payed == mpesa_amount1 && i.payment_date == mdate && i.customer_id == customer_id && i.transaction_code == code).Count();
                     if (tpp1 >= 1)
                     {
                         json = "payment already recorded";
@@ -304,20 +311,18 @@ namespace sunamiapi.classes
                 {
                     json = k.Message;
                 }
-                //if not already recorded get package amount-calculate balances and dates
-                tbl_customer tc = se.tbl_customer.FirstOrDefault(i => i.customer_id == id);
                 tbl_payments tp = new tbl_payments();
                 //if payment was made before installation then credit payment as made on that installation date
-                if (tc.install_date > mdate)
+                if (tc1.install_date > mdate)
                 {
-                    tp.payment_date = tc.install_date;
+                    tp.payment_date = tc1.install_date;
                 }
                 else
                 {
                     tp.payment_date = mdate;
                 }
                 tp.amount_payed = mpesa_amount1;
-                tp.customer_id = id;
+                tp.customer_id = customer_id;
                 tp.payment_method = payMode;
                 tp.transaction_code = code;
                 if (!string.IsNullOrEmpty(code))
@@ -340,46 +345,40 @@ namespace sunamiapi.classes
                 {
                     tp.date_recorded = DateTime.Now;
                 }
-
-                tp.balance = 0;
-                
-                 
+                tp.balance = 0;                               
                 se.tbl_payments.Add(tp);
                 se.SaveChanges();
-                json = "successfully recorded payment";
                 message1 = "Thank you for your payment of Ksh" + mpesa_amount;
-
                 response1.Add("message", message1);
                 response1.Add("number", paynumber);
-                preparesms(se); 
+                preparesms(se);
+                json = "successfully recorded payment";
             }
             catch (Exception kl)
             {
-                json = kl.StackTrace;
-                //failed to process payment-payment number not in db
-                //sending sms to unrecorded phone numbers
-                message = "Sunami solar imepokea malipo yako ya Ksh" + mpesa_amount + " .Tafadhali tupigie simu ili utueleze accounti yako";
-                //response1.Add("message", message1);
-                //response1.Add("number", paynumber);
-                sendSmsThroughGateway(mpesa_number);
+               json = kl.ToString();                
             }
         }
 
         private void preparesms(db_a0a592_sunamiEntities se)
         {
+            int? paid = 0;
+            int invoice = 0;
             try
             {
-                //get installation date
-                DateTime? instd = se.tbl_customer.FirstOrDefault(h => h.customer_id == id).install_date;//Value.Date.ToString("dd/MM/yyyy");
-                                                                                                        //add all payments....................................
-                int? paid = se.tbl_payments.Where(g => g.customer_id == id).Sum(t => t.amount_payed);
-                //get when he should make next payment -- get todays date
-                DateTime toda = DateTime.Today;
-                //get invoice to date...............................
-                int invoice = 0;
-                extra_package_invoicing ep = new classes.extra_package_invoicing();
-                invoice += ep.extr_invoice(instd, toda, id);
-                //or how much he still needs to buy
+                try
+                {
+                    //get installation date
+                    DateTime? instd = se.tbl_customer.FirstOrDefault(h => h.customer_id == customer_id).install_date;//Value.Date.ToString("dd/MM/yyyy");
+                                                                                                            //add all payments....................................
+                    paid = se.tbl_payments.Where(g => g.customer_id == customer_id).Sum(t => t.amount_payed);
+                    //get when he should make next payment -- get todays date
+                    DateTime toda = DateTime.Today;
+                    //get invoice to date...............................
+                    extra_package_invoicing ep = new classes.extra_package_invoicing();
+                    invoice += ep.extr_invoice(instd, toda, customer_id);
+                    //or how much he still needs to buy
+                } catch { }
                 int? bal = invoice - paid;
 
                 if (bal <= 0)
@@ -393,10 +392,7 @@ namespace sunamiapi.classes
                 }
                 sendSmsThroughGateway(paynumber);
             }
-            catch {
-                message = customer_name + ", Sunami solar inakushukuru kwa malipo yako ya Ksh" + mpesa_amount;
-                sendSmsThroughGateway(paynumber);
-            }
+            catch { }
 
         }
 
