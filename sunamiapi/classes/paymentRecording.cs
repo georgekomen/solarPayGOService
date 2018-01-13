@@ -393,7 +393,10 @@ namespace sunamiapi.classes
                 }
                 sendSmsThroughGateway(paynumber);
             }
-            catch { }
+            catch {
+                message = customer_name + ", Sunami solar inakushukuru kwa malipo yako ya Ksh" + mpesa_amount;
+                sendSmsThroughGateway(paynumber);
+            }
 
         }
 
