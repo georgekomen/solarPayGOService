@@ -229,17 +229,13 @@ namespace sunamiapi.classes
                         }
                         //record in payments
                         process_transaction(se);
-                        se.Dispose();                   
                     }
-
-
                 }
             }
             catch (Exception k)
             {
                 json = k.Message;
             }
-
         }
 
         public void process_transaction(db_a0a592_sunamiEntities se)
@@ -356,7 +352,7 @@ namespace sunamiapi.classes
             }
             catch (Exception kl)
             {
-                         
+                
             }
         }
 

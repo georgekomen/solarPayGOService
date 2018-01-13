@@ -947,6 +947,7 @@ namespace sunamiapi.Controllers.api
                 }
                 catch
                 {
+
                 }
             }
             se.Dispose();
