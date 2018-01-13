@@ -1,4 +1,4 @@
-﻿using sunamiapi.classes;
+﻿/*using sunamiapi.classes;
 using sunamiapi.Models.DatabaseModel;
 using System;
 using System.Collections.Generic;
@@ -151,4 +151,4 @@ namespace sunamiapi.codeIncludes
             return TotalPercent;
         }
     }
-}
+}*/

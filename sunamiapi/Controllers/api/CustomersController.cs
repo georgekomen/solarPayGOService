@@ -55,6 +55,7 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public List<paymentRatesClassPerClient> GetPaymentActiveRates([FromBody] JArray value)
         {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             List<paymentRatesClassPerClient> list = new List<paymentRatesClassPerClient>();
             try
             {
@@ -65,15 +66,20 @@ namespace sunamiapi.Controllers.api
                 //yyyy-mm-dd e.g. 2017-04-05 - date1
                 beginDate = getDate(startDate);
                 end1 = getDate(endDate);
-                list = calcInvoiceBtwnDatesm(beginDate, end1, true).OrderByDescending(g => g.Percent).ToList();
+                //get whole list of customers
+                List<tbl_customer> list2 = se.tbl_customer.Where(g => g.install_date <= end1 && g.active_status == true).ToList();
+
+                list = calcInvoiceBtwnDatesm(beginDate, end1, list2).OrderByDescending(g => g.Percent).ToList();
             }
             catch
             {
                 string enddate = DateTime.Today.ToString();
                 end1 = Convert.ToDateTime(enddate, info);
-                list = calcInvoiceBtwnDatesm(beginDate, end1, true).OrderByDescending(g => g.Percent).ToList();
+                List<tbl_customer> list2 = se.tbl_customer.Where(g => g.install_date <= end1 && g.active_status == true).ToList();
+
+                list = calcInvoiceBtwnDatesm(beginDate, end1, list2).OrderByDescending(g => g.Percent).ToList();
             }
-            
+            se.Dispose();
             return list;
 
         }
@@ -81,7 +87,9 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public List<paymentRatesClassPerClient> GetPaymentInactiveRates([FromBody] JArray value)
         {
-            /*List<paymentRatesClassPerClient> list = new List<paymentRatesClassPerClient>();
+            /*db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+
+            List<paymentRatesClassPerClient> list = new List<paymentRatesClassPerClient>();
             try
             {
                 JToken token = JObject.Parse(value[0].ToString());
@@ -91,20 +99,24 @@ namespace sunamiapi.Controllers.api
                 //yyyy-mm-dd e.g. 2017-04-05 - date1
                 beginDate = getDate(startDate);
                 end1 = getDate(endDate);
-                list = calcInvoiceBtwnDatesm(beginDate, end1, false).OrderByDescending(g => g.Percent).ToList();
+                List<tbl_customer> list2 = se.tbl_customer.Where(g => g.install_date <= end1 && g.active_status == false).ToList();
+
+                list = calcInvoiceBtwnDatesm(beginDate, end1, list2).OrderByDescending(g => g.Percent).ToList();
             }
             catch
             {
                 string enddate = DateTime.Today.ToString();
                 end1 = Convert.ToDateTime(enddate, info);
-                list = calcInvoiceBtwnDatesm(beginDate, end1, false).OrderByDescending(g => g.Percent).ToList();
-            }
+                List<tbl_customer> list2 = se.tbl_customer.Where(g => g.install_date <= end1 && g.active_status == false).ToList();
 
+                list = calcInvoiceBtwnDatesm(beginDate, end1, list2).OrderByDescending(g => g.Percent).ToList();
+            }
+            se.Dispose();
             return list;*/
             return null;
         }
 
-        public List<paymentRatesClassPerClient> calcInvoiceBtwnDatesm(DateTime start, DateTime end, bool getbaddebts)
+        public List<paymentRatesClassPerClient> calcInvoiceBtwnDatesm(DateTime start, DateTime end, List<tbl_customer> list2)
         {
             tbl_customer tableCustomer;
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
@@ -115,11 +127,9 @@ namespace sunamiapi.Controllers.api
             string St;
             string En;
 
-            //get whole list of customers
-            var list2 = se.tbl_customer.Where(g => g.install_date <= end && g.active_status == getbaddebts).Select(h => new { active = h.active_status, name = h.customer_name, id = h.customer_id, ind = h.install_date, pt = h.package_type, phone = h.phone_numbers, phone2 = h.phone_numbers2, phone3 = h.phone_numbers3, village = h.village_name }).ToList();
             foreach (var tc1 in list2)
             {
-                tableCustomer = se.tbl_customer.FirstOrDefault(g => g.customer_id == tc1.id);
+                tableCustomer = se.tbl_customer.FirstOrDefault(g => g.customer_id == tc1.customer_id);
                 //check if active or uninstalled
                 Comment = null;
                 Count = 0;
@@ -128,12 +138,12 @@ namespace sunamiapi.Controllers.api
                 //get begin date --- start
                 //get end date ----end
                 //calculate number of days
-                DateTime? instal_d = tc1.ind;
+                DateTime? instal_d = tc1.install_date;
                 if (instal_d >= start)
                 {
                     //if installation date is greater than the start picked date---it had not been
                     //installed by then
-                    if (tc1.active == true)
+                    if (tc1.active_status == true)
                     {
                         //if system is active then get number of days (end-install date)
                         En = end.Date.ToString("dd/MM/yyyy");
@@ -141,7 +151,7 @@ namespace sunamiapi.Controllers.api
                     else
                     {
                         //if not active - days= uninstall date - install date
-                        DateTime un_date = se.tbl_uninstalled_systems.FirstOrDefault(r => r.customer_id == tc1.id).uninstall_date;
+                        DateTime un_date = se.tbl_uninstalled_systems.FirstOrDefault(r => r.customer_id == tc1.customer_id).uninstall_date;
                         //Comment += "\nUninstalled";
                         En = un_date.Date.ToString("dd/MM/yyyy");
                         end = un_date;
@@ -149,16 +159,16 @@ namespace sunamiapi.Controllers.api
                     //show period
                     St = instal_d.Value.Date.ToString("dd/MM/yyyy");
 
-                    Paid = se.tbl_payments.Where(g => g.customer_id == tc1.id && g.payment_date >= instal_d && g.payment_date <= end).Sum(t => t.amount_payed);
+                    Paid = se.tbl_payments.Where(g => g.customer_id == tc1.customer_id && g.payment_date >= instal_d && g.payment_date <= end).Sum(t => t.amount_payed);
                     extraPackageInvoicing ep = new classes.extraPackageInvoicing();
-                    Count += ep.extr_invoice(instal_d, end, tc1.id);
+                    Count += ep.extr_invoice(instal_d, end, tc1.customer_id);
                     Comment += "\n" + ep.Comment;
                 }
                 else
                 {
                     //if installation date is less than the start picked date---it had been
                     //installed by then
-                    if (tc1.active == true)
+                    if (tc1.active_status == true)
                     {
                         //if system is active then get number of days (end-install date)
                         En = end.Date.ToString("dd/MM/yyyy");
@@ -166,7 +176,7 @@ namespace sunamiapi.Controllers.api
                     else
                     {
                         //if not active - days= uninstall date - install date
-                        DateTime un_date = se.tbl_uninstalled_systems.FirstOrDefault(r => r.customer_id == tc1.id).uninstall_date;
+                        DateTime un_date = se.tbl_uninstalled_systems.FirstOrDefault(r => r.customer_id == tc1.customer_id).uninstall_date;
                         // Comment += "\nUninstalled";
                         En = un_date.Date.ToString("dd/MM/yyyy");
                         end = un_date;
@@ -174,11 +184,11 @@ namespace sunamiapi.Controllers.api
                     //show period
                     St = start.Date.ToString("dd/MM/yyyy");
                     
-                    Paid = se.tbl_payments.Where(g => g.customer_id == tc1.id && g.payment_date >= start && g.payment_date <= end).Sum(t => t.amount_payed);
+                    Paid = se.tbl_payments.Where(g => g.customer_id == tc1.customer_id && g.payment_date >= start && g.payment_date <= end).Sum(t => t.amount_payed);
 
                     //get extra package amount
                     extraPackageInvoicing ep = new classes.extraPackageInvoicing();
-                    Count += ep.extr_invoice(start, end, tc1.id);
+                    Count += ep.extr_invoice(start, end, tc1.customer_id);
                     Comment += "\n" + ep.Comment;
                 }
                 int? Percent = 0;
@@ -197,7 +207,7 @@ namespace sunamiapi.Controllers.api
                 }
                 try
                 {
-                    tbl_system tse = se.tbl_system.FirstOrDefault(g => g.customer_id == tc1.id);
+                    tbl_system tse = se.tbl_system.FirstOrDefault(g => g.customer_id == tc1.customer_id);
                     if (tse.active_status == true)
                     {
                         status = true;
@@ -214,16 +224,16 @@ namespace sunamiapi.Controllers.api
 
                 li.Add(new paymentRatesClassPerClient
                 {
-                    Name = tc1.name.ToUpper(),
-                    Id = tc1.id,
+                    Name = tc1.customer_name.ToUpper(),
+                    Id = tc1.customer_id,
                     From = St,
                     To = En,
                     Amount = Paid,
                     Invoice = Count,
                     Percent = Percent,
                     Comment = Comment,
-                    Phone = tc1.phone + "\n" + tc1.phone2 + "\n" + tc1.phone3,
-                    Village = tc1.village.ToUpper(),
+                    Phone = tc1.phone_numbers + "\n" + tc1.phone_numbers2 + "\n" + tc1.phone_numbers3,
+                    Village = tc1.village_name.ToUpper(),
                     Status = status,
                     Description = tableCustomer.Description
                 });
@@ -283,8 +293,14 @@ namespace sunamiapi.Controllers.api
 
         public int? GetCalcPayRate(DateTime start, DateTime end)
         {
-            calcInvoiceBtwnDates civ = new calcInvoiceBtwnDates();
-            return civ.calcPayRate(start, end);
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            List<tbl_customer> lst = new List<tbl_customer>();
+            lst = se.tbl_customer.ToList();
+            List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
+            int? invoice = res1.Sum(t => t.Invoice);
+            int? paid = res1.Sum(r => r.Amount);
+            int? percent = (paid * 100) / invoice;
+            return percent;
         }
 
         public List<paychartclass> getPaymentChart()
@@ -657,6 +673,7 @@ namespace sunamiapi.Controllers.api
 
         public string switchOff(tbl_system ts, string sim_no, db_a0a592_sunamiEntities se, string customer_id, string loogeduser)
         {
+            tbl_customer tc = new tbl_customer();
             string res;
             try
             {
@@ -669,7 +686,7 @@ namespace sunamiapi.Controllers.api
                     ss.sendSmsThroughGateway(sim_no, "smsc$1%$1%");
 
                     //notify the customer that he has been put on
-                    tbl_customer tc = se.tbl_customer.FirstOrDefault(g => g.customer_id == customer_id);
+                    tc = se.tbl_customer.FirstOrDefault(g => g.customer_id == customer_id);
                     var customernames = tc.customer_name.Split(' ');
                     ss.sendSmsThroughGateway(tc.phone_numbers, customernames[0] + ", Sunami solar inakujulisha kuwa solar yako imewashwa");
                 }
@@ -678,11 +695,12 @@ namespace sunamiapi.Controllers.api
                 sl.customer_id = customer_id;
                 sl.switched_off_by = loogeduser;
                 sl.switch_off_date = DateTime.Today;
-                calcInvoiceBtwnDates2 cpr = new calcInvoiceBtwnDates2();
                 try
                 {
-                    cpr.idcalcInvoiceBtwnDates(beginDate, DateTime.Today, customer_id);
-                    sl.switch_off_payrate = cpr.Percent1.Value.ToString();
+                    List<tbl_customer> lst = new List<tbl_customer>();
+                    lst.Add(tc);
+                    List< paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
+                    sl.switch_off_payrate = res1[0].Percent.Value.ToString();
                 }
                 catch
                 {
@@ -701,6 +719,7 @@ namespace sunamiapi.Controllers.api
 
         public string switchOn(tbl_system ts, string sim_no, db_a0a592_sunamiEntities se, string customer_id, string loogeduser)
         {
+            tbl_customer tc = new tbl_customer();
             string res;
             try
             {
@@ -713,7 +732,7 @@ namespace sunamiapi.Controllers.api
                     ss.sendSmsThroughGateway(sim_no, "smsc$0%$0%");
 
                     //notify the customer that he has been switched off
-                    tbl_customer tc = se.tbl_customer.FirstOrDefault(g => g.customer_id == customer_id);
+                    tc = se.tbl_customer.FirstOrDefault(g => g.customer_id == customer_id);
                     var customernames = tc.customer_name.Split(' ');
                     ss.sendSmsThroughGateway(tc.phone_numbers, customernames[0] + ", Sunami solar inakujulisha kuwa solar yako inazimwa leo kutokana na deni. Tafadhali lipa ili iwashwe tena");
                 }
@@ -722,11 +741,12 @@ namespace sunamiapi.Controllers.api
                 sl.customer_id = customer_id;
                 sl.switched_on_by = loogeduser;
                 sl.switch_on_date = DateTime.Today;
-                calcInvoiceBtwnDates2 cpr = new calcInvoiceBtwnDates2();
                 try
                 {
-                    cpr.idcalcInvoiceBtwnDates(beginDate, DateTime.Today, customer_id);
-                    sl.switch_on_payrate = cpr.Percent1.Value.ToString();
+                    List<tbl_customer> lst = new List<tbl_customer>();
+                    lst.Add(tc);
+                    List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
+                    sl.switch_off_payrate = res1[0].Percent.Value.ToString();
                 }
                 catch
                 {
@@ -972,12 +992,13 @@ namespace sunamiapi.Controllers.api
                 DateTime start1 = Convert.ToDateTime(beginDate, info);
                 DateTime end1 = Convert.ToDateTime(enddate, info);
                 //get statistics
-                calcInvoiceBtwnDates2 inv = new calcInvoiceBtwnDates2();
-                inv.idcalcInvoiceBtwnDates(start1, end1, id);
-                daily_invoice = inv.Pack_amount1;
-                total_invoice = inv.Count1;
-                paid = inv.Paid1;
-                not_paid = inv.Count1 - inv.Paid1;
+                List<tbl_customer> lst = new List<tbl_customer>();
+                lst = se.tbl_customer.Where(g => g.customer_id == id).ToList();
+                List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
+                daily_invoice = 0; //TODO
+                total_invoice = res1[0].Invoice;
+                paid = res1[0].Amount;
+                not_paid = res1[0].Invoice - res1[0].Amount;
                 percent = (paid * 100) / total_invoice;
                 name = se.tbl_customer.FirstOrDefault(g => g.customer_id == id).customer_name;
                 try
