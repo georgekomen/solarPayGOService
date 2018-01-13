@@ -291,12 +291,11 @@ namespace sunamiapi.Controllers.api
             return result;
         }
 
-        public int? GetCalcPayRate(DateTime start, DateTime end)
+        public int? GetCalcPayRate(DateTime start, DateTime end, db_a0a592_sunamiEntities se)
         {
-            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             List<tbl_customer> lst = new List<tbl_customer>();
             lst = se.tbl_customer.ToList();
-            List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
+            List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(start, end, lst);
             int? invoice = res1.Sum(t => t.Invoice);
             int? paid = res1.Sum(r => r.Amount);
             int? percent = (paid * 100) / invoice;
@@ -305,35 +304,27 @@ namespace sunamiapi.Controllers.api
 
         public List<paychartclass> getPaymentChart()
         {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+
             //getting from db
             List<int?> pvals = new List<int?>();
+            List<string> chartlabels = new List<string>();
 
-            List<chartsdates> g = new List<chartsdates>();
-            g.Add(new chartsdates() { Bg = beginDate, En = Convert.ToDateTime("07/01/2016", info) });
-            g.Add(new chartsdates() { Bg = beginDate, En = Convert.ToDateTime("08/01/2016", info) });
-            g.Add(new chartsdates() { Bg = beginDate, En = Convert.ToDateTime("09/01/2016", info) });
-            g.Add(new chartsdates() { Bg = beginDate, En = Convert.ToDateTime("10/01/2016", info) });
-            g.Add(new chartsdates() { Bg = beginDate, En = Convert.ToDateTime("11/01/2016", info) });
-            g.Add(new chartsdates() { Bg = beginDate, En = Convert.ToDateTime("12/01/2016", info) });
-            g.Add(new chartsdates() { Bg = beginDate, En = Convert.ToDateTime("02/01/2017", info) });
-            g.Add(new chartsdates() { Bg = beginDate, En = Convert.ToDateTime("03/01/2017", info) });
-            g.Add(new chartsdates() { Bg = beginDate, En = Convert.ToDateTime("04/01/2017", info) });
-            g.Add(new chartsdates() { Bg = beginDate, En = Convert.ToDateTime("05/01/2017", info) });
-            g.Add(new chartsdates() { Bg = beginDate, En = Convert.ToDateTime("06/01/2017", info) });
-            g.Add(new chartsdates() { Bg = beginDate, En = Convert.ToDateTime("07/01/2017", info) });
-            g.Add(new chartsdates() { Bg = beginDate, En = Convert.ToDateTime("08/01/2017", info) });
-            g.Add(new chartsdates() { Bg = beginDate, En = DateTime.Today });
-            foreach (var l in g)
+            for(DateTime endDate = beginDate; endDate <= DateTime.Today; endDate = endDate.AddMonths(1))
             {
-                int? percent = GetCalcPayRate(l.Bg, l.En);
+                string monthName = info.GetMonthName(endDate.Month).ToString();
+                string month = monthName.Substring(0, 3) + "," + endDate.Year.ToString().Substring(1, 3);
+                chartlabels.Add(month);
+                int? percent = GetCalcPayRate(beginDate, endDate, se);
                 pvals.Add(percent);
             }
+            
             List<chartdata> chartdata = new List<chartdata>();
             chartdata.Add(new chartdata() { data = pvals, label = "payment rate" });
-
-            List<string> chartlabels = new List<string>(new string[] { "July 2016", "August", "September", "October", "November", "December 2016", "January 2017", "February", "March","April", "May", "June", "July","August" });
             List<paychartclass> datatoreturn = new List<paychartclass>();
             datatoreturn.Add(new paychartclass() { LineChartData = chartdata, LineChartLabels = chartlabels });
+            se.Dispose();
+
             return datatoreturn;
         }
 
@@ -986,16 +977,11 @@ namespace sunamiapi.Controllers.api
             List<payrecordClass> pd = new List<payrecordClass>();
             try
             {
-                string enddate = DateTime.Today.ToString();
-                DateTimeFormatInfo info = new CultureInfo("en-us", false).DateTimeFormat;
-                //get dates and conver to us format
-                DateTime start1 = Convert.ToDateTime(beginDate, info);
-                DateTime end1 = Convert.ToDateTime(enddate, info);
                 //get statistics
                 List<tbl_customer> lst = new List<tbl_customer>();
                 lst = se.tbl_customer.Where(g => g.customer_id == id).ToList();
                 List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
-                daily_invoice = 0; //TODO
+                daily_invoice = 0; //@TODO
                 total_invoice = res1[0].Invoice;
                 paid = res1[0].Amount;
                 not_paid = res1[0].Invoice - res1[0].Amount;
@@ -1006,7 +992,7 @@ namespace sunamiapi.Controllers.api
                     var list = (from tp in se.tbl_payments
                                 join tc in se.tbl_customer on tp.customer_id equals tc.customer_id
                                 orderby tp.payment_date descending
-                                where tp.payment_date >= start1 && tp.payment_date <= end1 && tp.customer_id == id
+                                where tp.payment_date >= beginDate && tp.payment_date <= end1 && tp.customer_id == id
                                 select new { tc.customer_name, tp.customer_id, tp.amount_payed, tp.payment_date, tp.payment_method, pp = tp.phone_number, TransactionCode = tp.transaction_code, pr = tp.person_recording }
                               ).ToList();
                     foreach (var it in list)
@@ -1933,7 +1919,7 @@ namespace sunamiapi.Controllers.api
                 pr.Id = Id;
                 pr.process_transaction(se, true);
                 res += pr.Json;
-                //se.Dispose();
+                se.Dispose();
                 return res;
 
             }
