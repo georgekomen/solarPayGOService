@@ -1,4 +1,5 @@
 ﻿using sunamiapi.classes;
+using sunamiapi.Controllers.api;
 using sunamiapi.Models.DatabaseModel;
 using System;
 using System.Collections.Generic;
@@ -80,8 +81,17 @@ namespace sunamiapi.codeIncludes
             int customerNumber = se.tbl_customer.Where(k => k.active_status == true).Count();
             int issues = se.tbl_issues.Where(g => g.date >= start && g.date <= end).Count();
             int maintenance = se.tbl_issues.Where(g => g.date >= start && g.date <= end && g.status == "solved").Count();
-            calcInvoiceBtwnDates civ = new calcInvoiceBtwnDates();
-            int? payrate = civ.calcPayRate(beginDate, end);
+
+            List<tbl_customer> lst = new List<tbl_customer>();
+            lst = se.tbl_customer.ToList();
+            CustomersController cc = new CustomersController();
+            List<paymentRatesClassPerClient> res1 =  cc.calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
+            int? invoice = res1.Sum(t => t.Invoice);
+            int? paid = res1.Sum(r => r.Amount);
+            int? percent = (paid * 100) / invoice;
+
+
+            int? payrate = percent;
             int newInstallations = se.tbl_customer.Where(f => f.install_date >= start && f.install_date <= end).Count();
             int remoteControls = se.tbl_system.Where(g => g.imei_number != "" && g.imei_number.Length >= 13).Count();
             int uninstallations = se.tbl_uninstalled_systems.Where(h => h.uninstall_date >= start && h.uninstall_date <= end).Count();
