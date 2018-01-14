@@ -85,7 +85,7 @@ namespace sunamiapi.codeIncludes
             List<tbl_customer> lst = new List<tbl_customer>();
             lst = se.tbl_customer.ToList();
             CustomersController cc = new CustomersController();
-            List<paymentRatesClassPerClient> res1 =  cc.calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
+            List<paymentRatesClassPerClient> res1 =  cc.calcInvoiceBtwnDatesm(start, end, lst);
             int? invoice = res1.Sum(t => t.Invoice);
             int? paid = res1.Sum(r => r.Amount);
             int? percent = (paid * 100) / invoice;
