@@ -118,7 +118,7 @@ namespace sunamiapi.Controllers.api
 
         public List<paymentRatesClassPerClient> calcInvoiceBtwnDatesm(DateTime start, DateTime end, List<tbl_customer> list2)
         {
-            tbl_customer tableCustomer;
+            tbl_customer tableCustomer = new tbl_customer();
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             List<paymentRatesClassPerClient> li = new List<paymentRatesClassPerClient>();
             string Comment;
@@ -130,81 +130,51 @@ namespace sunamiapi.Controllers.api
             foreach (var tc1 in list2)
             {
                 tableCustomer = se.tbl_customer.FirstOrDefault(g => g.customer_id == tc1.customer_id);
-                //check if active or uninstalled
                 Comment = null;
                 Count = 0;
                 Paid = 0;
                 bool? status = false;
-                //get begin date --- start
-                //get end date ----end
-                //calculate number of days
-                DateTime? instal_d = tc1.install_date;
-                if (instal_d >= start)
+                if (tc1.install_date >= start)
                 {
-                    //if installation date is greater than the start picked date---it had not been
-                    //installed by then
-                    if (tc1.active_status == true)
-                    {
-                        //if system is active then get number of days (end-install date)
-                        En = end.Date.ToString("dd/MM/yyyy");
-                    }
-                    else
-                    {
-                        //if not active - days= uninstall date - install date
-                        DateTime un_date = se.tbl_uninstalled_systems.FirstOrDefault(r => r.customer_id == tc1.customer_id).uninstall_date;
-                        //Comment += "\nUninstalled";
-                        En = un_date.Date.ToString("dd/MM/yyyy");
-                        end = un_date;
-                    }
-                    //show period
-                    St = instal_d.Value.Date.ToString("dd/MM/yyyy");
-
-                    Paid = se.tbl_payments.Where(g => g.customer_id == tc1.customer_id && g.payment_date >= instal_d && g.payment_date <= end).Sum(t => t.amount_payed);
-                    extraPackageInvoicing ep = new classes.extraPackageInvoicing();
-                    Count += ep.extr_invoice(instal_d, end, tc1.customer_id);
-                    Comment += "\n" + ep.Comment;
+                    St = tc1.install_date.Value.Date.ToString("dd/MM/yyyy");
                 }
                 else
                 {
-                    //if installation date is less than the start picked date---it had been
-                    //installed by then
-                    if (tc1.active_status == true)
-                    {
-                        //if system is active then get number of days (end-install date)
-                        En = end.Date.ToString("dd/MM/yyyy");
-                    }
-                    else
-                    {
-                        //if not active - days= uninstall date - install date
-                        DateTime un_date = se.tbl_uninstalled_systems.FirstOrDefault(r => r.customer_id == tc1.customer_id).uninstall_date;
-                        // Comment += "\nUninstalled";
-                        En = un_date.Date.ToString("dd/MM/yyyy");
-                        end = un_date;
-                    }
-                    //show period
                     St = start.Date.ToString("dd/MM/yyyy");
-                    
-                    Paid = se.tbl_payments.Where(g => g.customer_id == tc1.customer_id && g.payment_date >= start && g.payment_date <= end).Sum(t => t.amount_payed);
-
-                    //get extra package amount
-                    extraPackageInvoicing ep = new classes.extraPackageInvoicing();
-                    Count += ep.extr_invoice(start, end, tc1.customer_id);
-                    Comment += "\n" + ep.Comment;
                 }
+                En = end.Date.ToString("dd/MM/yyyy");
+                try
+                {
+                    Paid = se.tbl_payments.Where(g => g.customer_id == tc1.customer_id && g.payment_date >= start && g.payment_date <= end).Sum(t => t.amount_payed);
+                }
+                catch
+                {
+                    Paid = 0;
+                }
+
+
+                extraPackageInvoicing ep = new classes.extraPackageInvoicing();
+                Count += ep.extr_invoice(start, end, tc1.customer_id);
+                Comment += "\n" + ep.Comment;
+
+                if (Paid == null)
+                {
+                    Paid = 0;
+                }
+
                 int? Percent = 0;
                 try
                 {
                     Percent = (100 * Paid) / Count;
                 }
-                catch { }
+                catch {
+
+                }
                 if (Percent == null)
                 {
                     Percent = 0;
                 }
-                if (Paid == null)
-                {
-                    Paid = 0;
-                }
+                
                 try
                 {
                     tbl_system tse = se.tbl_system.FirstOrDefault(g => g.customer_id == tc1.customer_id);
@@ -238,8 +208,6 @@ namespace sunamiapi.Controllers.api
                     Description = tableCustomer.Description
                 });
             }
-            //List<paymentRatesClass> li2 = new List<paymentRatesClass>();
-            //li2.Add(new paymentRatesClass() { TotalPaid = Total_paid.ToString(), TotalInvoice = Total_count.ToString(), Percent = TotalPercent.ToString(), ClientPayRates = li });
             se.Dispose();
             return li;
         }
@@ -293,12 +261,22 @@ namespace sunamiapi.Controllers.api
 
         public int? GetCalcPayRate(DateTime start, DateTime end, db_a0a592_sunamiEntities se)
         {
+            int? percent = 0;
+            int? paid = 0;
+            int? invoice = 0;
             List<tbl_customer> lst = new List<tbl_customer>();
             lst = se.tbl_customer.ToList();
             List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(start, end, lst);
-            int? invoice = res1.Sum(t => t.Invoice);
-            int? paid = res1.Sum(r => r.Amount);
-            int? percent = (paid * 100) / invoice;
+            
+            try
+            {
+                invoice = res1.Sum(t => t.Invoice);
+                paid = res1.Sum(r => r.Amount);
+                percent = (paid * 100) / invoice;
+            }
+            catch {
+                percent = 0;
+            }
             return percent;
         }
 
@@ -310,7 +288,7 @@ namespace sunamiapi.Controllers.api
             List<int?> pvals = new List<int?>();
             List<string> chartlabels = new List<string>();
 
-            for(DateTime endDate = beginDate; endDate <= DateTime.Today; endDate = endDate.AddMonths(1))
+            for(DateTime endDate = beginDate; endDate < DateTime.Today; endDate = endDate.AddMonths(1))
             {
                 string monthName = info.GetMonthName(endDate.Month).ToString();
                 string month = monthName.Substring(0, 3) + "," + endDate.Year.ToString().Substring(1, 3);
@@ -1501,9 +1479,7 @@ namespace sunamiapi.Controllers.api
                     se.SaveChanges();
                 }
                 catch
-                {
-
-                }
+                { }
 
                 tbl_uninstalled_systems us = new tbl_uninstalled_systems();
                 us.customer_id = customer_id;
@@ -1512,6 +1488,18 @@ namespace sunamiapi.Controllers.api
                 us.Reason = reason;
                 us.previousRecords = possesions;
                 se.tbl_uninstalled_systems.Add(us);
+                
+                // set all invoiced items taken dates
+                foreach(tbl_extra_package_customers tep in se.tbl_extra_package_customers.Where(r=>r.customer_id == customer_id))
+                {
+                    if (tep.date_taken == null)
+                    {
+                        tep.date_taken = DateTime.Today;
+                    } else {
+                        //was already take from the customer
+                    }
+                }
+
                 se.SaveChanges();
                 res = "successfully uninstalled";
             }
