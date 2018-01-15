@@ -29,7 +29,6 @@ namespace sunamiapi.Controllers.api
     {
         private bool allowsendsms = true;
         public DateTime beginDate;
-        public DateTime end1;
         public DateTimeFormatInfo info = new CultureInfo("en-us", false).DateTimeFormat;//MMddyyyy
 
         public CustomersController()
@@ -55,6 +54,7 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public List<paymentRatesClassPerClient> GetPaymentActiveRates([FromBody] JArray value)
         {
+            DateTime end1;
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             List<paymentRatesClassPerClient> list = new List<paymentRatesClassPerClient>();
             try
@@ -87,7 +87,8 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public List<paymentRatesClassPerClient> GetPaymentInactiveRates([FromBody] JArray value)
         {
-            /*db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            DateTime end1;
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
 
             List<paymentRatesClassPerClient> list = new List<paymentRatesClassPerClient>();
             try
@@ -112,7 +113,7 @@ namespace sunamiapi.Controllers.api
                 list = calcInvoiceBtwnDatesm(beginDate, end1, list2).OrderByDescending(g => g.Percent).ToList();
             }
             se.Dispose();
-            return list;*/
+            return list;
             return null;
         }
 
@@ -970,7 +971,7 @@ namespace sunamiapi.Controllers.api
                     var list = (from tp in se.tbl_payments
                                 join tc in se.tbl_customer on tp.customer_id equals tc.customer_id
                                 orderby tp.payment_date descending
-                                where tp.payment_date >= beginDate && tp.payment_date <= end1 && tp.customer_id == id
+                                where tp.payment_date >= beginDate && tp.payment_date <= DateTime.Today && tp.customer_id == id
                                 select new { tc.customer_name, tp.customer_id, tp.amount_payed, tp.payment_date, tp.payment_method, pp = tp.phone_number, TransactionCode = tp.transaction_code, pr = tp.person_recording }
                               ).ToList();
                     foreach (var it in list)
