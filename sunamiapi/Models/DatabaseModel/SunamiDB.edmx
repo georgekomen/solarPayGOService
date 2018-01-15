@@ -83,6 +83,7 @@
           <Property Name="customer_id" Type="longtext" Nullable="false" />
           <Property Name="item" Type="longtext" Nullable="false" />
           <Property Name="date_given" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="date_taken" Type="datetime" Precision="0" />
         </EntityType>
         <EntityType Name="tbl_fault_code">
           <Key>
@@ -342,6 +343,7 @@
           <Property Name="customer_id" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="item" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="date_given" Type="DateTime" Nullable="false" />
+          <Property Name="date_taken" Type="DateTime" />
         </EntityType>
         <EntityType Name="tbl_fault_code">
           <Key>
@@ -634,6 +636,7 @@
           <EntitySetMapping Name="tbl_extra_package_customers">
             <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_extra_package_customers">
               <MappingFragment StoreEntitySet="tbl_extra_package_customers">
+                <ScalarProperty Name="date_taken" ColumnName="date_taken" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="customer_id" ColumnName="customer_id" />
                 <ScalarProperty Name="item" ColumnName="item" />

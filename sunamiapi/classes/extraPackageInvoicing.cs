@@ -49,39 +49,64 @@ namespace sunamiapi.classes
 
         public int extr_invoice(DateTime? start, DateTime end, string Id)
         {
-            int days_switched_off = 0;         
-
+            int days_switched_off = 0;
             int days = 0;
             comment = null;
-            //GET LIST OF ALL EXTRa items a customer has
-            var items = se.tbl_extra_package_customers.Where(r => r.customer_id == Id).Select(i => new { it = i.item }).ToList();
-            //find if customer has extra item then get that item
-            foreach (var ite in items)
+            int itemDeposit = 0;
+            var items = se.tbl_extra_package_customers.Where(r => r.customer_id == Id).Select(i => new { _item = i.item }).ToList();
+            foreach (var item1 in items)
             {
+                itemDeposit = 0;
                 try
                 {
-                    string item = ite.it;
+                    string item = item1._item;
                     tbl_extra_package_customers tp = se.tbl_extra_package_customers.FirstOrDefault(g => g.customer_id == Id && g.item == item);
-                    if (tp.date_given <= end)
+                    if (tp.date_given <= end) //if customer had been given the item
                     {
                         tbl_extra_item tep = se.tbl_extra_item.FirstOrDefault(e => e.item == item);
-                        //string item = se.tbl_extra_package_customers.FirstOrDefault(r => r.customer_id == Id && r.date_given <= end).item;
-                        //get deposit
-
-
-                        
-                        //TODO - calcuate invoice in span of a period here
-                        //if date given is greater than start date, include deposit otherwise do not
-                        //if startdate if before date given .... calculate days from date given to end date .... otherwise use startdate
-                        days = (end - tp.date_given).Days;
-
+                        if (start <= tp.date_given)//if invoice start date is equal to date item was issued
+                        {
+                            itemDeposit = tep.deposit;
+                            if(tp.date_taken == null)
+                            {
+                                days = (end - tp.date_given).Days;
+                            }
+                            else
+                            {
+                                if(end >= tp.date_taken)
+                                {
+                                    days = (tp.date_taken - tp.date_given).Value.Days;
+                                }
+                                else
+                                {
+                                    days = (end - tp.date_given).Days;
+                                }
+                            }
+                        }
+                        else if(start > tp.date_given)
+                        {
+                            if (tp.date_taken == null)
+                            {
+                                days = (end - start).Value.Days;
+                            }
+                            else
+                            {
+                                if (end >= tp.date_taken)
+                                {
+                                    days = (tp.date_taken - start).Value.Days;
+                                }
+                                else
+                                {
+                                    days = (end - start).Value.Days;
+                                }
+                            }
+                        }
 
 
 
                         //stop invoicing when switched off
-                        days_switched_off = 0;                   
+                        days_switched_off = 0;
                         //get days switched off
-                        //TODO - narrow down to this dates
                         var tsl = se.tbl_switch_logs.Where(r => r.customer_id == Id).ToList();
                         foreach (var i in tsl)
                         {
@@ -108,23 +133,17 @@ namespace sunamiapi.classes
                                 }
                             }
                         }
+
+
                         if (days_switched_off > 0)
                         {
                             comment += "\nDeduction of KES" + (days_switched_off * tep.amount_per_day).ToString() + " for " + days_switched_off.ToString() + " days for " + item + " switched off, ";
                         }
-
-
-
-
-
-                        //get cumm_invoice -- get date given item
-                        //get how much he pays per day
-                        //get cumm invoice
                         ext_daily_invoice += tep.amount_per_day;
-                        invoice += ((days - days_switched_off) * tep.amount_per_day) + tep.deposit;
-                        if (tep.deposit >= 0)
+                        invoice += ((days - days_switched_off) * tep.amount_per_day) + itemDeposit;
+                        if (itemDeposit > 0)
                         {
-                            comment += "\nDeposit of KES" + tep.deposit + " for " + item + ",";
+                            comment += "\nDeposit of KES" + itemDeposit + " for " + item + ",";
                         }
 
                         if(days > 0 && tep.extra_pay_period > 0)

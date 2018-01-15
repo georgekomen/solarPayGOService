@@ -1501,9 +1501,7 @@ namespace sunamiapi.Controllers.api
                     se.SaveChanges();
                 }
                 catch
-                {
-
-                }
+                { }
 
                 tbl_uninstalled_systems us = new tbl_uninstalled_systems();
                 us.customer_id = customer_id;
@@ -1512,6 +1510,18 @@ namespace sunamiapi.Controllers.api
                 us.Reason = reason;
                 us.previousRecords = possesions;
                 se.tbl_uninstalled_systems.Add(us);
+                
+                // set all invoiced items taken dates
+                foreach(tbl_extra_package_customers tep in se.tbl_extra_package_customers.Where(r=>r.customer_id == customer_id))
+                {
+                    if (tep.date_taken == null)
+                    {
+                        tep.date_taken = DateTime.Today;
+                    } else {
+                        //was already take from the customer
+                    }
+                }
+
                 se.SaveChanges();
                 res = "successfully uninstalled";
             }
