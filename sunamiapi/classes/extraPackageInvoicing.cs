@@ -57,6 +57,7 @@ namespace sunamiapi.classes
             foreach (var item1 in items)
             {
                 itemDeposit = 0;
+                days = 0;
                 try
                 {
                     string item = item1._item;
