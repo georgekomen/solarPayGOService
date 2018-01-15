@@ -251,8 +251,16 @@ namespace sunamiapi.classes
                         tc1 = se.tbl_customer.FirstOrDefault(i => i.phone_numbers == paynumber || i.phone_numbers2 == paynumber || i.phone_numbers3 == paynumber);
                         mpesa_number = paynumber;
                         customer_id = tc1.customer_id;
-                        var customernames = tc1.customer_name.Split(' ');
-                        customer_name = customernames[0];
+                        try
+                        {
+                            var customernames = tc1.customer_name.Split(' ');
+                            customer_name = customernames[0];
+                        }
+                        catch
+                        {
+                            customer_name = tc1.customer_name;
+                        }
+                        
                     }
                     catch(Exception g)
                     {
