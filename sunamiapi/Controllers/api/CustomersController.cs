@@ -359,6 +359,7 @@ namespace sunamiapi.Controllers.api
                     tbl_sunami_controller sc = new tbl_sunami_controller();
                     sc.imei = imei;
                     sc.sim_no = sim;
+                    sc.date_manufactured = DateTime.Today;
                     sc.provider = provider;
                     sc.version = version;
                     sc.recorded_by = loogeduser;
@@ -1143,7 +1144,7 @@ namespace sunamiapi.Controllers.api
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             List<object> list = new List<object>(from i in se.tbl_customer
-                                                 where i.active_status == true
+                                                 //where i.active_status == true
                                                  orderby i.install_date ascending
                                                  select new
                                                  {
