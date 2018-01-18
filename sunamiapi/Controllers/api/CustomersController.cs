@@ -562,7 +562,7 @@ namespace sunamiapi.Controllers.api
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             string customer_name = "";
-            var li1 = se.tbl_messages.ToList();
+            var li1 = se.tbl_messages.OrderByDescending(t=>t.date).ToList();
             List<object> li = new List<object>();
             foreach (var f in li1)
             {
@@ -799,7 +799,7 @@ namespace sunamiapi.Controllers.api
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             //date //ref //amount //number //message
 
-            var list1 = se.tbl_payments.Where(h => h.payment_method == "cash").ToList().OrderBy(gh => gh.payment_date);
+            var list1 = se.tbl_payments.Where(h => h.payment_method == "cash").ToList().OrderByDescending(gh => gh.payment_date);
             List<object> mp = new List<object>(from i in list1
                                                select new
                                                {
@@ -821,7 +821,7 @@ namespace sunamiapi.Controllers.api
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             //date //ref //amount //number //message
 
-            var list1 = se.tbl_payments.Where(h => h.payment_method.Contains("bank")).ToList().OrderBy(gh => gh.payment_date);
+            var list1 = se.tbl_payments.Where(h => h.payment_method.Contains("bank")).ToList().OrderByDescending(gh => gh.payment_date);
             List<object> mp = new List<object>(from i in list1
                                                select new
                                                {
@@ -873,7 +873,7 @@ namespace sunamiapi.Controllers.api
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             //date //ref //amount //number //message
 
-            var list1 = se.tbl_payments.Where(h => h.payment_method == "mpesa").ToList().OrderBy(gh => gh.payment_date);
+            var list1 = se.tbl_payments.Where(h => h.payment_method == "mpesa").ToList().OrderByDescending(gh => gh.payment_date);
             List<object> mp = new List<object>(from i in list1
                                                select new
                                                {
@@ -1133,7 +1133,7 @@ namespace sunamiapi.Controllers.api
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             List<object> list = new List<object>(from i in se.tbl_customer
                                                  //where i.active_status == true
-                                                 orderby i.install_date ascending
+                                                 orderby i.install_date descending
                                                  select new
                                                  {
                                                      Name = i.customer_name,
@@ -1206,7 +1206,7 @@ namespace sunamiapi.Controllers.api
                                                  join tc in se.tbl_customer on ts.customer_id equals tc.customer_id
                                                  join tsci in se.tbl_system on ts.customer_id equals tsci.customer_id
                                                  join tscn in se.tbl_sunami_controller on tsci.imei_number equals tscn.imei
-                                                 orderby ts.Id ascending
+                                                 orderby ts.switch_off_date descending
                                                  select new
                                                  {
                                                      Name = tc.customer_name,
@@ -1416,6 +1416,7 @@ namespace sunamiapi.Controllers.api
             List<object> list = new List<object>(from tu in se.tbl_uninstalled_systems
                                                  join tc in se.tbl_customer
                                                  on tu.customer_id equals tc.customer_id
+                                                 orderby tu.uninstall_date descending
                                                  select new
                                                  {
                                                      Name = tc.customer_name,
@@ -1935,14 +1936,15 @@ namespace sunamiapi.Controllers.api
         {
             List<object> list = new List<object>();
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            list = new List<object>(from t in se.tbl_event_logs select new
-            {
-                Category = t.category_affected,
-                CustomerId = t.customer_id,
-                Date = t.date,
-                Event = t.@event,
-                LoggedInUser = t.loggedin_user
-            });
+            list = new List<object>(from t in se.tbl_event_logs
+                                    orderby t.date descending
+                                    select new {
+                                                    Category = t.category_affected,
+                                                    CustomerId = t.customer_id,
+                                                    Date = t.date,
+                                                    Event = t.@event,
+                                                    LoggedInUser = t.loggedin_user
+                                               });
             return list;
         }
 
