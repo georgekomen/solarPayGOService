@@ -410,7 +410,7 @@ namespace sunamiapi.classes
             if(sendNotification == true)
             {
                 sendSms ss = new sendSms();
-                ss.sendSmsThroughGateway(num, message);
+                ss.sendSmsThroughGateway(num, message, customer_id);
             }
             
         }

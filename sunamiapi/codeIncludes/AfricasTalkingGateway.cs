@@ -5,6 +5,7 @@ using System.Web;
 using System.IO;
 using System.Net;
 using System.Web.Script.Serialization;
+using sunamiapi.Models.DatabaseModel;
 
 public class AfricasTalkingGatewayException : Exception
 {
@@ -18,6 +19,7 @@ public class AfricasTalkingGateway
     private string _apiKey;
     private int responseCode;
     private JavaScriptSerializer serializer;
+    private db_a0a592_sunamiEntities se1 = new db_a0a592_sunamiEntities();
 
     private static string SMS_URLString = "https://api.africastalking.com/version1/messaging";
     private static string VOICE_URLString = "https://voice.africastalking.com";
@@ -35,7 +37,7 @@ public class AfricasTalkingGateway
         serializer = new JavaScriptSerializer();
     }
 
-    public dynamic sendMessage(string to_, string message_, string from_ = null, int bulkSMSMode_ = 1, Hashtable options_ = null)
+    public dynamic sendMessage(string to_, string message_, string customer_id_, string from_ = null, int bulkSMSMode_ = 1, Hashtable options_ = null)
     {
         Hashtable data = new Hashtable();
         data["username"] = _username;
@@ -72,6 +74,17 @@ public class AfricasTalkingGateway
         string response = sendPostRequest(data, SMS_URLString);
         if (responseCode == (int)HttpStatusCode.Created)
         {
+            try
+            {
+                tbl_messages tm = new tbl_messages();
+                tm.customer_id = customer_id_;
+                tm.date = DateTime.Today;
+                tm.message = message_;
+                se1.tbl_messages.Add(tm);
+                se1.SaveChanges();
+
+            }
+            catch { }
             var json = serializer.Deserialize<dynamic>(response);
             dynamic recipients = json["SMSMessageData"]["Recipients"];
             if (recipients.Length > 0)
