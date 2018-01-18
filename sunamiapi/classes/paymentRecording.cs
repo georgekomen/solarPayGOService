@@ -214,6 +214,8 @@ namespace sunamiapi.classes
                         if(se.tbl_mpesa_payments.Select(r1 => r1.transaction_code).Contains(code))
                         {
                             json = "message already recorded";
+                            //dont send message then because it had been sent
+                            sendNotification = false;
                         }
                         else
                         {
