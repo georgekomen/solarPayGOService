@@ -1185,7 +1185,7 @@ namespace sunamiapi.Controllers.api
             List<object> list = new List<object>(from ts in se.tbl_system
                                                  join tc in se.tbl_customer on ts.customer_id equals tc.customer_id
                                                  join tsc in se.tbl_sunami_controller on ts.imei_number equals tsc.imei
-                                                 orderby tc.install_date ascending
+                                                 orderby tc.install_date descending
                                                  select new
                                                  {
                                                      Owner = tc.customer_name,
