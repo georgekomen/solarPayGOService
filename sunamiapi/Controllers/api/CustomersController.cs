@@ -513,21 +513,22 @@ namespace sunamiapi.Controllers.api
                             sendmsg(sim_no, msgs + ", Sunami solar", se1, cust_idd);
                             //return "successfully sent";
                         }
-                        else
+                        else if(msg.StartsWith("remind"))
                         {
+                            msg = msg.Replace(@"remind", @"");
                             int invoice = int.Parse(number.SelectToken("Invoice").ToString());
                             int paid = int.Parse(number.SelectToken("Paid").ToString());
                             int not_paid = invoice - paid;
 
                             if (not_paid < 0 && string.IsNullOrEmpty(msgs))
                             {
-                                msgs = "Jambo " + firstname[0] + "\n" + msg + " twakushukuru kwa kuwa mwaminifu na malipo yako. Malipo ni kwa Mpesa till number: 784289 (Buy goods & services), Sunami solar";//. Kuudumiwa piga: 0788103403
+                                msgs = "Jambo " + firstname[0] + "\n" + msg + " twakushukuru kwa uaminifu wako. Endelea kutuma malipo yako kwa Mpesa till number: 784289 (Buy goods & services), Sunami solar";//. Kuudumiwa piga: 0788103403
                                 sendmsg(sim_no, msgs, se1, cust_idd);
                                 // return "successfully sent";
                             }
                             else if (not_paid > 0 && string.IsNullOrEmpty(msgs))
                             {
-                                msgs = "Jambo " + firstname[0] + "\n" + msg + " una deni ya KSH" + not_paid.ToString("C").Trim('$') + " tafadhali lipa. Malipo ni kwa Mpesa till number: 784289 (Buy goods & services), Sunami Solar";
+                                msgs = "Jambo " + firstname[0] + "\n" + msg + " una deni ya KSH" + not_paid.ToString("C").Trim('$') + ". Tuma malipo yako kwa Mpesa till number: 784289 (Buy goods & services), Sunami Solar";
                                 sendmsg(sim_no, msgs, se1, cust_idd);
                                 // return "successfully sent";
                             }
