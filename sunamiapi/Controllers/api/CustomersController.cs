@@ -1070,7 +1070,7 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public string postReceive_mpesa([FromBody]JArray value)
         {
-            Thread.Sleep(1000);
+            //Thread.Sleep(1000);
             db_a0a592_sunamiEntities se;
             try
             {
