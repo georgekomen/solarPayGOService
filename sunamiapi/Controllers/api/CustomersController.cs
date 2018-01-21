@@ -87,7 +87,7 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public List<paymentRatesClassPerClient> GetPaymentInactiveRates([FromBody] JArray value)
         {
-           /* DateTime end1;
+          /*DateTime end1;
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
 
             List<paymentRatesClassPerClient> list = new List<paymentRatesClassPerClient>();
