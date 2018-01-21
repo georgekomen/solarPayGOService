@@ -642,13 +642,12 @@ namespace sunamiapi.Controllers.api
 
                 if (allowsendsms == true)
                 {
-                    sendSms ss = new sendSms();
-                    ss.sendSmsThroughGateway(sim_no, "smsc$1%$1%", customer_id);
-
                     //notify the customer that he has been put on
                     tc = se.tbl_customer.FirstOrDefault(g => g.customer_id == customer_id);
                     var customernames = tc.customer_name.Split(' ');
-                    ss.sendSmsThroughGateway(tc.phone_numbers, customernames[0] + ", Sunami solar inakujulisha kuwa solar yako imewashwa", customer_id);
+                    sendSms ss = new sendSms();
+                    ss.sendSmsThroughGateway(sim_no, "smsc$1%$1%smsd$"+customernames[0]+"%s*solar yako imezimwa#e", customer_id);                
+                    //ss.sendSmsThroughGateway(tc.phone_numbers, customernames[0] + ", Sunami solar inakujulisha kuwa solar yako imewashwa", customer_id);
                 }
 
                 tbl_switch_logs sl = new tbl_switch_logs();
@@ -688,13 +687,12 @@ namespace sunamiapi.Controllers.api
 
                 if (allowsendsms == true)
                 {
-                    sendSms ss = new sendSms();
-                    ss.sendSmsThroughGateway(sim_no, "smsc$0%$0%", customer_id);
-
                     //notify the customer that he has been switched off
                     tc = se.tbl_customer.FirstOrDefault(g => g.customer_id == customer_id);
                     var customernames = tc.customer_name.Split(' ');
-                    ss.sendSmsThroughGateway(tc.phone_numbers, customernames[0] + ", Sunami solar inakujulisha kuwa solar yako inazimwa leo kutokana na deni. Tafadhali lipa ili iwashwe tena", customer_id);
+                    sendSms ss = new sendSms();
+                    ss.sendSmsThroughGateway(sim_no, "smsc$0%$0%smsd$"+customernames[0]+"%s*solar yako imewashwa#e", customer_id);                
+                    //ss.sendSmsThroughGateway(tc.phone_numbers, customernames[0] + ", Sunami solar inakujulisha kuwa solar yako inazimwa leo kutokana na deni. Tafadhali lipa ili iwashwe tena", customer_id);
                 }
                 int sl1 = se.tbl_switch_logs.Where(h => h.customer_id == customer_id).Max(j => j.Id);
                 tbl_switch_logs sl = se.tbl_switch_logs.FirstOrDefault(h => h.customer_id == customer_id && h.Id == sl1);
