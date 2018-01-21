@@ -633,92 +633,104 @@ namespace sunamiapi.Controllers.api
 
         public string switchOff(tbl_system ts, string sim_no, db_a0a592_sunamiEntities se, string customer_id, string loogeduser)
         {
-            tbl_customer tc = new tbl_customer();
-            string res;
-            try
+            if (ts.active_status == false)
             {
-                //switch off
-                ts.active_status = true;
-
-                if (allowsendsms == true)
-                {
-                    //notify the customer that he has been put on
-                    tc = se.tbl_customer.FirstOrDefault(g => g.customer_id == customer_id);
-                    var customernames = tc.customer_name.Split(' ');
-                    sendSms ss = new sendSms();
-                    ss.sendSmsThroughGateway(sim_no, "smsc$1%$1%smsd$"+customernames[0]+"%s*solar yako imezimwa#e", customer_id);                
-                    //ss.sendSmsThroughGateway(tc.phone_numbers, customernames[0] + ", Sunami solar inakujulisha kuwa solar yako imewashwa", customer_id);
-                }
-
-                tbl_switch_logs sl = new tbl_switch_logs();
-                sl.customer_id = customer_id;
-                sl.switched_off_by = loogeduser;
-                sl.switch_off_date = DateTime.Today;
+                tbl_customer tc = new tbl_customer();
+                string res;
                 try
                 {
-                    List<tbl_customer> lst = new List<tbl_customer>();
-                    lst.Add(tc);
-                    List< paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
-                    sl.switch_off_payrate = res1[0].Percent.Value.ToString();
+                    //switch off
+                    ts.active_status = true;
+
+                    if (allowsendsms == true)
+                    {
+                        //notify the customer that he has been put on
+                        tc = se.tbl_customer.FirstOrDefault(g => g.customer_id == customer_id);
+                        var customernames = tc.customer_name.Split(' ');
+                        sendSms ss = new sendSms();
+                        ss.sendSmsThroughGateway(sim_no, "smsc$1%$1%smsd$" + customernames[0] + "%s*solar yako imezimwa#e", customer_id);
+                        //ss.sendSmsThroughGateway(tc.phone_numbers, customernames[0] + ", Sunami solar inakujulisha kuwa solar yako imewashwa", customer_id);
+                    }
+
+                    tbl_switch_logs sl = new tbl_switch_logs();
+                    sl.customer_id = customer_id;
+                    sl.switched_off_by = loogeduser;
+                    sl.switch_off_date = DateTime.Today;
+                    try
+                    {
+                        List<tbl_customer> lst = new List<tbl_customer>();
+                        lst.Add(tc);
+                        List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
+                        sl.switch_off_payrate = res1[0].Percent.Value.ToString();
+                    }
+                    catch
+                    {
+                        sl.switch_off_payrate = "0";
+                    }
+                    se.tbl_switch_logs.Add(sl);
+                    res = "";
                 }
-                catch
+                catch (Exception g)
                 {
-                    sl.switch_off_payrate = "0";
+                    res = g.Message;
                 }
-                se.tbl_switch_logs.Add(sl);
-                res = "";
-            }
-            catch (Exception g)
+                return res;
+            } else
             {
-                res = g.Message;
+                return null;
             }
-            return res;
 
         }
 
         public string switchOn(tbl_system ts, string sim_no, db_a0a592_sunamiEntities se, string customer_id, string loogeduser)
         {
-            tbl_customer tc = new tbl_customer();
-            string res;
-            try
+            if (ts.active_status == true)
             {
-                //switch on
-                ts.active_status = false;
-
-                if (allowsendsms == true)
-                {
-                    //notify the customer that he has been switched off
-                    tc = se.tbl_customer.FirstOrDefault(g => g.customer_id == customer_id);
-                    var customernames = tc.customer_name.Split(' ');
-                    sendSms ss = new sendSms();
-                    ss.sendSmsThroughGateway(sim_no, "smsc$0%$0%smsd$"+customernames[0]+"%s*solar yako imewashwa#e", customer_id);                
-                    //ss.sendSmsThroughGateway(tc.phone_numbers, customernames[0] + ", Sunami solar inakujulisha kuwa solar yako inazimwa leo kutokana na deni. Tafadhali lipa ili iwashwe tena", customer_id);
-                }
-                int sl1 = se.tbl_switch_logs.Where(h => h.customer_id == customer_id).Max(j => j.Id);
-                tbl_switch_logs sl = se.tbl_switch_logs.FirstOrDefault(h => h.customer_id == customer_id && h.Id == sl1);
-                sl.customer_id = customer_id;
-                sl.switched_on_by = loogeduser;
-                sl.switch_on_date = DateTime.Today;
+                tbl_customer tc = new tbl_customer();
+                string res;
                 try
                 {
-                    List<tbl_customer> lst = new List<tbl_customer>();
-                    lst.Add(tc);
-                    List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
-                    sl.switch_off_payrate = res1[0].Percent.Value.ToString();
-                }
-                catch
-                {
-                    sl.switch_on_payrate = "0";
-                }
+                    //switch on
+                    ts.active_status = false;
 
-                res = "";
-            }
-            catch (Exception g)
+                    if (allowsendsms == true)
+                    {
+                        //notify the customer that he has been switched off
+                        tc = se.tbl_customer.FirstOrDefault(g => g.customer_id == customer_id);
+                        var customernames = tc.customer_name.Split(' ');
+                        sendSms ss = new sendSms();
+                        ss.sendSmsThroughGateway(sim_no, "smsc$0%$0%smsd$" + customernames[0] + "%s*solar yako imewashwa#e", customer_id);
+                        //ss.sendSmsThroughGateway(tc.phone_numbers, customernames[0] + ", Sunami solar inakujulisha kuwa solar yako inazimwa leo kutokana na deni. Tafadhali lipa ili iwashwe tena", customer_id);
+                    }
+                    int sl1 = se.tbl_switch_logs.Where(h => h.customer_id == customer_id).Max(j => j.Id);
+                    tbl_switch_logs sl = se.tbl_switch_logs.FirstOrDefault(h => h.customer_id == customer_id && h.Id == sl1);
+                    sl.customer_id = customer_id;
+                    sl.switched_on_by = loogeduser;
+                    sl.switch_on_date = DateTime.Today;
+                    try
+                    {
+                        List<tbl_customer> lst = new List<tbl_customer>();
+                        lst.Add(tc);
+                        List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
+                        sl.switch_off_payrate = res1[0].Percent.Value.ToString();
+                    }
+                    catch
+                    {
+                        sl.switch_on_payrate = "0";
+                    }
+
+                    res = "";
+                }
+                catch (Exception g)
+                {
+                    res = g.Message;
+
+                }
+                return res;
+            } else
             {
-                res = g.Message;
-                
+                return null;
             }
-            return res;
         }
 
         /*public List<object> getmpesaPayments()
