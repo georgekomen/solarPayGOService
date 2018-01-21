@@ -88,8 +88,13 @@ namespace sunamiapi.codeIncludes
             List<paymentRatesClassPerClient> res1 =  cc.calcInvoiceBtwnDatesm(start, end, lst);
             int? invoice = res1.Sum(t => t.Invoice);
             int? paid = res1.Sum(r => r.Amount);
-            int? percent = (paid * 100) / invoice;
-
+            int? percent = 0;
+            try
+            {
+                percent = (paid * 100) / invoice;
+            } catch {
+                percent = 0;
+            }
 
             int? payrate = percent;
             int newInstallations = se.tbl_customer.Where(f => f.install_date >= start && f.install_date <= end).Count();
