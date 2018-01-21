@@ -281,7 +281,7 @@ namespace sunamiapi.Controllers.api
             for(DateTime endDate = beginDate; endDate < DateTime.Today; endDate = endDate.AddMonths(1))
             {
                 string monthName = info.GetMonthName(endDate.Month).ToString();
-                string month = monthName.Substring(0, 3) + "," + endDate.Year.ToString().Substring(0, 3);
+                string month = monthName.Substring(0, 3) + "," + endDate.Year.ToString();
                 chartlabels.Add(month);
                 //int? percent = GetCalcPayRate(beginDate, endDate, se);
                 int? percent = GetCalcPayRate(endDate.AddMonths(-1), endDate, se);
