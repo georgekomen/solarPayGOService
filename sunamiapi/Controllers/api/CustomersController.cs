@@ -119,7 +119,6 @@ namespace sunamiapi.Controllers.api
 
         public List<paymentRatesClassPerClient> calcInvoiceBtwnDatesm(DateTime start, DateTime end, List<tbl_customer> list2)
         {
-            tbl_customer tableCustomer = new tbl_customer();
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             List<paymentRatesClassPerClient> li = new List<paymentRatesClassPerClient>();
             string Comment;
@@ -130,7 +129,6 @@ namespace sunamiapi.Controllers.api
 
             foreach (var tc1 in list2)
             {
-                tableCustomer = se.tbl_customer.FirstOrDefault(g => g.customer_id == tc1.customer_id);
                 Comment = null;
                 Count = 0;
                 Paid = 0;
@@ -144,20 +142,11 @@ namespace sunamiapi.Controllers.api
                     St = start.Date.ToString("dd/MM/yyyy");
                 }
                 En = end.Date.ToString("dd/MM/yyyy");
-                try
-                {
-                    Paid = se.tbl_payments.Where(g => g.customer_id == tc1.customer_id && g.payment_date >= start && g.payment_date <= end).Sum(t => t.amount_payed);
-                }
-                catch
-                {
-                    Paid = 0;
-                }
-
-
+               
                 extraPackageInvoicing ep = new classes.extraPackageInvoicing();
-                Count += ep.extr_invoice(start, end, tc1.customer_id);
+                Count += ep.extr_invoice(start, end, tc1);
                 Comment += "\n" + ep.Comment;
-
+                Paid = ep.Paid;
                 if (Paid == null)
                 {
                     Paid = 0;
@@ -169,7 +158,7 @@ namespace sunamiapi.Controllers.api
                     Percent = (100 * Paid) / Count;
                 }
                 catch {
-
+                    Percent = 0;
                 }
                 if (Percent == null)
                 {
@@ -206,7 +195,7 @@ namespace sunamiapi.Controllers.api
                     Phone = tc1.phone_numbers + "\n" + tc1.phone_numbers2 + "\n" + tc1.phone_numbers3,
                     Village = tc1.village_name.ToUpper(),
                     Status = status,
-                    Description = tableCustomer.Description
+                    Description = tc1.Description
                 });
             }
             se.Dispose();

@@ -12,6 +12,8 @@ namespace sunamiapi.classes
         private int invoice;
         private string comment;
         private int ext_daily_invoice;
+        private Boolean calculatedPaid = false;
+        private int? paid;
 
         public int Invoice
         {
@@ -47,12 +49,16 @@ namespace sunamiapi.classes
             }
         }
 
-        public int extr_invoice(DateTime? start, DateTime end, string Id)
+        public int? Paid { get => paid; set => paid = value; }
+
+        public int extr_invoice(DateTime? start, DateTime end, tbl_customer tc1)
         {
+            string Id = tc1.customer_id;
             int days_switched_off = 0;
             int days = 0;
             comment = null;
             int itemDeposit = 0;
+            paid = 0;
             var items = se.tbl_extra_package_customers.Where(r => r.customer_id == Id).Select(i => new { _item = i.item }).ToList();
             foreach (var item1 in items)
             {
@@ -150,6 +156,17 @@ namespace sunamiapi.classes
                         if(days > 0 && tep.extra_pay_period > 0)
                         {
                             comment += "\nDaily payment of KES" + tep.amount_per_day + " for " + item + " for " + (days-days_switched_off).ToString() + " day(s), ";
+                        }
+                        if (!calculatedPaid)
+                        {
+                            try
+                            {
+                                paid = se.tbl_payments.Where(g => g.customer_id == tc1.customer_id && g.payment_date >= start && g.payment_date <= end).Sum(t => t.amount_payed);
+                            }
+                            catch {
+                                paid = 0;
+                            }
+                                calculatedPaid = true;
                         }
                     }
                     else
