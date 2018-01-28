@@ -68,7 +68,7 @@ namespace sunamiapi.classes
                 {
                     string item = item1._item;
                     tbl_extra_package_customers tp = se.tbl_extra_package_customers.FirstOrDefault(g => g.customer_id == Id && g.item == item);
-                    if (tp.date_given >= start && tp.date_given <= end) //if customer had been given the item
+                    if ((tp.date_taken >= start || tp.date_taken == null) && tp.date_given <= end) //if customer had been given the item
                     {
                         tbl_extra_item tep = se.tbl_extra_item.FirstOrDefault(e => e.item == item);
                         if (start <= tp.date_given)//if invoice start date is equal to date item was issued
@@ -90,7 +90,7 @@ namespace sunamiapi.classes
                                 }
                             }
                         }
-                        else if(start > tp.date_given)
+                        else
                         {
                             if (tp.date_taken == null)
                             {

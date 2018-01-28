@@ -35,7 +35,7 @@ namespace sunamiapi.Controllers.api
         {
             try
             {
-                string beginDate1 = "06/01/2016";
+                string beginDate1 = "07/01/2016";
                 beginDate = Convert.ToDateTime(beginDate1, info);
 
             }
@@ -147,6 +147,7 @@ namespace sunamiapi.Controllers.api
                 Count += ep.extr_invoice(start, end, tc1);
                 Comment += "\n" + ep.Comment;
                 Paid = ep.Paid;
+                
                 if (Paid == null)
                 {
                     Paid = 0;
@@ -249,51 +250,47 @@ namespace sunamiapi.Controllers.api
             return result;
         }
 
-        public int? GetCalcPayRate(DateTime start, DateTime end, db_a0a592_sunamiEntities se)
-        {
-            int? percent = 0;
-            int? paid = 0;
-            int? invoice = 0;
-            List<tbl_customer> lst = new List<tbl_customer>();
-            lst = se.tbl_customer.ToList();
-            List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(start, end, lst);
-            
-            try
-            {
-                invoice = res1.Sum(t => t.Invoice);
-                paid = res1.Sum(r => r.Amount);
-                percent = (paid * 100) / invoice;
-            }
-            catch {
-                percent = 0;
-            }
-            return percent;
-        }
 
         public List<paychartclass> getPaymentChart()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-
+            List<MonthPayBreakDown> monthPayBreakDown = new List<MonthPayBreakDown>();
             //getting from db
             List<int?> pvals = new List<int?>();
             List<string> chartlabels = new List<string>();
 
             for(DateTime endDate = beginDate; endDate < DateTime.Today; endDate = endDate.AddMonths(1))
             {
-                string monthName = info.GetMonthName(endDate.Month).ToString();
-                string month = monthName.Substring(0, 3) + "," + endDate.Year.ToString();
+                DateTime formatedTime = Convert.ToDateTime(endDate.Month.ToString() + "/01/" + endDate.Year.ToString(), info);
+                string monthName = info.GetMonthName(formatedTime.Month).ToString();
+                string month = monthName.Substring(0, 3) + "," + formatedTime.Year.ToString();
                 chartlabels.Add(month);
-                //int? percent = GetCalcPayRate(beginDate, endDate, se);
-                int? percent = GetCalcPayRate(endDate.AddMonths(-1), endDate, se);
+                List<tbl_customer> lsc = se.tbl_customer.Where(rr => rr.install_date <= endDate).ToList();
+                
+                List<paymentRatesClassPerClient> list = calcInvoiceBtwnDatesm(formatedTime.AddMonths(-1), formatedTime, lsc);
+                int invoice = 0;
+                int? paid = 0;
+                int? percent = 0;
+                try
+                {
+                    invoice = list.Sum(r1 => r1.Invoice);
+                    paid = list.Sum(r2 => r2.Amount);
+                    percent = (paid * 100) / invoice;
+                }
+                catch
+                {
+                    percent = 0;
+                }
+                
                 pvals.Add(percent);
+                monthPayBreakDown.Add(new MonthPayBreakDown{Month = month, Invoice = "Ksh"+invoice.ToString(), Paid = "Ksh"+paid.ToString(), Performance = percent.ToString()+"%"});
             }
             
             List<chartdata> chartdata = new List<chartdata>();
             chartdata.Add(new chartdata() { data = pvals, label = "payment rate" });
             List<paychartclass> datatoreturn = new List<paychartclass>();
-            datatoreturn.Add(new paychartclass() { LineChartData = chartdata, LineChartLabels = chartlabels });
+            datatoreturn.Add(new paychartclass() { LineChartData = chartdata, LineChartLabels = chartlabels, MonthPayBreakDown =  monthPayBreakDown});
             se.Dispose();
-
             return datatoreturn;
         }
 
@@ -561,7 +558,9 @@ namespace sunamiapi.Controllers.api
                 {
                     customer_name = se.tbl_customer.FirstOrDefault(g => g.customer_id == f.customer_id).customer_name;
                 }
-                catch { }
+                catch {
+                    customer_name = "UNKNOWN CUSTOMER";
+                }
                 li.Add(new
                 {
                     Name = customer_name,
