@@ -516,7 +516,7 @@ namespace sunamiapi.Controllers.api
                             }
                             else if (not_paid > 0 && string.IsNullOrEmpty(msgs))
                             {
-                                msgs = "Jambo " + firstname[0].ToUpper() + "\n" + msg + "Sunami solar inakujulisha kuwa una deni ya KSH" + not_paid.ToString() + ".Tafadhali tuma malipo yako kwa Mpesa till number 784289 (Buy goods & services). Nambari ya kuhudumiwa ni 0788103403";
+                                msgs = "Jambo " + firstname[0].ToUpper() + "\n" + msg + "Sunami solar inakujulisha kwamba una deni ya KSH" + not_paid.ToString() + ".Tafadhali tuma malipo yako kwa Mpesa till number 784289 (Buy goods & services). Nambari ya kuhudumiwa ni 0788103403";
                                 sendmsg(sim_no, msgs, se1, cust_idd);
                                 // return "successfully sent";
                             }
