@@ -256,7 +256,7 @@ namespace sunamiapi.classes
                         try
                         {
                             var customernames = tc1.customer_name.Split(' ');
-                            customer_name = customernames[0];
+                            customer_name = customernames[0].ToUpper();
                         }
                         catch
                         {
@@ -283,7 +283,7 @@ namespace sunamiapi.classes
                     tc1 = se.tbl_customer.FirstOrDefault(i => i.customer_id == customer_id);
                     customer_id = tc1.customer_id;
                     var customernames = tc1.customer_name.Split(' ');
-                    customer_name = customernames[0];
+                    customer_name = customernames[0].ToUpper();
                     paynumber = tc1.phone_numbers;
                 }
                 catch (Exception g)

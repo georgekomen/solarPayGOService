@@ -485,7 +485,8 @@ namespace sunamiapi.Controllers.api
                     }
                     catch
                     {
-
+                        //continue;
+                        sim_no = "0713014492";
                     }
 
                     try
@@ -496,7 +497,7 @@ namespace sunamiapi.Controllers.api
 
                         if (msg.StartsWith("send"))
                         {
-                            msgs = "Jambo " + firstname[0] + "\n" + msg.Replace(@"send", @"");
+                            msgs = "Jambo " + firstname[0].ToUpper() + "\n" + msg.Replace(@"send", @"");
                             sendmsg(sim_no, msgs + ", Sunami solar", se1, cust_idd);
                             //return "successfully sent";
                         }
@@ -509,13 +510,13 @@ namespace sunamiapi.Controllers.api
 
                             if (not_paid < 0 && string.IsNullOrEmpty(msgs))
                             {
-                                msgs = "Jambo " + firstname[0] + "\n" + msg + " twakushukuru kwa uaminifu wako. Endelea kutuma malipo yako kwa Mpesa till number: 784289 (Buy goods & services). Nambari ya kuhudumiwa ni: 0788103403, Sunami solar";//. Kuudumiwa piga: 0788103403
+                                msgs = "Jambo " + firstname[0].ToUpper() + "\n" + msg + "Sunami solar inakushukuru kwa uaminifu wako. Endelea kutuma malipo yako kwa Mpesa till number: 784289. Nambari ya kuhudumiwa ni 0788103403";//. Kuudumiwa piga: 0788103403
                                 sendmsg(sim_no, msgs, se1, cust_idd);
                                 // return "successfully sent";
                             }
                             else if (not_paid > 0 && string.IsNullOrEmpty(msgs))
                             {
-                                msgs = "Jambo " + firstname[0] + "\n" + msg + " una deni ya KSH" + not_paid.ToString("C").Trim('$') + ". Tuma malipo yako kwa Mpesa till number: 784289 (Buy goods & services). Nambari ya kuhudumiwa ni: 0788103403, Sunami Solar";
+                                msgs = "Jambo " + firstname[0].ToUpper() + "\n" + msg + "Sunami solar inakujulisha kuwa una deni ya KSH" + not_paid.ToString() + ". Tuma malipo yako kwa Mpesa till number: 784289. Nambari ya kuhudumiwa ni 0788103403";
                                 sendmsg(sim_no, msgs, se1, cust_idd);
                                 // return "successfully sent";
                             }
@@ -523,7 +524,7 @@ namespace sunamiapi.Controllers.api
                     }
                     catch
                     {
-
+                        //continue;
                     }
                 }
                 se1.Dispose();
