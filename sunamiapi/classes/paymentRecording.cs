@@ -270,7 +270,7 @@ namespace sunamiapi.classes
                         json = g.Message;
                         //failed to process payment-payment number not in db
                         //sending sms to unrecorded phone numbers
-                        message = "Sunami solar imepokea malipo yako ya Ksh" + mpesa_amount + " .Tafadhali tupigie simu ili utueleze accounti yako";
+                        message = "Tumepokea malipo yako ya Ksh" + mpesa_amount + " .Tafadhali tupigie simu ili utueleze accounti yako";
                         //response1.Add("message", message1);
                         //response1.Add("number", paynumber);
                         sendSmsThroughGateway(mpesa_number, sendNotification);
@@ -386,12 +386,12 @@ namespace sunamiapi.classes
 
                 if (bal <= 0)
                 {
-                    message = customer_name+", Sunami solar inakushukuru kwa malipo yako ya Ksh" + mpesa_amount;
+                    message = customer_name+", asanti kwa malipo yako ya Ksh" + mpesa_amount;
                 }
 
                 else
                 {
-                    message = customer_name +", Sunami solar inakushukuru kwa malipo yako ya Ksh" + mpesa_amount + ".Bado unadaiwa Ksh" + bal + " ya siku zilizopita";
+                    message = customer_name +", asanti kwa malipo yako ya Ksh" + mpesa_amount + ".Bado unadaiwa Ksh" + bal + " ya siku zilizopita";
                 }
                 sendSmsThroughGateway(paynumber, sendNotification);
             }
