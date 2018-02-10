@@ -497,8 +497,8 @@ namespace sunamiapi.Controllers.api
 
                         if (msg.StartsWith("send"))
                         {
-                            msgs = "Jambo " + firstname[0].ToUpper() + "\n" + msg.Replace(@"send", @"");
-                            sendmsg(sim_no, msgs+".\n", se1, cust_idd);
+                            msgs = "Jambo " + firstname[0].ToUpper() + ", " + msg.Replace(@"send", @"");
+                            sendmsg(sim_no, msgs, se1, cust_idd);
                             //return "successfully sent";
                         }
                         else if(msg.StartsWith("remind"))
@@ -510,13 +510,13 @@ namespace sunamiapi.Controllers.api
 
                             if (not_paid < 0 && string.IsNullOrEmpty(msgs))
                             {
-                                msgs = "Jambo " + firstname[0].ToUpper() + "\n" + msg + "Asanti kwa uaminifu wako. Malipo ni kwa Lipa na Mpesa, Till number 784289. Ili kuhudumiwa, tupigie simu kwa nambari +254788103403. \n";//. Kuudumiwa piga: 0788103403
+                                msgs = "Jambo " + firstname[0].ToUpper() + msg + ", asanti kwa uaminifu wako. Malipo ni kwa Lipa na Mpesa, Till number 784289. Ili kuhudumiwa, tupigie simu kwa nambari +254788103403. ";//. Kuudumiwa piga: 0788103403
                                 sendmsg(sim_no, msgs, se1, cust_idd);
                                 // return "successfully sent";
                             }
                             else if (not_paid > 0 && string.IsNullOrEmpty(msgs))
                             {
-                                msgs = "Jambo " + firstname[0].ToUpper() + "\n" + msg + "Una deni la KSH" + not_paid.ToString("C").Trim('$') + ". Tafadhali tuma malipo yako kupitia Lipa na Mpesa, Till number 784289. Ili kuhudumiwa, tupigie simu kwa nambari +254788103403. \n";
+                                msgs = "Jambo " + firstname[0].ToUpper() + msg + ", una deni la KSH" + not_paid.ToString("C").Trim('$') + ". Tafadhali tuma malipo yako kupitia Lipa na Mpesa, Till number 784289. Ili kuhudumiwa, tupigie simu kwa nambari +254788103403. ";
                                 sendmsg(sim_no, msgs, se1, cust_idd);
                                 // return "successfully sent";
                             }

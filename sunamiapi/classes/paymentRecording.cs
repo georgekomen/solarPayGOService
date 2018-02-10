@@ -270,7 +270,7 @@ namespace sunamiapi.classes
                         json = g.Message;
                         //failed to process payment-payment number not in db
                         //sending sms to unrecorded phone numbers
-                        message = "Tumepokea malipo yako ya Ksh" + mpesa_amount + " . Tafadhali tupigie simu kwa nambari +254788103403 ili utujulishe akaunti yako. Malipo ni kwa Lipa na Mpesa, Till number 784289. \n";
+                        message = "Tumepokea malipo yako ya Ksh" + mpesa_amount + " . Tafadhali tupigie simu kwa nambari +254788103403 ili utujulishe akaunti yako. Malipo ni kwa Lipa na Mpesa, Till number 784289. ";
                         //response1.Add("message", message1);
                         //response1.Add("number", paynumber);
                         sendSmsThroughGateway(mpesa_number, sendNotification);
@@ -386,12 +386,12 @@ namespace sunamiapi.classes
 
                 if (bal <= 0)
                 {
-                    message = customer_name+", asanti kwa malipo yako ya Ksh" + mpesa_amount + ". Malipo ni kwa Lipa na Mpesa, Till number 784289. Ili kuhudumiwa, tupigie simu kwa nambari +254788103403. \n";
+                    message = customer_name+", asanti kwa malipo yako ya Ksh" + mpesa_amount + ". Malipo ni kwa Lipa na Mpesa, Till number 784289. Ili kuhudumiwa, tupigie simu kwa nambari +254788103403. ";
                 }
 
                 else
                 {
-                    message = customer_name +", asanti kwa malipo yako ya Ksh" + mpesa_amount + ". Bado unadaiwa Ksh" + bal + " ya siku zilizopita. Malipo ni kwa Lipa na Mpesa, Till number 784289. Ili kuhudumiwa, tupigie simu kwa nambari +254788103403. \n";
+                    message = customer_name +", asanti kwa malipo yako ya Ksh" + mpesa_amount + ". Bado unadaiwa Ksh" + bal + " ya siku zilizopita. Malipo ni kwa Lipa na Mpesa, Till number 784289. Ili kuhudumiwa, tupigie simu kwa nambari +254788103403. ";
                 }
                 sendSmsThroughGateway(paynumber, sendNotification);
             }
