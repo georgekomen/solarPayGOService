@@ -83,7 +83,7 @@ namespace sunamiapi.codeIncludes
             int maintenance = se.tbl_issues.Where(g => g.date >= start && g.date <= end && g.status == "solved").Count();
 
             List<tbl_customer> lst = new List<tbl_customer>();
-            lst = se.tbl_customer.ToList();
+            lst = se.tbl_customer.Where(rr => rr.install_date <= end).ToList();
             CustomersController cc = new CustomersController();
             List<paymentRatesClassPerClient> res1 =  cc.calcInvoiceBtwnDatesm(start, end, lst);
             int? invoice = res1.Sum(t => t.Invoice);
