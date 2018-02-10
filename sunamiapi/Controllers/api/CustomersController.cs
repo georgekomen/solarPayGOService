@@ -262,12 +262,15 @@ namespace sunamiapi.Controllers.api
             for(DateTime endDate = beginDate; endDate < DateTime.Today; endDate = endDate.AddMonths(1))
             {
                 DateTime formatedTime = Convert.ToDateTime(endDate.Month.ToString() + "/01/" + endDate.Year.ToString(), info);
+                DateTime endformatedTime = formatedTime.AddMonths(1);
+
                 string monthName = info.GetMonthName(formatedTime.Month).ToString();
                 string month = monthName.Substring(0, 3) + "," + formatedTime.Year.ToString();
                 chartlabels.Add(month);
-                List<tbl_customer> lsc = se.tbl_customer.Where(rr => rr.install_date <= formatedTime.AddMonths(1)).ToList();
                 
-                List<paymentRatesClassPerClient> list = calcInvoiceBtwnDatesm(formatedTime, formatedTime.AddMonths(1), lsc);
+                List<tbl_customer> lsc = se.tbl_customer.Where(rr => rr.install_date <= endformatedTime).ToList();
+                
+                List<paymentRatesClassPerClient> list = calcInvoiceBtwnDatesm(formatedTime, endformatedTime, lsc);
                 int invoice = 0;
                 int? paid = 0;
                 int? percent = 0;
@@ -283,7 +286,7 @@ namespace sunamiapi.Controllers.api
                 }
                 
                 pvals.Add(percent);
-                monthPayBreakDown.Add(new MonthPayBreakDown{Month = month,DateRanges = formatedTime.ToString() +" - "+ formatedTime.AddMonths(1).ToString(), Invoice = "Ksh"+invoice.ToString(), Paid = "Ksh"+paid.ToString(), Performance = percent.ToString()+"%"});
+                monthPayBreakDown.Add(new MonthPayBreakDown{Month = month,DateRanges = formatedTime.ToString() +" - "+ endformatedTime.ToString(), Invoice = "Ksh"+invoice.ToString(), Paid = "Ksh"+paid.ToString(), Performance = percent.ToString()+"%"});
             }
             
             List<chartdata> chartdata = new List<chartdata>();
