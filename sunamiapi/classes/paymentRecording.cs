@@ -386,12 +386,12 @@ namespace sunamiapi.classes
 
                 if (bal <= 0)
                 {
-                    message = customer_name+", asanti kwa malipo yako ya Ksh" + mpesa_amount + "  Lipa na Mpesa, till number 784289. Ili kuhudumiwa, piga simu kwa nambari +254788103403. \n";
+                    message = customer_name+", asanti kwa malipo yako ya Ksh" + mpesa_amount + ". Lipa na Mpesa, till number 784289. Ili kuhudumiwa, tupigie simu kwa nambari +254788103403. \n";
                 }
 
                 else
                 {
-                    message = customer_name +", asanti kwa malipo yako ya Ksh" + mpesa_amount + ". Bado unadaiwa Ksh" + bal + " ya siku zilizopita. Lipa na Mpesa, till number 784289. Ili kuhudumiwa, piga simu kwa nambari +254788103403. \n";
+                    message = customer_name +", asanti kwa malipo yako ya Ksh" + mpesa_amount + ". Bado unadaiwa Ksh" + bal + " ya siku zilizopita. Lipa na Mpesa, till number 784289. Ili kuhudumiwa, tupigie simu kwa nambari +254788103403. \n";
                 }
                 sendSmsThroughGateway(paynumber, sendNotification);
             }
