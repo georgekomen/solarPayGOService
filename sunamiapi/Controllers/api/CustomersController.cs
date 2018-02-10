@@ -498,7 +498,7 @@ namespace sunamiapi.Controllers.api
                         if (msg.StartsWith("send"))
                         {
                             msgs = "Jambo " + firstname[0].ToUpper() + "\n" + msg.Replace(@"send", @"");
-                            sendmsg(sim_no, msgs, se1, cust_idd);
+                            sendmsg(sim_no, msgs+"\n", se1, cust_idd);
                             //return "successfully sent";
                         }
                         else if(msg.StartsWith("remind"))
@@ -510,13 +510,13 @@ namespace sunamiapi.Controllers.api
 
                             if (not_paid < 0 && string.IsNullOrEmpty(msgs))
                             {
-                                msgs = "Jambo " + firstname[0].ToUpper() + "\n" + msg + "Asanti kwa uaminifu wako. Tafadhali endelea kutuma malipo yako kwa Mpesa till number 784289 (Buy goods & services). Nambari ya kuhudumiwa ni +254788103403";//. Kuudumiwa piga: 0788103403
+                                msgs = "Jambo " + firstname[0].ToUpper() + "\n" + msg + "Asanti kwa uaminifu wako. Tafadhali endelea kutuma malipo yako kwa Mpesa till number 784289 (Buy goods & services). Nambari ya kuhudumiwa ni +254788103403 \n";//. Kuudumiwa piga: 0788103403
                                 sendmsg(sim_no, msgs, se1, cust_idd);
                                 // return "successfully sent";
                             }
                             else if (not_paid > 0 && string.IsNullOrEmpty(msgs))
                             {
-                                msgs = "Jambo " + firstname[0].ToUpper() + "\n" + msg + "Una deni la KSH" + not_paid.ToString("C").Trim('$') + ". Tafadhali tuma malipo yako kwa Mpesa till number 784289 (Buy goods & services). Nambari ya kuhudumiwa ni +254788103403";
+                                msgs = "Jambo " + firstname[0].ToUpper() + "\n" + msg + "Una deni la KSH" + not_paid.ToString("C").Trim('$') + ". Tafadhali tuma malipo yako kwa Mpesa till number 784289 (Buy goods & services). Nambari ya kuhudumiwa ni +254788103403 \n";
                                 sendmsg(sim_no, msgs, se1, cust_idd);
                                 // return "successfully sent";
                             }

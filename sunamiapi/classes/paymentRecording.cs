@@ -270,7 +270,7 @@ namespace sunamiapi.classes
                         json = g.Message;
                         //failed to process payment-payment number not in db
                         //sending sms to unrecorded phone numbers
-                        message = "Tumepokea malipo yako ya Ksh" + mpesa_amount + " .Tafadhali tupigie simu kwa nambari +254788103403 ili utueleze accounti yako";
+                        message = "Tumepokea malipo yako ya Ksh" + mpesa_amount + " .Tafadhali tupigie simu kwa nambari +254788103403 ili utueleze accounti yako \n";
                         //response1.Add("message", message1);
                         //response1.Add("number", paynumber);
                         sendSmsThroughGateway(mpesa_number, sendNotification);
@@ -386,12 +386,12 @@ namespace sunamiapi.classes
 
                 if (bal <= 0)
                 {
-                    message = customer_name+", asanti kwa malipo yako ya Ksh" + mpesa_amount + "  Lipa na Mpesa, till number 784289. Ili kuhudumiwa piga simu kwa nambari +254788103403";
+                    message = customer_name+", asanti kwa malipo yako ya Ksh" + mpesa_amount + "  Lipa na Mpesa, till number 784289. Ili kuhudumiwa, piga simu kwa nambari +254788103403 \n";
                 }
 
                 else
                 {
-                    message = customer_name +", asanti kwa malipo yako ya Ksh" + mpesa_amount + ". Bado unadaiwa Ksh" + bal + " ya siku zilizopita. Lipa na Mpesa, till number 784289. Ili kuhudumiwa piga simu kwa nambari +254788103403";
+                    message = customer_name +", asanti kwa malipo yako ya Ksh" + mpesa_amount + ". Bado unadaiwa Ksh" + bal + " ya siku zilizopita. Lipa na Mpesa, till number 784289. Ili kuhudumiwa, piga simu kwa nambari +254788103403 \n";
                 }
                 sendSmsThroughGateway(paynumber, sendNotification);
             }
