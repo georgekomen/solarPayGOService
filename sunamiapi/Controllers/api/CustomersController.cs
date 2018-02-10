@@ -262,7 +262,7 @@ namespace sunamiapi.Controllers.api
             for(DateTime endDate = beginDate; endDate < DateTime.Today; endDate = endDate.AddMonths(1))
             {
                 DateTime formatedTime = Convert.ToDateTime(endDate.Month.ToString() + "/01/" + endDate.Year.ToString(), info);
-                DateTime endformatedTime = formatedTime.AddMonths(1);
+                DateTime endformatedTime = formatedTime.AddMonths(1).AddDays(-1);
 
                 string monthName = info.GetMonthName(formatedTime.Month).ToString();
                 string month = monthName.Substring(0, 3) + "," + formatedTime.Year.ToString();
@@ -313,7 +313,7 @@ namespace sunamiapi.Controllers.api
                 //int year = DateTime.Today.Year;
                 monthStart = Convert.ToDateTime(month1 + "/01/" + year1, info);
                 //DateTime monthend = DateTime.Today;
-                monthend1 = monthStart.AddMonths(1);
+                monthend1 = monthStart.AddMonths(1).AddDays(-1);
                 gdl = new getDataLists();
             }
             catch
