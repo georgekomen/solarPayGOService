@@ -510,13 +510,13 @@ namespace sunamiapi.Controllers.api
 
                             if (not_paid < 0 && string.IsNullOrEmpty(msgs))
                             {
-                                msgs = "Jambo " + firstname[0].ToUpper() + "\n" + msg + "Asanti kwa uaminifu wako. Tafadhali endelea kutuma malipo yako kwa Mpesa till number 784289 (Buy goods & services). Nambari ya kuhudumiwa ni +254788103403 \n";//. Kuudumiwa piga: 0788103403
+                                msgs = "Jambo " + firstname[0].ToUpper() + "\n" + msg + "Asanti kwa uaminifu wako. Endelea kutuma malipo yako kupitia lipa na Mpesa, till number 784289. Ili kuhudumiwa, piga simu kwa nambari +254788103403 \n";//. Kuudumiwa piga: 0788103403
                                 sendmsg(sim_no, msgs, se1, cust_idd);
                                 // return "successfully sent";
                             }
                             else if (not_paid > 0 && string.IsNullOrEmpty(msgs))
                             {
-                                msgs = "Jambo " + firstname[0].ToUpper() + "\n" + msg + "Una deni la KSH" + not_paid.ToString("C").Trim('$') + ". Tafadhali tuma malipo yako kwa Mpesa till number 784289 (Buy goods & services). Nambari ya kuhudumiwa ni +254788103403 \n";
+                                msgs = "Jambo " + firstname[0].ToUpper() + "\n" + msg + "Una deni la KSH" + not_paid.ToString("C").Trim('$') + ". Tafadhali tuma malipo yako kupitia lipa na Mpesa, till number 784289. Ili kuhudumiwa, piga simu kwa nambari +254788103403 \n";
                                 sendmsg(sim_no, msgs, se1, cust_idd);
                                 // return "successfully sent";
                             }
