@@ -527,7 +527,7 @@ namespace sunamiapi.Controllers.api
                     }
                     catch
                     {
-                        //continue;
+                        continue;
                     }
                 }
                 se1.Dispose();
@@ -546,7 +546,7 @@ namespace sunamiapi.Controllers.api
             {
                 sendSms ss = new sendSms();
                 ss.sendSmsThroughGateway(sim_no, msgs, idk);
-                Thread.Sleep(600);
+                Thread.Sleep(300);
             }
         }
 
