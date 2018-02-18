@@ -203,6 +203,23 @@ namespace sunamiapi.Controllers.api
             se.Dispose();
             return li;
         }
+        
+        public void sendEmail(string to, string subject, string body)
+        {
+            SmtpClient client = new SmtpClient();
+            client.Port = 25;
+            client.Host = "mail.sunamiapp.net";
+            client.EnableSsl = false;
+            client.Timeout = 10000;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.UseDefaultCredentials = false;
+            client.Credentials = new System.Net.NetworkCredential("postmaster@sunamiapp.net", "Sunami_2016");
+
+            MailMessage mm = new MailMessage("postmaster@sunamiapp.net", to, subject, body);
+            mm.BodyEncoding = UTF8Encoding.UTF8;
+            mm.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
+            client.Send(mm);
+        }
 
         [HttpGet]
         public List<object> invoiceItems()
