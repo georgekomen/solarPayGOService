@@ -87,33 +87,33 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public List<paymentRatesClassPerClient> GetPaymentInactiveRates([FromBody] JArray value)
         {
-          /*DateTime end1;
-            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            /*DateTime end1;
+              db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
 
-            List<paymentRatesClassPerClient> list = new List<paymentRatesClassPerClient>();
-            try
-            {
-                JToken token = JObject.Parse(value[0].ToString());
-                string startDate = token.SelectToken("startDate").ToString();
-                string endDate = token.SelectToken("endDate").ToString();
+              List<paymentRatesClassPerClient> list = new List<paymentRatesClassPerClient>();
+              try
+              {
+                  JToken token = JObject.Parse(value[0].ToString());
+                  string startDate = token.SelectToken("startDate").ToString();
+                  string endDate = token.SelectToken("endDate").ToString();
 
-                //yyyy-mm-dd e.g. 2017-04-05 - date1
-                beginDate = getDate(startDate);
-                end1 = getDate(endDate);
-                List<tbl_customer> list2 = se.tbl_customer.Where(g => g.install_date <= end1 && g.active_status == false).ToList();
+                  //yyyy-mm-dd e.g. 2017-04-05 - date1
+                  beginDate = getDate(startDate);
+                  end1 = getDate(endDate);
+                  List<tbl_customer> list2 = se.tbl_customer.Where(g => g.install_date <= end1 && g.active_status == false).ToList();
 
-                list = calcInvoiceBtwnDatesm(beginDate, end1, list2).OrderByDescending(g => g.Percent).ToList();
-            }
-            catch
-            {
-                string enddate = DateTime.Today.ToString();
-                end1 = Convert.ToDateTime(enddate, info);
-                List<tbl_customer> list2 = se.tbl_customer.Where(g => g.install_date <= end1 && g.active_status == false).ToList();
+                  list = calcInvoiceBtwnDatesm(beginDate, end1, list2).OrderByDescending(g => g.Percent).ToList();
+              }
+              catch
+              {
+                  string enddate = DateTime.Today.ToString();
+                  end1 = Convert.ToDateTime(enddate, info);
+                  List<tbl_customer> list2 = se.tbl_customer.Where(g => g.install_date <= end1 && g.active_status == false).ToList();
 
-                list = calcInvoiceBtwnDatesm(beginDate, end1, list2).OrderByDescending(g => g.Percent).ToList();
-            }
-            se.Dispose();
-            return list;*/
+                  list = calcInvoiceBtwnDatesm(beginDate, end1, list2).OrderByDescending(g => g.Percent).ToList();
+              }
+              se.Dispose();
+              return list;*/
             return null;
         }
 
@@ -142,12 +142,12 @@ namespace sunamiapi.Controllers.api
                     St = start.Date.ToString("dd/MM/yyyy");
                 }
                 En = end.Date.ToString("dd/MM/yyyy");
-               
+
                 extraPackageInvoicing ep = new classes.extraPackageInvoicing();
                 Count += ep.extr_invoice(start, end, tc1);
                 Comment += "\n" + ep.Comment;
                 Paid = ep.Paid;
-                
+
                 if (Paid == null)
                 {
                     Paid = 0;
@@ -158,14 +158,15 @@ namespace sunamiapi.Controllers.api
                 {
                     Percent = (100 * Paid) / Count;
                 }
-                catch {
+                catch
+                {
                     Percent = 0;
                 }
                 if (Percent == null)
                 {
                     Percent = 0;
                 }
-                
+
                 try
                 {
                     tbl_system tse = se.tbl_system.FirstOrDefault(g => g.customer_id == tc1.customer_id);
@@ -245,7 +246,7 @@ namespace sunamiapi.Controllers.api
             }
             finally
             {
-                se.Dispose();               
+                se.Dispose();
             }
             return result;
         }
@@ -259,7 +260,7 @@ namespace sunamiapi.Controllers.api
             List<int?> pvals = new List<int?>();
             List<string> chartlabels = new List<string>();
 
-            for(DateTime endDate = beginDate; endDate < DateTime.Today; endDate = endDate.AddMonths(1))
+            for (DateTime endDate = beginDate; endDate < DateTime.Today; endDate = endDate.AddMonths(1))
             {
                 DateTime formatedTime = Convert.ToDateTime(endDate.Month.ToString() + "/01/" + endDate.Year.ToString(), info);
                 DateTime endformatedTime = formatedTime.AddMonths(1).AddDays(-1);
@@ -267,9 +268,9 @@ namespace sunamiapi.Controllers.api
                 string monthName = info.GetMonthName(formatedTime.Month).ToString();
                 string month = monthName.Substring(0, 3) + "," + formatedTime.Year.ToString();
                 chartlabels.Add(month);
-                
+
                 List<tbl_customer> lsc = se.tbl_customer.Where(rr => rr.install_date <= endformatedTime).ToList();
-                
+
                 List<paymentRatesClassPerClient> list = calcInvoiceBtwnDatesm(formatedTime, endformatedTime, lsc);
                 int invoice = 0;
                 int? paid = 0;
@@ -284,15 +285,15 @@ namespace sunamiapi.Controllers.api
                 {
                     percent = 0;
                 }
-                
+
                 pvals.Add(percent);
-                monthPayBreakDown.Add(new MonthPayBreakDown{Month = month,DateRanges = formatedTime.ToString() +" - "+ endformatedTime.ToString(), Invoice = "Ksh"+invoice.ToString(), Paid = "Ksh"+paid.ToString(), Performance = percent.ToString()+"%"});
+                monthPayBreakDown.Add(new MonthPayBreakDown { Month = month, DateRanges = formatedTime.ToString() + " - " + endformatedTime.ToString(), Invoice = "Ksh" + invoice.ToString(), Paid = "Ksh" + paid.ToString(), Performance = percent.ToString() + "%" });
             }
-            
+
             List<chartdata> chartdata = new List<chartdata>();
             chartdata.Add(new chartdata() { data = pvals, label = "payment rate" });
             List<paychartclass> datatoreturn = new List<paychartclass>();
-            datatoreturn.Add(new paychartclass() { LineChartData = chartdata, LineChartLabels = chartlabels, MonthPayBreakDown =  monthPayBreakDown});
+            datatoreturn.Add(new paychartclass() { LineChartData = chartdata, LineChartLabels = chartlabels, MonthPayBreakDown = monthPayBreakDown });
             se.Dispose();
             return datatoreturn;
         }
@@ -327,7 +328,7 @@ namespace sunamiapi.Controllers.api
             }
             return gdl.getPaymentSummaryReport(monthStart, monthend1, beginDate);
         }
-     
+
         [HttpPost]
         public List<object> postAddController([FromBody]JArray value)
         {
@@ -355,10 +356,11 @@ namespace sunamiapi.Controllers.api
                     sc.recorded_by = loogeduser;
                     se.tbl_sunami_controller.Add(sc);
                     se.SaveChanges();
-                    
+
                     controllers.Add(new { message = "successfully created new controller" });
                     controllers.Add(new { content = getSunamiControllers() });
-                } else if(se.tbl_sunami_controller.Select(h => h.imei).Contains(imei) && action == "modify")
+                }
+                else if (se.tbl_sunami_controller.Select(h => h.imei).Contains(imei) && action == "modify")
                 {
                     tbl_sunami_controller sc = se.tbl_sunami_controller.FirstOrDefault(g => g.imei == imei);
                     sc.sim_no = sim;
@@ -367,7 +369,7 @@ namespace sunamiapi.Controllers.api
                     sc.recorded_by = loogeduser;
                     se.SaveChanges();
                     this.logevent(loogeduser, "controller imei" + imei, DateTime.Today, "modified controller details", "system controller");
-                    
+
                     controllers.Add(new { message = "successfully modified controller" });
                     controllers.Add(new { content = getSunamiControllers() });
                 }
@@ -376,7 +378,7 @@ namespace sunamiapi.Controllers.api
             {
             }
             se.Dispose();
-            
+
             return controllers;
         }
 
@@ -401,7 +403,7 @@ namespace sunamiapi.Controllers.api
                 logevent(user, sc.customer_id, DateTime.Today, "unlinked imei: " + id, "unlink controller");
                 se.tbl_system.Remove(sc);
                 se.SaveChanges();
-                
+
             }
             catch
             {
@@ -435,7 +437,7 @@ namespace sunamiapi.Controllers.api
                 {
                     tbl_sunami_controller sc = se.tbl_sunami_controller.FirstOrDefault(r => r.imei == imei);
 
-                    logevent(user, sc.sim_no+","+sc.provider+","+sc.version, DateTime.Today, "deleted imei: " + id, "deleted controller");
+                    logevent(user, sc.sim_no + "," + sc.provider + "," + sc.version, DateTime.Today, "deleted imei: " + id, "deleted controller");
                     se.tbl_sunami_controller.Remove(sc);
                     se.SaveChanges();
                     se.Dispose();
@@ -448,105 +450,73 @@ namespace sunamiapi.Controllers.api
                 se.Dispose();
                 return "error occured. please contact system admin";
             }
-            
+
         }
 
         [HttpPost]
         public string PostSMS([FromBody]JArray value)
         {
-            db_a0a592_sunamiEntities se1;
-            try
-            {
-                se1 = new db_a0a592_sunamiEntities();
-            }
-            catch (Exception g)
-            {
-                return g.Message;
-
-            }
+            db_a0a592_sunamiEntities se1 = new db_a0a592_sunamiEntities();
+            sendSms ss = new sendSms();
             var tc33 = se1.tbl_customer.Select(ff => new { customer_id = ff.customer_id, phone_numbers = ff.phone_numbers, customer_name = ff.customer_name }).ToList();
-
             string msgs = null;
             string sim_no = null;
             try
             {
                 JToken token = JObject.Parse(value[0].ToString());
                 string msg = token.SelectToken("message").ToString();
-
+                string message = msg;
                 JArray numbers = JArray.Parse(token.SelectToken("recipients").ToString());
-                int i = numbers.Count();
+                int i = numbers.Count;
                 for (int g = 0; g < i; g++)
                 {
                     JToken number = JObject.Parse(numbers[g].ToString());
                     string cust_idd = number.SelectToken("idnumber").ToString();
-                    //check tbl customer
                     var tc3 = tc33.FirstOrDefault(g3 => g3.customer_id == cust_idd);
-                    try
+                    sim_no = tc33.FirstOrDefault(o => o.customer_id == cust_idd).phone_numbers != null? tc33.FirstOrDefault(o => o.customer_id == cust_idd).phone_numbers: "+254713014492";
+                    string customername = tc3.customer_name;
+                    string[] firstname = null;            
+                    firstname = customername.Split(' ').Length>0 ? customername.Split(' ') : new string[] {customername};
+                    if (message.StartsWith("send"))
                     {
-                        //if he has never payed with mpesa then use reg number
-                        sim_no = tc33.FirstOrDefault(o => o.customer_id == cust_idd).phone_numbers;
+                        msgs = "Jambo " + firstname[0].ToUpper() + ", " + message.Replace(@"send", @"");
+                        sendmsg(sim_no, msgs, se1, cust_idd, ss);
                     }
-                    catch
+                    else if (message.StartsWith("remind"))
                     {
-                        //continue;
-                        sim_no = "0713014492";
-                    }
-
-                    try
-                    {
-                        string customername = tc3.customer_name;
-
-                        var firstname = customername.Split(' ');
-
-                        if (msg.StartsWith("send"))
+                        msg = message.Replace(@"remind", @"");
+                        int invoice = int.Parse(number.SelectToken("Invoice").ToString());
+                        int paid = int.Parse(number.SelectToken("Paid").ToString());
+                        int not_paid = invoice - paid;
+                        if (not_paid < 0)
                         {
-                            msgs = "Jambo " + firstname[0].ToUpper() + ", " + msg.Replace(@"send", @"");
-                            sendmsg(sim_no, msgs, se1, cust_idd);
-                            //return "successfully sent";
+                            msgs = "Jambo " + firstname[0].ToUpper() + msg + ", asanti kwa uaminifu wako. Malipo ni kwa Mpesa Till number 784289. Nambari ya kuhudumiwa ni 0788103403.";//. Kuudumiwa piga: 0788103403                              
+                            sendmsg(sim_no, msgs, se1, cust_idd, ss);
                         }
-                        else if(msg.StartsWith("remind"))
+                        else if (not_paid > 0)
                         {
-                            msg = msg.Replace(@"remind", @"");
-                            int invoice = int.Parse(number.SelectToken("Invoice").ToString());
-                            int paid = int.Parse(number.SelectToken("Paid").ToString());
-                            int not_paid = invoice - paid;
-
-                            if (not_paid < 0 && string.IsNullOrEmpty(msgs))
-                            {
-                                msgs = "Jambo " + firstname[0].ToUpper() + msg + ", asanti kwa uaminifu wako. Malipo ni kwa Mpesa Till number 784289. Nambari ya kuhudumiwa ni 0788103403.";//. Kuudumiwa piga: 0788103403
-                                sendmsg(sim_no, msgs, se1, cust_idd);
-                                // return "successfully sent";
-                            }
-                            else if (not_paid > 0 && string.IsNullOrEmpty(msgs))
-                            {
-                                msgs = "Jambo " + firstname[0].ToUpper() + msg + ", una deni la KSH" + not_paid.ToString() + ". Tafadhali tuma malipo yako kwa Mpesa Till number 784289. Nambari ya kuhudumiwa ni 0788103403.";
-                                sendmsg(sim_no, msgs, se1, cust_idd);
-                                // return "successfully sent";
-                            }
+                            msgs = "Jambo " + firstname[0].ToUpper() + msg + ", una deni la KSH" + not_paid.ToString() + ". Tafadhali tuma malipo yako kwa Mpesa Till number 784289. Nambari ya kuhudumiwa ni 0788103403.";
+                            sendmsg(sim_no, msgs, se1, cust_idd, ss);
                         }
-                    }
-                    catch
-                    {
-                        continue;
                     }
                 }
-                se1.Dispose();
-                return "messages sent successfully";
+                return i.ToString();
             }
-            catch
+            catch(Exception e)
+            {
+                return e.StackTrace;
+            }
+            finally
             {
                 se1.Dispose();
-                return "error sending messages";
             }
         }
 
-        private void sendmsg(string sim_no, string msgs, db_a0a592_sunamiEntities se1, string idk)
+        private void sendmsg(string sim_no, string msgs, db_a0a592_sunamiEntities se1, string cust_id, sendSms ss)
         {
             if (allowsendsms == true)
             {
-                sendSms ss = new sendSms();
-                ss.sendSmsThroughGateway(sim_no, msgs, idk);
-                Thread.Sleep(300);
+                ss.sendSmsThroughGateway(sim_no, msgs, cust_id);
             }
         }
 
@@ -554,7 +524,7 @@ namespace sunamiapi.Controllers.api
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             string customer_name = "";
-            var li1 = se.tbl_messages.OrderByDescending(t=>t.date).ToList();
+            var li1 = se.tbl_messages.OrderByDescending(t => t.date).ToList();
             List<object> li = new List<object>();
             foreach (var f in li1)
             {
@@ -562,7 +532,8 @@ namespace sunamiapi.Controllers.api
                 {
                     customer_name = se.tbl_customer.FirstOrDefault(g => g.customer_id == f.customer_id).customer_name;
                 }
-                catch {
+                catch
+                {
                     customer_name = "UNKNOWN CUSTOMER";
                 }
                 li.Add(new
@@ -668,7 +639,8 @@ namespace sunamiapi.Controllers.api
                     res = g.Message;
                 }
                 return res;
-            } else
+            }
+            else
             {
                 return null;
             }
@@ -720,7 +692,8 @@ namespace sunamiapi.Controllers.api
 
                 }
                 return res;
-            } else
+            }
+            else
             {
                 return null;
             }
@@ -855,15 +828,15 @@ namespace sunamiapi.Controllers.api
                 user = token.SelectToken("user").ToString();
             }
             catch { }
-            
+
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             try
             {
                 tbl_payments sc = se.tbl_payments.FirstOrDefault(r => r.Id == id1);
-                logevent(user, sc.customer_id, DateTime.Today, "deleted payment amount: " + sc.amount_payed + " ref: " + sc.transaction_code+" method: "+sc.payment_method, "delete payment");
+                logevent(user, sc.customer_id, DateTime.Today, "deleted payment amount: " + sc.amount_payed + " ref: " + sc.transaction_code + " method: " + sc.payment_method, "delete payment");
                 se.tbl_payments.Remove(sc);
                 se.SaveChanges();
-                
+
             }
             catch
             {
@@ -1136,7 +1109,7 @@ namespace sunamiapi.Controllers.api
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             List<object> list = new List<object>(from i in se.tbl_customer
-                                                 //where i.active_status == true
+                                                     //where i.active_status == true
                                                  orderby i.install_date descending
                                                  select new
                                                  {
@@ -1161,7 +1134,8 @@ namespace sunamiapi.Controllers.api
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             tbl_customer i = se.tbl_customer.FirstOrDefault(t1 => t1.customer_id == id);
-            object customer = (new {
+            object customer = (new
+            {
                 Name = i.customer_name,
                 ID = i.customer_id,
                 Occupation = i.occupation,
@@ -1177,7 +1151,7 @@ namespace sunamiapi.Controllers.api
                 status = i.active_status,
                 Package = i.package_type
             });
-                
+
             se.Dispose();
             return customer;
         }
@@ -1483,14 +1457,16 @@ namespace sunamiapi.Controllers.api
                 us.Reason = reason;
                 us.previousRecords = possesions;
                 se.tbl_uninstalled_systems.Add(us);
-                
+
                 // set all invoiced items taken dates
-                foreach(tbl_extra_package_customers tep in se.tbl_extra_package_customers.Where(r=>r.customer_id == customer_id))
+                foreach (tbl_extra_package_customers tep in se.tbl_extra_package_customers.Where(r => r.customer_id == customer_id))
                 {
                     if (tep.date_taken == null)
                     {
                         tep.date_taken = DateTime.Today;
-                    } else {
+                    }
+                    else
+                    {
                         //was already take from the customer
                     }
                 }
@@ -1756,7 +1732,8 @@ namespace sunamiapi.Controllers.api
                     //rc.Package = token.SelectToken("package").ToString();
                     rc.Package = "single_2018(100)";
                 }
-                catch {
+                catch
+                {
                     rc.Package = "single_2018(100)";
                 }
                 try
@@ -1764,8 +1741,9 @@ namespace sunamiapi.Controllers.api
                     date2 = getDate(token.SelectToken("date1").ToString());//yyyy-mm-dd e.g. 2017-04-05 - date1
                     rc.Install_date = date2;
                 }
-                catch {
-                    
+                catch
+                {
+
                 }
                 try
                 {
@@ -1783,7 +1761,7 @@ namespace sunamiapi.Controllers.api
                 // invoice new customer
                 //TODO - call invoice function - avoid duplication of code
                 item = rc.Package;
-                
+
                 if (!se.tbl_extra_package_customers.Where(r => r.customer_id == rc.Id).Select(t => t.item).Contains(item))
                 {
                     tbl_extra_package_customers epc = new tbl_extra_package_customers();
@@ -1793,7 +1771,8 @@ namespace sunamiapi.Controllers.api
                     se.tbl_extra_package_customers.Add(epc);
                     se.SaveChanges();
                     // this.logevent(rc.RecordedBy, rc.Id, DateTime.Today, "Invoiced customer a " + item, "Invoice Customer");
-                } else
+                }
+                else
                 {
                     tbl_extra_package_customers tepc = se.tbl_extra_package_customers.FirstOrDefault(f => f.customer_id == rc.Id && f.item == item);
                     tepc.date_given = date2;
@@ -1864,7 +1843,8 @@ namespace sunamiapi.Controllers.api
                 try
                 {
                     bankname = token.SelectToken("bankname").ToString();
-                }catch { }
+                }
+                catch { }
 
                 if (PayMode == "mpesa")
                 {
@@ -1878,23 +1858,23 @@ namespace sunamiapi.Controllers.api
                 {
                     pr.Mdate = getDate(token.SelectToken("date1").ToString());
                     pr.Mpesa_amount = token.SelectToken("amount").ToString();
-                    if(Code.Length > 5)
+                    if (Code.Length > 5)
                     {
                         PayMode = "mpesa";
                     }
                 }
 
-                else if(PayMode == "bank")
+                else if (PayMode == "bank")
                 {
                     pr.Mdate = getDate(token.SelectToken("date1").ToString());
                     pr.Mpesa_amount = token.SelectToken("amount").ToString();
-                    if(bankname.Length > 2)
+                    if (bankname.Length > 2)
                     {
-                        PayMode = PayMode + "_"+ bankname;
+                        PayMode = PayMode + "_" + bankname;
                     }
                 }
 
-                
+
 
                 pr.Loggedin = loggedUser;
                 pr.PayMode = PayMode;
@@ -1942,13 +1922,14 @@ namespace sunamiapi.Controllers.api
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             list = new List<object>(from t in se.tbl_event_logs
                                     orderby t.date descending
-                                    select new {
-                                                    Category = t.category_affected,
-                                                    CustomerId = t.customer_id,
-                                                    Date = t.date,
-                                                    Event = t.@event,
-                                                    LoggedInUser = t.loggedin_user
-                                               });
+                                    select new
+                                    {
+                                        Category = t.category_affected,
+                                        CustomerId = t.customer_id,
+                                        Date = t.date,
+                                        Event = t.@event,
+                                        LoggedInUser = t.loggedin_user
+                                    });
             return list;
         }
 
@@ -2032,14 +2013,14 @@ namespace sunamiapi.Controllers.api
                 string comment = token.SelectToken("comment").ToString();
                 string item = token.SelectToken("item").ToString();
                 int maxinv = se.tbl_inventory.Where(y => y.Item == item).Max(f => f.Id);
-                tbl_inventory ti = se.tbl_inventory.SingleOrDefault(fr => fr.Id == maxinv && fr.Item==item);
+                tbl_inventory ti = se.tbl_inventory.SingleOrDefault(fr => fr.Id == maxinv && fr.Item == item);
 
                 if (method == "dispense")
                 {
                     stock = ti.stock - number;
-                    if(stock < 0)
+                    if (stock < 0)
                     {
-                        return "OUT OF STOCK, you cannot dispense "+number;
+                        return "OUT OF STOCK, you cannot dispense " + number;
                     }
                 }
                 else if (method == "add")
