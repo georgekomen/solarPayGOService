@@ -612,6 +612,32 @@ namespace sunamiapi.Controllers.api
             return res;
         }
 
+        //work in progress
+        [HttpPost]
+        public void smsDeliveryReport()
+        {
+
+        }
+
+        [HttpPost]
+        public void recordSwitchResponse()
+        {
+
+        }
+
+        private dynamic fetchMessageFromAfricasTalking(int messageId)
+        {
+            fetchSMS ss = new fetchSMS();
+            return ss.fetchSms(messageId);
+            /*foreach (dynamic result in ss.fetchSms(messageId))
+            {
+                Console.Write((string)result["number"] + ",");
+                Console.Write((string)result["status"] + ","); // status is either "Success" or "error message"
+                Console.Write((string)result["messageId"] + ",");
+                Console.WriteLine((string)result["cost"]);
+            }*/
+        }
+
         public string switchOff(tbl_system ts, string sim_no, db_a0a592_sunamiEntities se, string customer_id, string loogeduser)
         {
             if (ts.active_status == false)
@@ -694,7 +720,7 @@ namespace sunamiapi.Controllers.api
                         List<tbl_customer> lst = new List<tbl_customer>();
                         lst.Add(tc);
                         List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
-                        sl.switch_off_payrate = res1[0].Percent.Value.ToString();
+                        sl.switch_on_payrate = res1[0].Percent.Value.ToString();
                     }
                     catch
                     {

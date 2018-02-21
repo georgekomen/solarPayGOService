@@ -314,9 +314,11 @@
     <Compile Include="classes\payRecordClass2.cs" />
     <Compile Include="classes\registerCustomer.cs" />
     <Compile Include="classes\summaryReport.cs" />
+    <Compile Include="classes\SwitchResponse.cs" />
     <Compile Include="codeIncludes\AfricasTalkingGateway.cs" />
     <Compile Include="codeIncludes\calcInvoiceBtwnDates.cs" />
     <Compile Include="codeIncludes\calcInvoiceBtwnDates2.cs" />
+    <Compile Include="codeIncludes\fetchSMS.cs" />
     <Compile Include="codeIncludes\getDataLists.cs" />
     <Compile Include="codeIncludes\sendMail.cs" />
     <Compile Include="codeIncludes\sendSms.cs" />
