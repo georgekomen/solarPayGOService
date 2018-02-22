@@ -620,9 +620,9 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpPost]
-        public void recordSwitchResponse()
+        public void recordSwitchResponse([FromBody]SwitchResponse switchResponse)
         {
-
+            logevent("system",switchResponse.Status, DateTime.Today, switchResponse.Address, switchResponse.Imei);
         }
 
         private dynamic fetchMessageFromAfricasTalking(int messageId)
@@ -1954,7 +1954,7 @@ namespace sunamiapi.Controllers.api
             }
             catch (Exception f)
             {
-
+                
             }
         }
 
