@@ -87,7 +87,7 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public List<paymentRatesClassPerClient> GetPaymentInactiveRates([FromBody] JArray value)
         {
-            /*DateTime end1;
+            DateTime end1;
               db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
 
               List<paymentRatesClassPerClient> list = new List<paymentRatesClassPerClient>();
@@ -113,8 +113,8 @@ namespace sunamiapi.Controllers.api
                   list = calcInvoiceBtwnDatesm(beginDate, end1, list2).OrderByDescending(g => g.Percent).ToList();
               }
               se.Dispose();
-              return list;*/
-            return null;
+              return list;
+            //return null;
         }
 
         public List<paymentRatesClassPerClient> calcInvoiceBtwnDatesm(DateTime start, DateTime end, List<tbl_customer> list2)
