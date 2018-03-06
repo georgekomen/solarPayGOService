@@ -643,7 +643,7 @@ namespace sunamiapi.Controllers.api
                 ts.last_connected_to_db_date = DateTime.Now;
                 tc = se.tbl_customer.FirstOrDefault(oo => oo.customer_id == ts.customer_id);
             }
-            
+            logevent("system feedback", tc.customer_id, DateTime.Today,"Mobile: " + switchResponse.Address+"IMEI: " + switchResponse.Imei+ "SATUS: "+ switchResponse.Status, "switch feedback");
             se.SaveChanges();
             se.Dispose();
         }
