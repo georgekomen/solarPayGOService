@@ -634,7 +634,10 @@ namespace sunamiapi.Controllers.api
                 ts.last_connected_to_db_date = DateTime.Now;
                 tc = se.tbl_customer.FirstOrDefault(tt => tt.customer_id == ts.customer_id);
                 foreach(tbl_sunami_controller tsc in se.tbl_sunami_controller.Where(ff => ff.sim_no == switchResponse.Address)){
-                    tsc.imei = switchResponse.Imei;
+                    if(switchResponse.Imei.Length > 10)
+                    {
+                        tsc.imei = switchResponse.Imei;
+                    }
                 }
             }
             catch
@@ -643,7 +646,7 @@ namespace sunamiapi.Controllers.api
                 ts.last_connected_to_db_date = DateTime.Now;
                 tc = se.tbl_customer.FirstOrDefault(oo => oo.customer_id == ts.customer_id);
             }
-            logevent("system feedback", tc.customer_id, DateTime.Today,"Mobile: " + switchResponse.Address+"IMEI: " + switchResponse.Imei+ "SATUS: "+ switchResponse.Status, "switch feedback");
+            logevent("system feedback", tc.customer_name+ " ID: "+ tc.customer_id, DateTime.Today,"Mobile: " + switchResponse.Address+"IMEI: " + switchResponse.Imei+ "SATUS: "+ switchResponse.Status, "switch feedback");
             se.SaveChanges();
             se.Dispose();
         }
