@@ -10,9 +10,14 @@ namespace sunamiapi.classes
         //date //ref //amount //number //message
         DateTime? date;
         string reference;
-        string amount;
+        int? amount;
         string number;
         string message;
+        string _payMode;
+        string recordedBy;
+        int id;
+        string customer_Name;
+        string customer_Id;
 
         public DateTime? Date
         {
@@ -40,7 +45,7 @@ namespace sunamiapi.classes
             }
         }
 
-        public string Amount
+        public int? Amount
         {
             get
             {
@@ -78,5 +83,11 @@ namespace sunamiapi.classes
                 message = value;
             }
         }
+
+        public string payMode { get => _payMode; set => _payMode = value; }
+        public string RecordedBy { get => recordedBy; set => recordedBy = value; }
+        public int Id { get => id; set => id = value; }
+        public string Customer_Name { get => customer_Name; set => customer_Name = value; }
+        public string Customer_Id { get => customer_Id; set => customer_Id = value; }
     }
 }
