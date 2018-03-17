@@ -1083,24 +1083,24 @@ namespace sunamiapi.Controllers.api
             return res;
         }
 
-        public List<getcustomerresponse> getCustomerDetails()
+        public List<postnewcustomer> getCustomerDetails()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            List<getcustomerresponse> list = new List<getcustomerresponse>(from i in se.tbl_customer
+            List<postnewcustomer> list = new List<postnewcustomer>(from i in se.tbl_customer
                                                      //where i.active_status == true
                                                  orderby i.Id descending
-                                                 select new getcustomerresponse
+                                                 select new postnewcustomer
                                                  {
-                                                     Name = i.customer_name,
-                                                     ID = i.customer_id,
-                                                     Occupation = i.occupation,
-                                                     Mobile = i.phone_numbers,
+                                                     name = i.customer_name,
+                                                     id = i.customer_id,
+                                                     occupation = i.occupation,
+                                                     number1 = i.phone_numbers,
                                                      village = i.village_name,
                                                      location = i.location,
                                                      city = i.city,
                                                      installdate = i.install_date,
-                                                     Witness = i.next_of_kin,
-                                                     Witness_ID = i.nok_mobile,
+                                                     witness = i.next_of_kin,
+                                                     witnessid = i.nok_mobile,
                                                      status = i.active_status
                                                  }
                       );
@@ -1108,26 +1108,26 @@ namespace sunamiapi.Controllers.api
             return list;
         }
 
-        public getcustomerresponse getSingleCustomerDetails(string id)
+        public postnewcustomer getSingleCustomerDetails(string id)
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             tbl_customer i = se.tbl_customer.FirstOrDefault(t1 => t1.customer_id == id);
-            getcustomerresponse customer = (new getcustomerresponse
+            postnewcustomer customer = (new postnewcustomer
             {
-                Name = i.customer_name,
-                ID = i.customer_id,
-                Occupation = i.occupation,
-                Mobile = i.phone_numbers,
-                Mobile2 = i.phone_numbers2,
-                Mobile3 = i.phone_numbers3,
+                name = i.customer_name,
+                id = i.customer_id,
+                occupation = i.occupation,
+                number1 = i.phone_numbers,
+                number2 = i.phone_numbers2,
+                number3 = i.phone_numbers3,
                 village = i.village_name,
                 location = i.location,
                 city = i.city,
                 installdate = i.install_date.Value.Date,
-                Witness = i.next_of_kin,
-                Witness_ID = i.nok_mobile,
+                witness = i.next_of_kin,
+                witnessid = i.nok_mobile,
                 status = i.active_status,
-                Package = i.package_type
+                package = i.package_type
             });
 
             se.Dispose();
@@ -1221,7 +1221,7 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpPost]
-        public string postLinkController([FromBody]JArray value)
+        public string postLinkController([FromBody]postlinkcontroller[] value)
         {
             db_a0a592_sunamiEntities se;
             try
@@ -1235,19 +1235,13 @@ namespace sunamiapi.Controllers.api
             string res = "";
             try
             {
-                //{ imei: this.imei, sim: this.sim, provider: this.provider, version: this.version, loogeduser: this.disname }
-                JToken token = JObject.Parse(value[0].ToString());
-                string imei = token.SelectToken("imei").ToString();
-                string loogeduser = token.SelectToken("loogeduser").ToString();
-                string customer_id = token.SelectToken("customer_id").ToString();
-
-                int ts4 = se.tbl_system.Where(i => i.customer_id == customer_id).Count();
+                int ts4 = se.tbl_system.Where(i => i.customer_id == value[0].customer_id).Count();
                 if (ts4 == 0)
                 {
                     tbl_system ts = new tbl_system();
-                    ts.customer_id = customer_id;
+                    ts.customer_id = value[0].customer_id;
                     ts.active_status = false;
-                    ts.imei_number = imei;
+                    ts.imei_number = value[0].imei;
                     ts.current_lat = null;
                     ts.current_lon = null;
                     ts.last_connected_to_db_date = DateTime.Today;
@@ -1458,15 +1452,15 @@ namespace sunamiapi.Controllers.api
             return date2;
         }
 
-        public List<getcustomerresponse> getActiveCustomersDetails()
+        public List<postnewcustomer> getActiveCustomersDetails()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             // List<object> list = new List<object>(se.tbl_customer.Where(r => r.active_status == true).Select(g => new
-            List<getcustomerresponse> list = new List<getcustomerresponse>(se.tbl_customer.Select(g => new getcustomerresponse
+            List<postnewcustomer> list = new List<postnewcustomer>(se.tbl_customer.Select(g => new postnewcustomer
             {
-                Name = g.customer_name,
-                Customer_id = g.customer_id
-            }).OrderBy(G => G.Name));
+                name = g.customer_name,
+                id = g.customer_id
+            }).OrderBy(G => G.name));
             se.Dispose();
             return list;
         }
@@ -1670,12 +1664,18 @@ namespace sunamiapi.Controllers.api
                 {
                     rc.RecordedBy = "anonymous";
                 }
-                rc.Country = "Kenya";
-
                 try
                 {
-                    //rc.Package = token.SelectToken("package").ToString();
-                    rc.Package = "single_2018(100)";
+                    rc.Country = value[0].country;
+                }
+                catch
+                {
+                    rc.Country = "Kenya";
+                }
+                
+                try
+                {
+                    rc.Package = value[0].package;
                 }
                 catch
                 {
@@ -1700,8 +1700,6 @@ namespace sunamiapi.Controllers.api
                 }
                 rc.record();
                 res = rc.Confirm;
-
-
 
                 // invoice new customer
                 //TODO - call invoice function - avoid duplication of code

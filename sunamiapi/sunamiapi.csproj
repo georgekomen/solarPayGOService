@@ -372,7 +372,6 @@
     <Compile Include="classes\chartdates.cs" />
     <Compile Include="classes\extraPackageInvoicing.cs" />
     <Compile Include="classes\extra_package_invoicing.cs" />
-    <Compile Include="classes\getcustomerresponse.cs" />
     <Compile Include="classes\geteventlogsresponse.cs" />
     <Compile Include="classes\getexpensebody.cs" />
     <Compile Include="classes\getexpensecategory.cs" />
@@ -400,6 +399,7 @@
     <Compile Include="classes\postexpensebody.cs" />
     <Compile Include="classes\postissuebody.cs" />
     <Compile Include="classes\postissuesolvedbody.cs" />
+    <Compile Include="classes\postlinkcontroller.cs" />
     <Compile Include="classes\postmakepaymentbody.cs" />
     <Compile Include="classes\postnewcustomer.cs" />
     <Compile Include="classes\postrecordstockitem.cs" />

@@ -7,6 +7,8 @@ namespace sunamiapi.classes
 {
     public class postnewcustomer
     {
+        private DateTime? _installdate;
+        private bool? _status;
         private string _id;
         private string _box;
         private string _city;
@@ -24,6 +26,8 @@ namespace sunamiapi.classes
         private string _recordedBy;
         private string _date1;
         private string _location;
+        private string _country;
+        private string _package;
 
         public string id { get => _id; set => _id = value; }
         public string box { get => _box; set => _box = value; }
@@ -42,5 +46,9 @@ namespace sunamiapi.classes
         public string recordedBy { get => _recordedBy; set => _recordedBy = value; }
         public string date1 { get => _date1; set => _date1 = value; }
         public string location { get => _location; set => _location = value; }
+        public string country { get => _country; set => _country = value; }
+        public string package { get => _package; set => _package = value; }
+        public DateTime? installdate { get => _installdate; set => _installdate = value; }
+        public bool? status { get => _status; set => _status = value; }
     }
 }
