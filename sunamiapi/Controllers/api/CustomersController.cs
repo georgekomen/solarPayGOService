@@ -1109,7 +1109,8 @@ namespace sunamiapi.Controllers.api
                                                      installdate = i.install_date,
                                                      witness = i.next_of_kin,
                                                      witnessid = i.nok_mobile,
-                                                     status = i.active_status
+                                                     status = i.active_status,
+                                                     country = i.country
                                                  }
                       );
             se.Dispose();
@@ -1137,7 +1138,8 @@ namespace sunamiapi.Controllers.api
                     witness = i.next_of_kin,
                     witnessid = i.nok_mobile,
                     status = i.active_status,
-                    package = i.package_type
+                    package = i.package_type,
+                    country = i.country
                 });
                 return customer;
             }
