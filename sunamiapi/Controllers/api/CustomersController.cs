@@ -1111,27 +1111,36 @@ namespace sunamiapi.Controllers.api
         public postnewcustomer getSingleCustomerDetails(string id)
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            tbl_customer i = se.tbl_customer.FirstOrDefault(t1 => t1.customer_id == id);
-            postnewcustomer customer = (new postnewcustomer
+            try
             {
-                name = i.customer_name,
-                id = i.customer_id,
-                occupation = i.occupation,
-                number1 = i.phone_numbers,
-                number2 = i.phone_numbers2,
-                number3 = i.phone_numbers3,
-                village = i.village_name,
-                location = i.location,
-                city = i.city,
-                installdate = i.install_date.Value.Date,
-                witness = i.next_of_kin,
-                witnessid = i.nok_mobile,
-                status = i.active_status,
-                package = i.package_type
-            });
-
-            se.Dispose();
-            return customer;
+                tbl_customer i = se.tbl_customer.FirstOrDefault(t1 => t1.customer_id == id);
+                postnewcustomer customer = (new postnewcustomer
+                {
+                    name = i.customer_name,
+                    id = i.customer_id,
+                    occupation = i.occupation,
+                    number1 = i.phone_numbers,
+                    number2 = i.phone_numbers2,
+                    number3 = i.phone_numbers3,
+                    village = i.village_name,
+                    location = i.location,
+                    city = i.city,
+                    installdate = i.install_date.Value.Date,
+                    witness = i.next_of_kin,
+                    witnessid = i.nok_mobile,
+                    status = i.active_status,
+                    package = i.package_type
+                });
+                return customer;
+            }
+            catch
+            {
+                return null;
+            }
+            finally
+            {
+                se.Dispose();
+            }
         }
 
         public List<getsunamisystemresponse> getSystemDetails()
