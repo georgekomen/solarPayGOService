@@ -227,7 +227,9 @@ namespace sunamiapi.Controllers.api
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             try
             {
-                if (!se.tbl_extra_package_customers.Where(r => r.customer_id == value[0].customerId).Select(t => t.item).Contains(value[0].item))
+                string customer_id = value[0].customerId;
+                string item = value[0].item;
+                if (!se.tbl_extra_package_customers.Where(r => r.customer_id == customer_id).Select(t => t.item).Contains(item))
                 {
                     tbl_extra_package_customers epc = new tbl_extra_package_customers();
                     epc.customer_id = value[0].customerId;
@@ -339,8 +341,10 @@ namespace sunamiapi.Controllers.api
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             try
             {
+                string imei = value[0].imei;
+                string action = value[0].action;
                 //{ imei: this.imei, sim: this.sim, provider: this.provider, version: this.version, loogeduser: this.disname }
-                if (!se.tbl_sunami_controller.Select(h => h.imei).Contains(value[0].imei) && value[0].action == "create")
+                if (!se.tbl_sunami_controller.Select(h => h.imei).Contains(imei) && action == "create")
                 {
                     tbl_sunami_controller sc = new tbl_sunami_controller();
                     sc.imei = value[0].imei;
@@ -354,9 +358,9 @@ namespace sunamiapi.Controllers.api
 
                     controllers.Add(new msgAndGetsunamicontroller { message = "successfully created new controller", content = getSunamiControllers() });
                 }
-                else if (se.tbl_sunami_controller.Select(h => h.imei).Contains(value[0].imei) && value[0].action == "modify")
+                else if (se.tbl_sunami_controller.Select(h => h.imei).Contains(imei) && action == "modify")
                 {
-                    tbl_sunami_controller sc = se.tbl_sunami_controller.FirstOrDefault(g => g.imei == value[0].imei);
+                    tbl_sunami_controller sc = se.tbl_sunami_controller.FirstOrDefault(g => g.imei == imei);
                     sc.sim_no = value[0].sim;
                     sc.provider = value[0].provider;
                     sc.version = value[0].version;
@@ -381,16 +385,19 @@ namespace sunamiapi.Controllers.api
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             try
             {
-                tbl_system sc = se.tbl_system.FirstOrDefault(r => r.imei_number == value[0].id);
-                logevent(value[0].user, sc.customer_id, DateTime.Today, "unlinked imei: " + value[0].id, "unlink controller");
+                string imei = value[0].id;
+                tbl_system sc = se.tbl_system.FirstOrDefault(r => r.imei_number == imei);             
                 se.tbl_system.Remove(sc);
                 se.SaveChanges();
+                se.Dispose();
+                logevent(value[0].user, sc.customer_id, DateTime.Now, "unlinked imei: " + value[0].id, "unlink controller");
+                return "successfully unlinked controller";
             }
-            catch
+            catch(Exception g)
             {
+                return g.Message;
             }
-            se.Dispose();
-            return "successfully unlinked controller";
+            
         }
 
         [HttpPost]
@@ -399,16 +406,16 @@ namespace sunamiapi.Controllers.api
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             try
             {
-                if (se.tbl_system.Where(r1 => r1.imei_number == value[0].id).Count() > 0)
+                string imei = value[0].id;
+                if (se.tbl_system.Where(r1 => r1.imei_number == imei).Count() > 0)
                 {
                     se.Dispose();
                     return "cannot delete controller, it is currently linked to a customer. You need to unlink it before deleting";
                 }
                 else
                 {
-                    tbl_sunami_controller sc = se.tbl_sunami_controller.FirstOrDefault(r => r.imei == value[0].id);
-
-                    logevent(value[0].user, sc.sim_no + "," + sc.provider + "," + sc.version, DateTime.Today, "deleted imei: " + value[0].id, "deleted controller");
+                    tbl_sunami_controller sc = se.tbl_sunami_controller.FirstOrDefault(r => r.imei == imei);
+                    logevent(value[0].user, sc.sim_no + "," + sc.provider + "," + sc.version, DateTime.Now, "deleted imei: " + value[0].id, "deleted controller");
                     se.tbl_sunami_controller.Remove(sc);
                     se.SaveChanges();
                     se.Dispose();
@@ -597,7 +604,7 @@ namespace sunamiapi.Controllers.api
                 ts.last_connected_to_db_date = DateTime.Now;
                 tc = se.tbl_customer.FirstOrDefault(oo => oo.customer_id == ts.customer_id);
             }
-            logevent("system feedback", tc.customer_name+ " ID: "+ tc.customer_id, DateTime.Today,"Mobile: " + switchResponse.Address+"IMEI: " + switchResponse.Imei+ "SATUS: "+ switchResponse.Status, "switch feedback");
+            logevent("system feedback", tc.customer_name+ " ID: "+ tc.customer_id, DateTime.Now,"Mobile: " + switchResponse.Address+"IMEI: " + switchResponse.Imei+ "SATUS: "+ switchResponse.Status, "switch feedback");
             se.SaveChanges();
             se.Dispose();
         }
@@ -1045,7 +1052,8 @@ namespace sunamiapi.Controllers.api
             {
                 try
                 {
-                    int tblm = se.tbl_mpesa_phone_imei.Where(i => i.imei == value[0].imei).Count();
+                    string imei = value[0].imei;
+                    int tblm = se.tbl_mpesa_phone_imei.Where(i => i.imei == imei).Count();
                     if (tblm < 1)
                     {
                         res = null;
@@ -1244,7 +1252,8 @@ namespace sunamiapi.Controllers.api
             string res = "";
             try
             {
-                int ts4 = se.tbl_system.Where(i => i.customer_id == value[0].customer_id).Count();
+                string customer_id = value[0].customer_id;
+                int ts4 = se.tbl_system.Where(i => i.customer_id == customer_id).Count();
                 if (ts4 == 0)
                 {
                     tbl_system ts = new tbl_system();
@@ -1343,7 +1352,8 @@ namespace sunamiapi.Controllers.api
             string res = "";
             try
             {
-                tbl_issues ti = se.tbl_issues.FirstOrDefault(f => f.Id == value[0].Id);
+                int id = value[0].Id;
+                tbl_issues ti = se.tbl_issues.FirstOrDefault(f => f.Id == id);
                 ti.status = "solved";
                 ti.solvedOn = DateTime.Now;
                 ti.solvedBy = value[0].Ssolver;
@@ -1383,6 +1393,7 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public string postUninstall([FromBody]postuninstallbody[] value)
         {
+            string customer_id = value[0].customer_id;
             db_a0a592_sunamiEntities se;
             try
             {
@@ -1399,7 +1410,7 @@ namespace sunamiapi.Controllers.api
                 DateTime date2 = getDate(value[0].date1);
 
                 //mark customer as inactive in customer db
-                tbl_customer tc = se.tbl_customer.FirstOrDefault(w => w.customer_id == value[0].customer_id);
+                tbl_customer tc = se.tbl_customer.FirstOrDefault(w => w.customer_id == customer_id);
                 tc.active_status = false;
                 se.SaveChanges();
 
@@ -1407,7 +1418,7 @@ namespace sunamiapi.Controllers.api
                 try
                 {
                     //inactivate in tblsystem too
-                    tbl_system tc2 = se.tbl_system.FirstOrDefault(w4 => w4.customer_id == value[0].customer_id);
+                    tbl_system tc2 = se.tbl_system.FirstOrDefault(w4 => w4.customer_id == customer_id);
                     possesions += tc2.imei_number;
                     se.tbl_system.Remove(tc2);
                     se.SaveChanges();
@@ -1424,7 +1435,7 @@ namespace sunamiapi.Controllers.api
                 se.tbl_uninstalled_systems.Add(us);
 
                 // set all invoiced items taken dates
-                foreach (tbl_extra_package_customers tep in se.tbl_extra_package_customers.Where(r => r.customer_id == value[0].customer_id))
+                foreach (tbl_extra_package_customers tep in se.tbl_extra_package_customers.Where(r => r.customer_id == customer_id))
                 {
                     if (tep.date_taken == null)
                     {
@@ -1494,7 +1505,8 @@ namespace sunamiapi.Controllers.api
             //get recipients email
             try
             {
-                string email = se.tbl_users.FirstOrDefault(f2 => f2.name == value[0].recipient).email;
+                string recipient = value[0].recipient;
+                string email = se.tbl_users.FirstOrDefault(f2 => f2.name == recipient).email;
                 value[0].recipient = email;
             }
             catch
@@ -1950,8 +1962,9 @@ namespace sunamiapi.Controllers.api
             {
                 int? stock = 0;
                 db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-                int maxinv = se.tbl_inventory.Where(y => y.Item == value[0].item).Max(f => f.Id);
-                tbl_inventory ti = se.tbl_inventory.SingleOrDefault(fr => fr.Id == maxinv && fr.Item == value[0].item);
+                string item = value[0].item;
+                int maxinv = se.tbl_inventory.Where(y => y.Item == item).Max(f => f.Id);
+                tbl_inventory ti = se.tbl_inventory.SingleOrDefault(fr => fr.Id == maxinv && fr.Item == item);
 
                 if (value[0].method == "dispense")
                 {
