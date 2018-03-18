@@ -459,10 +459,12 @@ namespace sunamiapi.Controllers.api
                     }
                     else if (message.StartsWith("remind"))
                     {
+                        List<tbl_customer> tc = se1.tbl_customer.Where(gg => gg.customer_id == num.idnumber).ToList();
+                        List<paymentRatesClassPerClient> list = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, tc);
                         msg = message.Replace(@"remind", @"");
-                        int invoice = int.Parse(num.Invoice);
-                        int paid = int.Parse(num.Paid);
-                        int not_paid = invoice - paid;
+                        int invoice = list[0].Invoice;
+                        int? paid = list[0].Amount;
+                        int? not_paid = invoice - paid;
                         if (not_paid < 0)
                         {
                             msgs = "Jambo " + firstname[0].ToUpper() + msg + ", asanti kwa uaminifu wako. Malipo ni kwa Mpesa Till number 784289. Nambari ya kuhudumiwa ni 0788103403.";//. Kuudumiwa piga: 0788103403                              
