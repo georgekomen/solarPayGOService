@@ -1312,6 +1312,32 @@ namespace sunamiapi.Controllers.api
             return list;
         }
 
+        [HttpGet]
+        public List<getissueresponse> getIssuesPerCustomer(string id)
+        {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            List<getissueresponse> list = 
+                new List<getissueresponse>(from tc in se.tbl_customer
+                                            where tc.customer_id == id
+                                            join ti in se.tbl_issues on tc.customer_id equals ti.customer_id
+                                            orderby ti.Id ascending
+                                            select new getissueresponse
+                                            {
+                                                customer = tc.customer_name,
+                                                Id = ti.Id,
+                                                reporter = ti.reporter,
+                                                issue = ti.issue,
+                                                date = ti.date,
+                                                priority = ti.priority,
+                                                status = ti.status,
+                                                solvedOn = ti.solvedOn,
+                                                solvedBy = ti.solvedBy,
+                                                comment = ti.comments
+                                            });
+            se.Dispose();
+            return list;
+        }
+
         [HttpPost]
         public string postNewIssues([FromBody]postissuebody[] value)
         {
