@@ -1110,7 +1110,9 @@ namespace sunamiapi.Controllers.api
                                                      witness = i.next_of_kin,
                                                      witnessid = i.nok_mobile,
                                                      status = i.active_status,
-                                                     country = i.country
+                                                     country = i.country,
+                                                     agentcode = i.agentcode,
+                                                     witnessnumber = i.witness_mobile_number
                                                  }
                       );
             se.Dispose();
@@ -1139,7 +1141,9 @@ namespace sunamiapi.Controllers.api
                     witnessid = i.nok_mobile,
                     status = i.active_status,
                     package = i.package_type,
-                    country = i.country
+                    country = i.country,
+                    agentcode = i.agentcode,
+                    witnessnumber = i.witness_mobile_number
                 });
                 return customer;
             }
