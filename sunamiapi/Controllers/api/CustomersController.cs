@@ -1907,6 +1907,7 @@ namespace sunamiapi.Controllers.api
                                         Event = t.@event,
                                         LoggedInUser = t.loggedin_user
                                     });
+            se.Dispose();
             return list;
         }
 
@@ -2009,6 +2010,23 @@ namespace sunamiapi.Controllers.api
             {
                 return f.Message;
             }
+        }
+        
+        [HttpGet]
+        public List<object> getCustomerInvoicedItems(string id)
+        {
+            List<object> list = new List<object>();
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            list = new List<object>(from ei in se.tbl_extra_package_customers
+                                    where ei.customer_id == id
+                                    orderby ei.Id descending
+                                    select new
+                                    {
+                                        item = ei.item,
+                                        invoiceDate = ei.date_given
+                                    });
+            se.Dispose();
+            return list;
         }
     }
 }
