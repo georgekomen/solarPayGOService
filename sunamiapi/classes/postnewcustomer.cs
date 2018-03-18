@@ -7,7 +7,7 @@ namespace sunamiapi.classes
 {
     public class postnewcustomer
     {
-        private int? _agentcode;
+        private string _agentcode;
         private string _witnessnumber;
         private DateTime? _installdate;
         private bool? _status;
@@ -52,7 +52,7 @@ namespace sunamiapi.classes
         public string package { get => _package; set => _package = value; }
         public DateTime? installdate { get => _installdate; set => _installdate = value; }
         public bool? status { get => _status; set => _status = value; }
-        public int? agentcode { get => _agentcode; set => _agentcode = value; }
+        public string agentcode { get => _agentcode; set => _agentcode = value; }
         public string witnessnumber { get => _witnessnumber; set => _witnessnumber = value; }
     }
 }

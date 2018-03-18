@@ -234,6 +234,7 @@ namespace sunamiapi.Controllers.api
                     tbl_extra_package_customers epc = new tbl_extra_package_customers();
                     epc.customer_id = value[0].customerId;
                     epc.item = value[0].item;
+                    epc.agentcode = value[0].agentcode;
                     epc.date_given = getDate(value[0].invoiceDate);
                     se.tbl_extra_package_customers.Add(epc);
                     se.SaveChanges();
@@ -1741,6 +1742,7 @@ namespace sunamiapi.Controllers.api
                     tbl_extra_package_customers epc = new tbl_extra_package_customers();
                     epc.customer_id = rc.Id;
                     epc.item = item;
+                    epc.agentcode = value[0].agentcode;
                     epc.date_given = date2;
                     se.tbl_extra_package_customers.Add(epc);
                     se.SaveChanges();
@@ -2052,10 +2054,10 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpGet]
-        public List<tbl_customer> getAgentSales(string id)
+        public List<tbl_extra_package_customers> getAgentSales(string id)
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            List<tbl_customer> list = se.tbl_customer.Where(rr=>rr.agentcode == id).ToList();
+            List<tbl_extra_package_customers> list = se.tbl_extra_package_customers.Where(rr=>rr.agentcode == id).ToList();
             se.Dispose();
             return list;
         }

@@ -7,6 +7,7 @@ namespace sunamiapi.classes
 {
     public class Invoicecustomerbody
     {
+        private string _agentcode;
         private string _customerId;
         private string _item;
         private string _loogedUser;
@@ -16,5 +17,6 @@ namespace sunamiapi.classes
         public string item { get => _item; set => _item = value; }
         public string loogedUser { get => _loogedUser; set => _loogedUser = value; }
         public string invoiceDate { get => _invoiceDate; set => _invoiceDate = value; }
+        public string agentcode { get => _agentcode; set => _agentcode = value; }
     }
 }

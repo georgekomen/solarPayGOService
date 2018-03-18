@@ -349,7 +349,7 @@
           <Property Name="package_type" Type="String" MaxLength="16777215" FixedLength="false" Unicode="false" />
           <Property Name="RecordedBy" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
           <Property Name="Description" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
-          <Property Name="agentcode" Type="Int32" />
+          <Property Name="agentcode" Type="String" />
           <Property Name="witness_mobile_number" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="gender" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
         </EntityType>

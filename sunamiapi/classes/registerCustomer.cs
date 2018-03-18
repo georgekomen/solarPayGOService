@@ -29,7 +29,7 @@ namespace sunamiapi.classes
         private string witness;
         private string witnessid;
         private string witness_mobile;
-        private int? agentcode;
+        private string agentcode;
         private string description;
         private string recordedBy;
 
@@ -293,7 +293,7 @@ namespace sunamiapi.classes
         }
 
         public string Witness_mobile { get => witness_mobile; set => witness_mobile = value; }
-        public int? Agentcode { get => agentcode; set => agentcode = value; }
+        public string Agentcode { get => agentcode; set => agentcode = value; }
 
         public void record()
         {
@@ -361,7 +361,7 @@ namespace sunamiapi.classes
                     {
                         tc.witness_mobile_number = Witness_mobile;
                     }
-                    if (Agentcode != 0 && Agentcode != null)
+                    if (Agentcode != "" && Agentcode != null)
                     {
                         tc.agentcode = Agentcode;
                     }
