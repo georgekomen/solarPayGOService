@@ -1666,6 +1666,8 @@ namespace sunamiapi.Controllers.api
             {
                 registerCustomer rc = new registerCustomer();
                 rc.Id = value[0].id;
+                rc.Agentcode = value[0].agentcode;
+                rc.Witness_mobile = value[0].witnessnumber;
                 rc.Box = value[0].box;
                 rc.City = value[0].city;
                 rc.LatG = value[0].latG;
