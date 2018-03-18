@@ -4,14 +4,14 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="4d1df97d537845bf8b9b3527a3cb1185" Name="Diagram1">
+      <Diagram DiagramId="4d1df97d537845bf8b9b3527a3cb1185" Name="Diagram1" ZoomLevel="62">
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_customer" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_extra_item" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_extra_package_customers" Width="1.5" PointX="2.75" PointY="2.75" IsExpanded="true" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_fault_code" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_faults" Width="1.5" PointX="4.75" PointY="2.75" IsExpanded="true" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_imei_sim_numbers" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_issues" Width="1.5" PointX="0.75" PointY="5.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_issues" Width="1.5" PointX="0.75" PointY="6" IsExpanded="true" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_mpesa_payments" Width="1.5" PointX="6.75" PointY="2.375" IsExpanded="true" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_mpesa_phone_imei" Width="1.5" PointX="2.75" PointY="4.5" IsExpanded="true" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_packages" Width="1.5" PointX="4.75" PointY="5.125" IsExpanded="true" />
@@ -28,6 +28,7 @@
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_messages" Width="1.5" PointX="2.75" PointY="8.25" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_event_logs" Width="1.5" PointX="8.75" PointY="9" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_inventory" Width="1.5" PointX="6.75" PointY="9.5" />
+        <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_agents" Width="1.5" PointX="0.75" PointY="11.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -48,5 +48,6 @@ namespace sunamiapi.Models.DatabaseModel
         public virtual DbSet<tbl_messages> tbl_messages { get; set; }
         public virtual DbSet<tbl_event_logs> tbl_event_logs { get; set; }
         public virtual DbSet<tbl_inventory> tbl_inventory { get; set; }
+        public virtual DbSet<tbl_agents> tbl_agents { get; set; }
     }
 }

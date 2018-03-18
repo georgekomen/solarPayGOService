@@ -5,6 +5,15 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="db_a0a592_sunamiModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.6" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tbl_agents">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="firstname" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="lastname" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="dateofenrolment" Type="datetime" Precision="0" Nullable="false" />
+        </EntityType>
         <EntityType Name="tbl_customer">
           <Key>
             <PropertyRef Name="Id" />
@@ -30,6 +39,8 @@
           <Property Name="package_type" Type="mediumtext" />
           <Property Name="RecordedBy" Type="longtext" />
           <Property Name="Description" Type="longtext" />
+          <Property Name="agentcode" Type="int" />
+          <Property Name="witness_mobile_number" Type="varchar" MaxLength="15" />
         </EntityType>
         <EntityType Name="tbl_event_logs">
           <Key>
@@ -271,6 +282,7 @@
           <Property Name="task" Type="longtext" Nullable="false" />
         </EntityType>
         <EntityContainer Name="db_a0a592_sunamiModelStoreContainer">
+          <EntitySet Name="tbl_agents" EntityType="Self.tbl_agents" Schema="db_a0a592_sunami" store:Type="Tables" />
           <EntitySet Name="tbl_customer" EntityType="Self.tbl_customer" Schema="db_a0a592_sunami" store:Type="Tables" />
           <EntitySet Name="tbl_event_logs" EntityType="Self.tbl_event_logs" Schema="db_a0a592_sunami" store:Type="Tables" />
           <EntitySet Name="tbl_expense_categories" EntityType="Self.tbl_expense_categories" Schema="db_a0a592_sunami" store:Type="Tables" />
@@ -324,6 +336,8 @@
           <Property Name="package_type" Type="String" MaxLength="16777215" FixedLength="false" Unicode="false" />
           <Property Name="RecordedBy" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
           <Property Name="Description" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
+          <Property Name="agentcode" Type="Int32" />
+          <Property Name="witness_mobile_number" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="tbl_extra_item">
           <Key>
@@ -509,6 +523,7 @@
           <EntitySet Name="tbl_messages" EntityType="db_a0a592_sunamiModel.tbl_messages" />
           <EntitySet Name="tbl_event_logs" EntityType="db_a0a592_sunamiModel.tbl_event_logs" />
           <EntitySet Name="tbl_inventory" EntityType="db_a0a592_sunamiModel.tbl_inventory" />
+          <EntitySet Name="tbl_agents" EntityType="db_a0a592_sunamiModel.tbl_agents" />
         </EntityContainer>
         <EntityType Name="tbl_sunami_controller">
           <Key>
@@ -589,6 +604,15 @@
           <Property Name="units" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
           <Property Name="comments" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="tbl_agents">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="firstname" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="lastname" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="dateofenrolment" Type="DateTime" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -598,6 +622,8 @@
           <EntitySetMapping Name="tbl_customer">
             <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_customer">
               <MappingFragment StoreEntitySet="tbl_customer">
+                <ScalarProperty Name="witness_mobile_number" ColumnName="witness_mobile_number" />
+                <ScalarProperty Name="agentcode" ColumnName="agentcode" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="RecordedBy" ColumnName="RecordedBy" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -880,6 +906,16 @@
                 <ScalarProperty Name="stock" ColumnName="stock" />
                 <ScalarProperty Name="Item" ColumnName="Item" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_agents">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_agents">
+              <MappingFragment StoreEntitySet="tbl_agents">
+                <ScalarProperty Name="dateofenrolment" ColumnName="dateofenrolment" />
+                <ScalarProperty Name="lastname" ColumnName="lastname" />
+                <ScalarProperty Name="firstname" ColumnName="firstname" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -421,6 +421,9 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\api\CustomersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Models\DatabaseModel\tbl_agents.cs">
+      <DependentUpon>SunamiDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DatabaseModel\tbl_event_logs.cs">
       <DependentUpon>SunamiDB.tt</DependentUpon>
     </Compile>
