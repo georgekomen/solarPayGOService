@@ -1829,10 +1829,6 @@ namespace sunamiapi.Controllers.api
                 {
                     pr.Mdate = getDate(value[0].date1);
                     pr.Mpesa_amount = value[0].amount;
-                    if (Code.Length > 5)
-                    {
-                        PayMode = "mpesa";
-                    }
                 }
 
                 else if (PayMode == "bank")
@@ -1844,7 +1840,19 @@ namespace sunamiapi.Controllers.api
                         PayMode = PayMode + "_" + bankname;
                     }
                 }
-                
+
+                else if (PayMode == "mtn_uganda")
+                {
+                    pr.Mdate = getDate(value[0].date1);
+                    pr.Mpesa_amount = value[0].amount;
+                }
+
+                else if (PayMode == "airtel_uganda")
+                {
+                    pr.Mdate = getDate(value[0].date1);
+                    pr.Mpesa_amount = value[0].amount;
+                }
+
                 pr.Loggedin = loggedUser;
                 pr.PayMode = PayMode;
                 pr.Code = Code;
