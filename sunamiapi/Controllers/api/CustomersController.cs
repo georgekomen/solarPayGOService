@@ -2030,6 +2030,35 @@ namespace sunamiapi.Controllers.api
             se.Dispose();
             return list;
         }
+        
+        [HttpPost]
+        public tbl_agents registerAgent([FromBody]tbl_agents value)
+        {
+            string idnumber = value.idnumber;
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            se.tbl_agents.Add(value);
+            se.SaveChanges();
+            se.Dispose();
+            return se.tbl_agents.FirstOrDefault(gg => gg.idnumber == idnumber);
+        }
+
+        [HttpGet]
+        public List<tbl_agents> getAgents()
+        {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            List<tbl_agents> list = se.tbl_agents.ToList();
+            se.Dispose();
+            return list;
+        }
+
+        [HttpGet]
+        public List<tbl_customer> getAgentSales(string id)
+        {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            List<tbl_customer> list = se.tbl_customer.Where(rr=>rr.agentcode == id).ToList();
+            se.Dispose();
+            return list;
+        }
     }
 }
 
