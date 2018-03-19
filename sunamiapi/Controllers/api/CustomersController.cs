@@ -500,11 +500,41 @@ namespace sunamiapi.Controllers.api
             }
         }
 
+        [HttpGet]
         public List<getmessagebody> getMessages()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             string customer_name = "";
             var li1 = se.tbl_messages.OrderByDescending(t => t.id).ToList();
+            List<getmessagebody> li = new List<getmessagebody>();
+            foreach (var f in li1)
+            {
+                try
+                {
+                    customer_name = se.tbl_customer.FirstOrDefault(g => g.customer_id == f.customer_id).customer_name;
+                }
+                catch
+                {
+                    customer_name = "UNKNOWN CUSTOMER";
+                }
+                li.Add(new getmessagebody
+                {
+                    Name = customer_name,
+                    Message = f.message,
+                    Date = f.date
+                });
+            }
+            se.Dispose();
+            return li;
+        }
+        
+
+        [HttpGet]
+        public List<getmessagebody> getMessagesPerCustomer(string id)
+        {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            string customer_name = "";
+            var li1 = se.tbl_messages.Where(rr=>rr.customer_id == id).OrderByDescending(t => t.id).ToList();
             List<getmessagebody> li = new List<getmessagebody>();
             foreach (var f in li1)
             {
