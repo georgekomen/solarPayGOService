@@ -14,6 +14,7 @@
           <Property Name="lastname" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="dateofenrolment" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="idnumber" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="country" Type="varchar" MaxLength="15" Nullable="false" />
         </EntityType>
         <EntityType Name="tbl_customer">
           <Key>
@@ -40,7 +41,7 @@
           <Property Name="package_type" Type="mediumtext" />
           <Property Name="RecordedBy" Type="longtext" />
           <Property Name="Description" Type="longtext" />
-          <Property Name="agentcode" Type="int" />
+          <Property Name="agentcode" Type="varchar" MaxLength="15" />
           <Property Name="witness_mobile_number" Type="varchar" MaxLength="15" />
           <Property Name="gender" Type="text" />
         </EntityType>
@@ -97,6 +98,7 @@
           <Property Name="item" Type="longtext" Nullable="false" />
           <Property Name="date_given" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="date_taken" Type="datetime" Precision="0" />
+          <Property Name="agentcode" Type="varchar" MaxLength="15" />
         </EntityType>
         <EntityType Name="tbl_fault_code">
           <Key>
@@ -370,6 +372,7 @@
           <Property Name="item" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="date_given" Type="DateTime" Nullable="false" />
           <Property Name="date_taken" Type="DateTime" />
+          <Property Name="agentcode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="tbl_fault_code">
           <Key>
@@ -626,6 +629,7 @@
           <Property Name="lastname" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="dateofenrolment" Type="DateTime" Nullable="false" />
           <Property Name="idnumber" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="country" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="tbl_grants">
           <Key>
@@ -685,6 +689,7 @@
           <EntitySetMapping Name="tbl_extra_package_customers">
             <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_extra_package_customers">
               <MappingFragment StoreEntitySet="tbl_extra_package_customers">
+                <ScalarProperty Name="agentcode" ColumnName="agentcode" />
                 <ScalarProperty Name="date_taken" ColumnName="date_taken" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="customer_id" ColumnName="customer_id" />
@@ -935,6 +940,7 @@
           <EntitySetMapping Name="tbl_agents">
             <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_agents">
               <MappingFragment StoreEntitySet="tbl_agents">
+                <ScalarProperty Name="country" ColumnName="country" />
                 <ScalarProperty Name="idnumber" ColumnName="idnumber" />
                 <ScalarProperty Name="dateofenrolment" ColumnName="dateofenrolment" />
                 <ScalarProperty Name="lastname" ColumnName="lastname" />

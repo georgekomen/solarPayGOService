@@ -19,5 +19,6 @@ namespace sunamiapi.Models.DatabaseModel
         public string lastname { get; set; }
         public System.DateTime dateofenrolment { get; set; }
         public string idnumber { get; set; }
+        public string country { get; set; }
     }
 }
