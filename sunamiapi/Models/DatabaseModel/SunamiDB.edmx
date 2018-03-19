@@ -15,6 +15,9 @@
           <Property Name="dateofenrolment" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="idnumber" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="country" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="phonenumber" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="15" />
+          <Property Name="location" Type="varchar" MaxLength="15" />
         </EntityType>
         <EntityType Name="tbl_customer">
           <Key>
@@ -630,6 +633,9 @@
           <Property Name="dateofenrolment" Type="DateTime" Nullable="false" />
           <Property Name="idnumber" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="country" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="phonenumber" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="location" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="tbl_grants">
           <Key>
@@ -940,6 +946,9 @@
           <EntitySetMapping Name="tbl_agents">
             <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_agents">
               <MappingFragment StoreEntitySet="tbl_agents">
+                <ScalarProperty Name="location" ColumnName="location" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="phonenumber" ColumnName="phonenumber" />
                 <ScalarProperty Name="country" ColumnName="country" />
                 <ScalarProperty Name="idnumber" ColumnName="idnumber" />
                 <ScalarProperty Name="dateofenrolment" ColumnName="dateofenrolment" />
