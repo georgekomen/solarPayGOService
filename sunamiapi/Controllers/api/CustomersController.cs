@@ -480,6 +480,7 @@ namespace sunamiapi.Controllers.api
                         }
                     }
                 }
+                logevent(value[0].sender, "e.g. " + value[0].recipients[0].idnumber, DateTime.Today, "SMS sent", "SMS");
                 return "sent";
             }
             catch (Exception e)

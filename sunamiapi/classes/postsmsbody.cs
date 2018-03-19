@@ -7,11 +7,13 @@ namespace sunamiapi.classes
 {
     public class postsmsbody
     {
+        private string _sender;
         private string _message;
         private List<recipients> _recipients;
 
         public string message { get => _message; set => _message = value; }
         public List<recipients> recipients { get => _recipients; set => _recipients = value; }
+        public string sender { get => _sender; set => _sender = value; }
     }
 
     public class recipients
