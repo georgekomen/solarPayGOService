@@ -217,7 +217,9 @@ namespace sunamiapi.Controllers.api
         public List<Invoiceitem> invoiceItems()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            return new List<Invoiceitem>(se.tbl_extra_item.Select(r => new Invoiceitem { Item = r.item, Deposit = r.deposit, Amount = r.amount_per_day, PayDays = r.extra_pay_period }));
+            List<Invoiceitem> list = new List<Invoiceitem>(se.tbl_extra_item.Select(r => new Invoiceitem { Item = r.item, Deposit = r.deposit, Amount = r.amount_per_day, PayDays = r.extra_pay_period }));
+            se.Dispose();
+            return list; 
         }
 
         [HttpPost]
@@ -1175,8 +1177,29 @@ namespace sunamiapi.Controllers.api
                                                      Last_System_Communication = "l" + ts.last_connected_to_db_date,
                                                      Imei = ts.imei_number,
                                                      SystemPhoneNumber = tsc.sim_no
-                                                 }
-                    );
+                                                 });
+            se.Dispose();
+            return list;
+        }
+
+
+        public List<getsunamisystemresponse> getSystemDetailsPerCustomer(String id)
+        {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            List<getsunamisystemresponse> list = new List<getsunamisystemresponse>(from ts in se.tbl_system
+                                                                                   where ts.customer_id == id
+                                                                                   join tc in se.tbl_customer on ts.customer_id equals tc.customer_id
+                                                                                   join tsc in se.tbl_sunami_controller on ts.imei_number equals tsc.imei
+                                                                                   orderby tc.Id descending
+                                                                                   select new getsunamisystemresponse
+                                                                                   {
+                                                                                       Owner = tc.customer_name,
+                                                                                       installdate = "i" + tc.install_date,
+                                                                                       Active_Status = ts.active_status,
+                                                                                       Last_System_Communication = "l" + ts.last_connected_to_db_date,
+                                                                                       Imei = ts.imei_number,
+                                                                                       SystemPhoneNumber = tsc.sim_no
+                                                                                   });
             se.Dispose();
             return list;
         }
@@ -1799,15 +1822,14 @@ namespace sunamiapi.Controllers.api
 
         public List<object> getUser(string id)
         {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             try
             {
-                db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
                 List<object> list = new List<object>(se.tbl_users.Where(f => f.email == id).Select(g => new
                 {
                     allowed = g.allow,
                     level = g.level
                 }));
-                se.Dispose();
                 return list;
             }
             catch
@@ -1815,6 +1837,10 @@ namespace sunamiapi.Controllers.api
                 List<object> list1 = new List<object>();
                 list1.Add(new { allowed = false, level = "0" });
                 return list1;
+            }
+            finally
+            {
+                se.Dispose();
             }
         }
 
