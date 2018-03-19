@@ -35,5 +35,8 @@ namespace sunamiapi.Models.DatabaseModel
         public string package_type { get; set; }
         public string RecordedBy { get; set; }
         public string Description { get; set; }
+        public string agentcode { get; set; }
+        public string witness_mobile_number { get; set; }
+        public string gender { get; set; }
     }
 }

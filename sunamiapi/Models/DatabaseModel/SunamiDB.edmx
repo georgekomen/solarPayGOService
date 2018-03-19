@@ -5,6 +5,20 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="db_a0a592_sunamiModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.6" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tbl_agents">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="firstname" Type="longtext" Nullable="false" />
+          <Property Name="lastname" Type="longtext" Nullable="false" />
+          <Property Name="dateofenrolment" Type="datetime" Precision="5" Nullable="false" />
+          <Property Name="idnumber" Type="longtext" Nullable="false" />
+          <Property Name="country" Type="longtext" Nullable="false" />
+          <Property Name="phonenumber" Type="longtext" Nullable="false" />
+          <Property Name="email" Type="longtext" />
+          <Property Name="location" Type="longtext" />
+        </EntityType>
         <EntityType Name="tbl_customer">
           <Key>
             <PropertyRef Name="Id" />
@@ -30,6 +44,9 @@
           <Property Name="package_type" Type="mediumtext" />
           <Property Name="RecordedBy" Type="longtext" />
           <Property Name="Description" Type="longtext" />
+          <Property Name="agentcode" Type="varchar" MaxLength="15" />
+          <Property Name="witness_mobile_number" Type="varchar" MaxLength="15" />
+          <Property Name="gender" Type="text" />
         </EntityType>
         <EntityType Name="tbl_event_logs">
           <Key>
@@ -84,6 +101,7 @@
           <Property Name="item" Type="longtext" Nullable="false" />
           <Property Name="date_given" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="date_taken" Type="datetime" Precision="0" />
+          <Property Name="agentcode" Type="varchar" MaxLength="15" />
         </EntityType>
         <EntityType Name="tbl_fault_code">
           <Key>
@@ -106,6 +124,14 @@
           <Property Name="error_code" Type="longtext" />
           <Property Name="fixed_status" Type="bool" />
           <Property Name="imei_number" Type="longtext" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_grants">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="grants" Type="varchar" MaxLength="15" Nullable="false" />
         </EntityType>
         <EntityType Name="tbl_imei_sim_numbers">
           <Key>
@@ -271,6 +297,7 @@
           <Property Name="task" Type="longtext" Nullable="false" />
         </EntityType>
         <EntityContainer Name="db_a0a592_sunamiModelStoreContainer">
+          <EntitySet Name="tbl_agents" EntityType="Self.tbl_agents" Schema="db_a0a592_sunami" store:Type="Tables" />
           <EntitySet Name="tbl_customer" EntityType="Self.tbl_customer" Schema="db_a0a592_sunami" store:Type="Tables" />
           <EntitySet Name="tbl_event_logs" EntityType="Self.tbl_event_logs" Schema="db_a0a592_sunami" store:Type="Tables" />
           <EntitySet Name="tbl_expense_categories" EntityType="Self.tbl_expense_categories" Schema="db_a0a592_sunami" store:Type="Tables" />
@@ -279,6 +306,7 @@
           <EntitySet Name="tbl_extra_package_customers" EntityType="Self.tbl_extra_package_customers" Schema="db_a0a592_sunami" store:Type="Tables" />
           <EntitySet Name="tbl_fault_code" EntityType="Self.tbl_fault_code" Schema="db_a0a592_sunami" store:Type="Tables" />
           <EntitySet Name="tbl_faults" EntityType="Self.tbl_faults" Schema="db_a0a592_sunami" store:Type="Tables" />
+          <EntitySet Name="tbl_grants" EntityType="Self.tbl_grants" Schema="db_a0a592_sunami" store:Type="Tables" />
           <EntitySet Name="tbl_imei_sim_numbers" EntityType="Self.tbl_imei_sim_numbers" Schema="db_a0a592_sunami" store:Type="Tables" />
           <EntitySet Name="tbl_inventory" EntityType="Self.tbl_inventory" Schema="db_a0a592_sunami" store:Type="Tables" />
           <EntitySet Name="tbl_issues" EntityType="Self.tbl_issues" Schema="db_a0a592_sunami" store:Type="Tables" />
@@ -324,6 +352,9 @@
           <Property Name="package_type" Type="String" MaxLength="16777215" FixedLength="false" Unicode="false" />
           <Property Name="RecordedBy" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
           <Property Name="Description" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
+          <Property Name="agentcode" Type="String" />
+          <Property Name="witness_mobile_number" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="gender" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="tbl_extra_item">
           <Key>
@@ -344,6 +375,7 @@
           <Property Name="item" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="date_given" Type="DateTime" Nullable="false" />
           <Property Name="date_taken" Type="DateTime" />
+          <Property Name="agentcode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="tbl_fault_code">
           <Key>
@@ -509,6 +541,8 @@
           <EntitySet Name="tbl_messages" EntityType="db_a0a592_sunamiModel.tbl_messages" />
           <EntitySet Name="tbl_event_logs" EntityType="db_a0a592_sunamiModel.tbl_event_logs" />
           <EntitySet Name="tbl_inventory" EntityType="db_a0a592_sunamiModel.tbl_inventory" />
+          <EntitySet Name="tbl_agents" EntityType="db_a0a592_sunamiModel.tbl_agents" />
+          <EntitySet Name="tbl_grants" EntityType="db_a0a592_sunamiModel.tbl_grants" />
         </EntityContainer>
         <EntityType Name="tbl_sunami_controller">
           <Key>
@@ -589,6 +623,28 @@
           <Property Name="units" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
           <Property Name="comments" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="tbl_agents">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="firstname" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="lastname" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="dateofenrolment" Type="DateTime" Nullable="false" />
+          <Property Name="idnumber" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="country" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="phonenumber" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="location" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_grants">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="grants" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -598,6 +654,9 @@
           <EntitySetMapping Name="tbl_customer">
             <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_customer">
               <MappingFragment StoreEntitySet="tbl_customer">
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="witness_mobile_number" ColumnName="witness_mobile_number" />
+                <ScalarProperty Name="agentcode" ColumnName="agentcode" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="RecordedBy" ColumnName="RecordedBy" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -636,6 +695,7 @@
           <EntitySetMapping Name="tbl_extra_package_customers">
             <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_extra_package_customers">
               <MappingFragment StoreEntitySet="tbl_extra_package_customers">
+                <ScalarProperty Name="agentcode" ColumnName="agentcode" />
                 <ScalarProperty Name="date_taken" ColumnName="date_taken" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="customer_id" ColumnName="customer_id" />
@@ -880,6 +940,30 @@
                 <ScalarProperty Name="stock" ColumnName="stock" />
                 <ScalarProperty Name="Item" ColumnName="Item" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_agents">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_agents">
+              <MappingFragment StoreEntitySet="tbl_agents">
+                <ScalarProperty Name="location" ColumnName="location" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="phonenumber" ColumnName="phonenumber" />
+                <ScalarProperty Name="country" ColumnName="country" />
+                <ScalarProperty Name="idnumber" ColumnName="idnumber" />
+                <ScalarProperty Name="dateofenrolment" ColumnName="dateofenrolment" />
+                <ScalarProperty Name="lastname" ColumnName="lastname" />
+                <ScalarProperty Name="firstname" ColumnName="firstname" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_grants">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_grants">
+              <MappingFragment StoreEntitySet="tbl_grants">
+                <ScalarProperty Name="grants" ColumnName="grants" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

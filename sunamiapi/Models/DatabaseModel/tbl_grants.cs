@@ -12,13 +12,10 @@ namespace sunamiapi.Models.DatabaseModel
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_extra_package_customers
+    public partial class tbl_grants
     {
-        public int Id { get; set; }
-        public string customer_id { get; set; }
-        public string item { get; set; }
-        public System.DateTime date_given { get; set; }
-        public Nullable<System.DateTime> date_taken { get; set; }
-        public string agentcode { get; set; }
+        public int id { get; set; }
+        public string email { get; set; }
+        public string grants { get; set; }
     }
 }

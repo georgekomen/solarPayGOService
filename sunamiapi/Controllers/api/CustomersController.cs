@@ -52,20 +52,16 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpPost]
-        public List<paymentRatesClassPerClient> GetPaymentActiveRates([FromBody] JArray value)
+        public List<paymentRatesClassPerClient> GetPaymentActiveRates([FromBody] StartEndDate[] value)
         {
             DateTime end1;
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             List<paymentRatesClassPerClient> list = new List<paymentRatesClassPerClient>();
             try
             {
-                JToken token = JObject.Parse(value[0].ToString());
-                string startDate = token.SelectToken("startDate").ToString();
-                string endDate = token.SelectToken("endDate").ToString();
-
                 //yyyy-mm-dd e.g. 2017-04-05 - date1
-                beginDate = getDate(startDate);
-                end1 = getDate(endDate);
+                beginDate = getDate(value[0].startDate);
+                end1 = getDate(value[0].endDate);
                 //get whole list of customers
                 List<tbl_customer> list2 = se.tbl_customer.Where(g => g.install_date <= end1 && g.active_status == true).ToList();
 
@@ -85,7 +81,7 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpPost]
-        public List<paymentRatesClassPerClient> GetPaymentInactiveRates([FromBody] JArray value)
+        public List<paymentRatesClassPerClient> GetPaymentInactiveRates([FromBody] StartEndDate[] value)
         {
             DateTime end1;
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
@@ -93,13 +89,9 @@ namespace sunamiapi.Controllers.api
             List<paymentRatesClassPerClient> list = new List<paymentRatesClassPerClient>();
             try
             {
-                JToken token = JObject.Parse(value[0].ToString());
-                string startDate = token.SelectToken("startDate").ToString();
-                string endDate = token.SelectToken("endDate").ToString();
-
                 //yyyy-mm-dd e.g. 2017-04-05 - date1
-                beginDate = getDate(startDate);
-                end1 = getDate(endDate);
+                beginDate = getDate(value[0].startDate);
+                end1 = getDate(value[0].endDate);
                 List<tbl_customer> list2 = se.tbl_customer.Where(g => g.install_date <= end1 && g.active_status == false).ToList();
 
                 list = calcInvoiceBtwnDatesm(beginDate, end1, list2).OrderByDescending(g => g.Percent).ToList();
@@ -222,35 +214,32 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpGet]
-        public List<object> invoiceItems()
+        public List<Invoiceitem> invoiceItems()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            return new List<object>(se.tbl_extra_item.Select(r => new { Item = r.item, Deposit = r.deposit, Amount = r.amount_per_day, PayDays = r.extra_pay_period }));
+            return new List<Invoiceitem>(se.tbl_extra_item.Select(r => new Invoiceitem { Item = r.item, Deposit = r.deposit, Amount = r.amount_per_day, PayDays = r.extra_pay_period }));
         }
 
         [HttpPost]
-        public string invoiceCustomer([FromBody]JArray value)
+        public string invoiceCustomer([FromBody]Invoicecustomerbody[] value)
         {
             string result = "";
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             try
             {
-                JToken token = JObject.Parse(value[0].ToString());
-                string customerId = token.SelectToken("customerId").ToString();
-                string item = token.SelectToken("item").ToString();
-                string loogedUser = token.SelectToken("loogedUser").ToString();
-                string invoiceDate = token.SelectToken("invoiceDate").ToString();
-
-                if (!se.tbl_extra_package_customers.Where(r => r.customer_id == customerId).Select(t => t.item).Contains(item))
+                string customer_id = value[0].customerId;
+                string item = value[0].item;
+                if (!se.tbl_extra_package_customers.Where(r => r.customer_id == customer_id).Select(t => t.item).Contains(item))
                 {
                     tbl_extra_package_customers epc = new tbl_extra_package_customers();
-                    epc.customer_id = customerId;
-                    epc.item = item;
-                    epc.date_given = getDate(invoiceDate);
+                    epc.customer_id = value[0].customerId;
+                    epc.item = value[0].item;
+                    epc.agentcode = value[0].agentcode;
+                    epc.date_given = getDate(value[0].invoiceDate);
                     se.tbl_extra_package_customers.Add(epc);
                     se.SaveChanges();
                     result = "successfully invoiced customer";
-                    this.logevent(loogedUser, customerId, DateTime.Today, "Invoiced customer a " + item, "Invoice Customer");
+                    this.logevent(value[0].loogedUser, value[0].customerId, DateTime.Today, "Invoiced customer a " + value[0].item, "Invoice Customer");
                 }
                 else
                 {
@@ -347,48 +336,40 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpPost]
-        public List<object> postAddController([FromBody]JArray value)
+        public List<msgAndGetsunamicontroller> postAddController([FromBody]postcontrollerbody[] value)
         {
-            List<object> controllers = new List<object>();
+            List<msgAndGetsunamicontroller> controllers = new List<msgAndGetsunamicontroller>();
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             try
             {
+                string imei = value[0].imei;
+                string action = value[0].action;
                 //{ imei: this.imei, sim: this.sim, provider: this.provider, version: this.version, loogeduser: this.disname }
-                JToken token = JObject.Parse(value[0].ToString());
-                string imei = token.SelectToken("imei").ToString();
-                string sim = token.SelectToken("sim").ToString();
-                string provider = token.SelectToken("provider").ToString();
-                string version = token.SelectToken("version").ToString();
-                string loogeduser = token.SelectToken("loogeduser").ToString();
-                string action = token.SelectToken("action").ToString();
-
                 if (!se.tbl_sunami_controller.Select(h => h.imei).Contains(imei) && action == "create")
                 {
                     tbl_sunami_controller sc = new tbl_sunami_controller();
-                    sc.imei = imei;
-                    sc.sim_no = sim;
+                    sc.imei = value[0].imei;
+                    sc.sim_no = value[0].sim;
                     sc.date_manufactured = DateTime.Today;
-                    sc.provider = provider;
-                    sc.version = version;
-                    sc.recorded_by = loogeduser;
+                    sc.provider = value[0].provider;
+                    sc.version = value[0].version;
+                    sc.recorded_by = value[0].loogeduser;
                     se.tbl_sunami_controller.Add(sc);
                     se.SaveChanges();
 
-                    controllers.Add(new { message = "successfully created new controller" });
-                    controllers.Add(new { content = getSunamiControllers() });
+                    controllers.Add(new msgAndGetsunamicontroller { message = "successfully created new controller", content = getSunamiControllers() });
                 }
                 else if (se.tbl_sunami_controller.Select(h => h.imei).Contains(imei) && action == "modify")
                 {
                     tbl_sunami_controller sc = se.tbl_sunami_controller.FirstOrDefault(g => g.imei == imei);
-                    sc.sim_no = sim;
-                    sc.provider = provider;
-                    sc.version = version;
-                    sc.recorded_by = loogeduser;
+                    sc.sim_no = value[0].sim;
+                    sc.provider = value[0].provider;
+                    sc.version = value[0].version;
+                    sc.recorded_by = value[0].loogeduser;
                     se.SaveChanges();
-                    this.logevent(loogeduser, "controller imei" + imei, DateTime.Today, "modified controller details", "system controller");
+                    this.logevent(value[0].loogeduser, "controller imei" + value[0].imei, DateTime.Today, "modified controller details", "system controller");
 
-                    controllers.Add(new { message = "successfully modified controller" });
-                    controllers.Add(new { content = getSunamiControllers() });
+                    controllers.Add(new msgAndGetsunamicontroller { message = "successfully modified controller", content = getSunamiControllers() });
                 }
             }
             catch
@@ -400,51 +381,33 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpPost]
-        public string unlinkController([FromBody]JArray id)
+        public string unlinkController([FromBody]IdUser[] value)
         {
-            string imei = "";
-            string user = "";
-            JToken token = JObject.Parse(id[0].ToString());
-            try
-            {
-                imei = token.SelectToken("id").ToString();
-                user = token.SelectToken("user").ToString();
-            }
-            catch { }
-
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             try
             {
-                tbl_system sc = se.tbl_system.FirstOrDefault(r => r.imei_number == imei);
-
-                logevent(user, sc.customer_id, DateTime.Today, "unlinked imei: " + id, "unlink controller");
+                string imei = value[0].id;
+                tbl_system sc = se.tbl_system.FirstOrDefault(r => r.imei_number == imei);             
                 se.tbl_system.Remove(sc);
                 se.SaveChanges();
-
+                se.Dispose();
+                logevent(value[0].user, sc.customer_id, DateTime.Now, "unlinked imei: " + value[0].id, "unlink controller");
+                return "successfully unlinked controller";
             }
-            catch
+            catch(Exception g)
             {
+                return g.Message;
             }
-            se.Dispose();
-            return "successfully unlinked controller";
+            
         }
 
         [HttpPost]
-        public string deleteController([FromBody]JArray id)
+        public string deleteController([FromBody]IdUser[] value)
         {
-            string imei = "";
-            string user = "";
-            JToken token = JObject.Parse(id[0].ToString());
-            try
-            {
-                imei = token.SelectToken("id").ToString();
-                user = token.SelectToken("user").ToString();
-            }
-            catch { }
-
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             try
             {
+                string imei = value[0].id;
                 if (se.tbl_system.Where(r1 => r1.imei_number == imei).Count() > 0)
                 {
                     se.Dispose();
@@ -453,8 +416,7 @@ namespace sunamiapi.Controllers.api
                 else
                 {
                     tbl_sunami_controller sc = se.tbl_sunami_controller.FirstOrDefault(r => r.imei == imei);
-
-                    logevent(user, sc.sim_no + "," + sc.provider + "," + sc.version, DateTime.Today, "deleted imei: " + id, "deleted controller");
+                    logevent(value[0].user, sc.sim_no + "," + sc.provider + "," + sc.version, DateTime.Now, "deleted imei: " + value[0].id, "deleted controller");
                     se.tbl_sunami_controller.Remove(sc);
                     se.SaveChanges();
                     se.Dispose();
@@ -471,7 +433,7 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpPost]
-        public string PostSMS([FromBody]JArray value)
+        public string PostSMS([FromBody]postsmsbody[] value)
         {
             db_a0a592_sunamiEntities se1 = new db_a0a592_sunamiEntities();
             sendSms ss = new sendSms();
@@ -480,15 +442,12 @@ namespace sunamiapi.Controllers.api
             string sim_no = null;
             try
             {
-                JToken token = JObject.Parse(value[0].ToString());
-                string msg = token.SelectToken("message").ToString();
+                string msg = value[0].message;
                 string message = msg;
-                JArray numbers = JArray.Parse(token.SelectToken("recipients").ToString());
-                int i = numbers.Count;
-                for (int g = 0; g < i; g++)
+                List<recipients> numbers = value[0].recipients;
+                foreach (var num in numbers)
                 {
-                    JToken number = JObject.Parse(numbers[g].ToString());
-                    string cust_idd = number.SelectToken("idnumber").ToString();
+                    string cust_idd = num.idnumber;
                     var tc3 = tc33.FirstOrDefault(g3 => g3.customer_id == cust_idd);
                     sim_no = tc33.FirstOrDefault(o => o.customer_id == cust_idd).phone_numbers != null ? tc33.FirstOrDefault(o => o.customer_id == cust_idd).phone_numbers : "+254713014492";
                     string customername = tc3.customer_name;
@@ -501,10 +460,12 @@ namespace sunamiapi.Controllers.api
                     }
                     else if (message.StartsWith("remind"))
                     {
+                        List<tbl_customer> tc = se1.tbl_customer.Where(gg => gg.customer_id == num.idnumber).ToList();
+                        List<paymentRatesClassPerClient> list = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, tc);
                         msg = message.Replace(@"remind", @"");
-                        int invoice = int.Parse(number.SelectToken("Invoice").ToString());
-                        int paid = int.Parse(number.SelectToken("Paid").ToString());
-                        int not_paid = invoice - paid;
+                        int invoice = list[0].Invoice;
+                        int? paid = list[0].Amount;
+                        int? not_paid = invoice - paid;
                         if (not_paid < 0)
                         {
                             msgs = "Jambo " + firstname[0].ToUpper() + msg + ", asanti kwa uaminifu wako. Malipo ni kwa Mpesa Till number 784289. Nambari ya kuhudumiwa ni 0788103403.";//. Kuudumiwa piga: 0788103403                              
@@ -517,7 +478,7 @@ namespace sunamiapi.Controllers.api
                         }
                     }
                 }
-                return i.ToString();
+                return "sent";
             }
             catch (Exception e)
             {
@@ -537,12 +498,12 @@ namespace sunamiapi.Controllers.api
             }
         }
 
-        public List<object> getMessages()
+        public List<getmessagebody> getMessages()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             string customer_name = "";
             var li1 = se.tbl_messages.OrderByDescending(t => t.id).ToList();
-            List<object> li = new List<object>();
+            List<getmessagebody> li = new List<getmessagebody>();
             foreach (var f in li1)
             {
                 try
@@ -553,7 +514,7 @@ namespace sunamiapi.Controllers.api
                 {
                     customer_name = "UNKNOWN CUSTOMER";
                 }
-                li.Add(new
+                li.Add(new getmessagebody
                 {
                     Name = customer_name,
                     Message = f.message,
@@ -634,7 +595,10 @@ namespace sunamiapi.Controllers.api
                 ts.last_connected_to_db_date = DateTime.Now;
                 tc = se.tbl_customer.FirstOrDefault(tt => tt.customer_id == ts.customer_id);
                 foreach(tbl_sunami_controller tsc in se.tbl_sunami_controller.Where(ff => ff.sim_no == switchResponse.Address)){
-                    tsc.imei = switchResponse.Imei;
+                    if(switchResponse.Imei.Length > 10)
+                    {
+                        tsc.imei = switchResponse.Imei;
+                    }
                 }
             }
             catch
@@ -643,62 +607,7 @@ namespace sunamiapi.Controllers.api
                 ts.last_connected_to_db_date = DateTime.Now;
                 tc = se.tbl_customer.FirstOrDefault(oo => oo.customer_id == ts.customer_id);
             }
-            if (switchResponse.Status == "0")
-            {
-                try
-                {
-                    //switch off
-                    ts.active_status = true;
-                    tbl_switch_logs sl = new tbl_switch_logs();
-                    sl.customer_id = ts.customer_id;
-                    sl.switched_off_by = "";
-                    sl.switch_off_date = DateTime.Today;
-                    try
-                    {
-                        List<tbl_customer> lst = new List<tbl_customer>();
-                        lst.Add(tc);
-                        List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
-                        sl.switch_off_payrate = res1[0].Percent.Value.ToString();
-                    }
-                    catch
-                    {
-                        sl.switch_off_payrate = "0";
-                    }
-                    se.tbl_switch_logs.Add(sl);
-                }
-                catch (Exception g)
-                {
-                    res = g.Message;
-                }
-            }
-            else if (switchResponse.Status == "1")
-            {
-                try
-                {
-                    //switch on
-                    ts.active_status = false;
-                    int sl1 = se.tbl_switch_logs.Where(h => h.customer_id == ts.customer_id).Max(j => j.Id);
-                    tbl_switch_logs sl = se.tbl_switch_logs.FirstOrDefault(h => h.customer_id == ts.customer_id && h.Id == sl1);
-                    sl.customer_id = ts.customer_id;
-                    sl.switched_on_by = " ";
-                    sl.switch_on_date = DateTime.Today;
-                    try
-                    {
-                        List<tbl_customer> lst = new List<tbl_customer>();
-                        lst.Add(tc);
-                        List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
-                        sl.switch_on_payrate = res1[0].Percent.Value.ToString();
-                    }
-                    catch
-                    {
-                        sl.switch_on_payrate = "0";
-                    }
-                }
-                catch (Exception g)
-                {
-                    res = g.Message;
-                }
-            }
+            logevent("system feedback", tc.customer_name+ " ID: "+ tc.customer_id, DateTime.Now,"Mobile: " + switchResponse.Address+"IMEI: " + switchResponse.Imei+ "SATUS: "+ switchResponse.Status, "switch feedback");
             se.SaveChanges();
             se.Dispose();
         }
@@ -724,6 +633,9 @@ namespace sunamiapi.Controllers.api
                 string res;
                 try
                 {
+                    //switch off
+                    ts.active_status = true;
+
                     if (allowsendsms == true)
                     {
                         //notify the customer that he has been put on
@@ -733,6 +645,23 @@ namespace sunamiapi.Controllers.api
                         ss.sendSmsThroughGateway(sim_no, "smsc$1%$+254713014492%smsd$" + customernames[0] + "%s*solar yako imezimwa#e", customer_id);
                         //ss.sendSmsThroughGateway(tc.phone_numbers, customernames[0] + ", Sunami solar inakujulisha kuwa solar yako imewashwa", customer_id);
                     }
+
+                    tbl_switch_logs sl = new tbl_switch_logs();
+                    sl.customer_id = customer_id;
+                    sl.switched_off_by = loogeduser;
+                    sl.switch_off_date = DateTime.Today;
+                    try
+                    {
+                        List<tbl_customer> lst = new List<tbl_customer>();
+                        lst.Add(tc);
+                        List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
+                        sl.switch_off_payrate = res1[0].Percent.Value.ToString();
+                    }
+                    catch
+                    {
+                        sl.switch_off_payrate = "0";
+                    }
+                    se.tbl_switch_logs.Add(sl);
                     res = "";
                 }
                 catch (Exception g)
@@ -745,6 +674,7 @@ namespace sunamiapi.Controllers.api
             {
                 return null;
             }
+
         }
 
         public string switchOn(tbl_system ts, string sim_no, db_a0a592_sunamiEntities se, string customer_id, string loogeduser)
@@ -755,6 +685,9 @@ namespace sunamiapi.Controllers.api
                 string res;
                 try
                 {
+                    //switch on
+                    ts.active_status = false;
+
                     if (allowsendsms == true)
                     {
                         //notify the customer that he has been switched off
@@ -764,6 +697,23 @@ namespace sunamiapi.Controllers.api
                         ss.sendSmsThroughGateway(sim_no, "smsc$0%$+254713014492%smsd$" + customernames[0] + "%s*solar yako imewashwa#e", customer_id);
                         //ss.sendSmsThroughGateway(tc.phone_numbers, customernames[0] + ", Sunami solar inakujulisha kuwa solar yako inazimwa leo kutokana na deni. Tafadhali lipa ili iwashwe tena", customer_id);
                     }
+                    int sl1 = se.tbl_switch_logs.Where(h => h.customer_id == customer_id).Max(j => j.Id);
+                    tbl_switch_logs sl = se.tbl_switch_logs.FirstOrDefault(h => h.customer_id == customer_id && h.Id == sl1);
+                    sl.customer_id = customer_id;
+                    sl.switched_on_by = loogeduser;
+                    sl.switch_on_date = DateTime.Today;
+                    try
+                    {
+                        List<tbl_customer> lst = new List<tbl_customer>();
+                        lst.Add(tc);
+                        List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
+                        sl.switch_on_payrate = res1[0].Percent.Value.ToString();
+                    }
+                    catch
+                    {
+                        sl.switch_on_payrate = "0";
+                    }
+
                     res = "";
                 }
                 catch (Exception g)
@@ -779,40 +729,10 @@ namespace sunamiapi.Controllers.api
             }
         }
 
-        /*public List<object> getmpesaPayments()
+        public List<mpesaPayments> getmpesaPayments()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            //date //ref //amount //number //message
-            List<object> mp = new List<object>();
-            var list3 = (from i in se.tbl_mpesa_payments
-                         orderby i.date descending
-                         select new
-                         {
-                             Date = i.date,
-                             Reference = i.transaction_code,
-                             Amount = i.amount,
-                             Number = i.number,
-                             Message = i.message
-                         }).ToList();
-            foreach (var i in list3)
-            {
-                mp.Add(new
-                {
-                    Date = i.Date,
-                    Reference = i.Reference,
-                    Amount = i.Amount,
-                    Number = i.Number,
-                    Message = i.Message
-                });
-            }
-            se.Dispose();
-            return mp;
-        }*/
-
-        public List<object> getmpesaPayments()
-        {
-            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            List<object> mp = new List<object>();
+            List<mpesaPayments> mp = new List<mpesaPayments>();
             var list1 = se.tbl_payments.Select(g => new { code = g.transaction_code }).ToList();
             var list2 = se.tbl_mpesa_payments.ToList();
             //select from list2 where not in list1
@@ -834,11 +754,11 @@ namespace sunamiapi.Controllers.api
                         paymentRecording pr = new paymentRecording();
                         pr.recordpayment(tmp.Message.ToString(), se, false);
                     }
-                    mp.Add(new
+                    mp.Add(new mpesaPayments
                     {
                         Date = tmp.Date,
                         Reference = tmp.Reference,
-                        Amount = tmp.Amount,
+                        Amount = int.Parse(tmp.Amount),
                         Number = tmp.Phone,
                         Message = tmp.Message
                     });
@@ -851,14 +771,14 @@ namespace sunamiapi.Controllers.api
             return mp;
         }
 
-        public List<object> getcashRecords()
+        public List<mpesaPayments> getcashRecords()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             //date //ref //amount //number //message
 
             var list1 = se.tbl_payments.Where(h => h.payment_method == "cash").ToList().OrderByDescending(gh => gh.Id);
-            List<object> mp = new List<object>(from i in list1
-                                               select new
+            List<mpesaPayments> mp = new List<mpesaPayments>(from i in list1
+                                               select new mpesaPayments
                                                {
                                                    Id = i.Id,
                                                    Customer_Id = i.customer_id,
@@ -873,14 +793,14 @@ namespace sunamiapi.Controllers.api
             return mp;
         }
 
-        public List<object> getbankRecords()
+        public List<mpesaPayments> getbankRecords()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             //date //ref //amount //number //message
 
             var list1 = se.tbl_payments.Where(h => h.payment_method.Contains("bank")).ToList().OrderByDescending(gh => gh.Id);
-            List<object> mp = new List<object>(from i in list1
-                                               select new
+            List<mpesaPayments> mp = new List<mpesaPayments>(from i in list1
+                                               select new mpesaPayments
                                                {
                                                    Id = i.Id,
                                                    Customer_Id = i.customer_id,
@@ -897,23 +817,15 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpPost]
-        public string deletePayment([FromBody]JArray id)
+        public string deletePayment([FromBody]IdUser[] value)
         {
-            int id1 = 0;
-            string user = "";
-            JToken token = JObject.Parse(id[0].ToString());
-            try
-            {
-                id1 = int.Parse(token.SelectToken("id").ToString());
-                user = token.SelectToken("user").ToString();
-            }
-            catch { }
-
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             try
             {
-                tbl_payments sc = se.tbl_payments.FirstOrDefault(r => r.Id == id1);
-                logevent(user, sc.customer_id, DateTime.Today, "deleted payment amount: " + sc.amount_payed + " ref: " + sc.transaction_code + " method: " + sc.payment_method, "delete payment");
+                int id_ = 0;
+                id_ = int.Parse(value[0].id);
+                tbl_payments sc = se.tbl_payments.FirstOrDefault(r => r.Id == id_);
+                logevent(value[0].user, sc.customer_id, DateTime.Today, "deleted payment amount: " + sc.amount_payed + " ref: " + sc.transaction_code + " method: " + sc.payment_method, "delete payment");
                 se.tbl_payments.Remove(sc);
                 se.SaveChanges();
 
@@ -925,14 +837,14 @@ namespace sunamiapi.Controllers.api
             return "successfully deleted payment";
         }
 
-        public List<Object> getMpesaRecords()
+        public List<mpesaPayments> getMpesaRecords()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             //date //ref //amount //number //message
 
             var list1 = se.tbl_payments.Where(h => h.payment_method == "mpesa").ToList().OrderByDescending(gh => gh.Id);
-            List<object> mp = new List<object>(from i in list1
-                                               select new
+            List<mpesaPayments> mp = new List<mpesaPayments>(from i in list1
+                                               select new mpesaPayments
                                                {
                                                    Id = i.Id,
                                                    Customer_Id = i.customer_id,
@@ -947,10 +859,10 @@ namespace sunamiapi.Controllers.api
             return mp;
         }
 
-        public List<object> getUnprocessedMpesaPayments()
+        public List<mpesaPayments> getUnprocessedMpesaPayments()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            List<object> mp = new List<object>();
+            List<mpesaPayments> mp = new List<mpesaPayments>();
             var list1 = se.tbl_payments.Select(g => new { code = g.transaction_code }).ToList();
             var list2 = se.tbl_mpesa_payments.ToList();
             //select from list2 where not in list1
@@ -972,11 +884,11 @@ namespace sunamiapi.Controllers.api
                         paymentRecording pr = new paymentRecording();
                         pr.recordpayment(tmp.Message.ToString(), se, false);
                     }
-                    mp.Add(new
+                    mp.Add(new mpesaPayments
                     {
                         Date = tmp.Date,
                         Reference = tmp.Reference,
-                        Amount = tmp.Amount,
+                        Amount = int.Parse(tmp.Amount),
                         Number = tmp.Phone,
                         Message = tmp.Message
                     });
@@ -1124,7 +1036,7 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpPost]
-        public string postReceive_mpesa([FromBody]JArray value)
+        public string postReceive_mpesa([FromBody]mobilempesapaymentbody[] value)
         {
             //Thread.Sleep(1000);
             db_a0a592_sunamiEntities se;
@@ -1138,23 +1050,20 @@ namespace sunamiapi.Controllers.api
 
             }
             string res = "";
-            JToken token = JObject.Parse(value[0].ToString());
-
             // only record if message is from mpesa
-            if (token.SelectToken("address").ToString() == "MPESA")
+            if (value[0].address == "MPESA")
             {
                 try
                 {
-                    string imei_no = token.SelectToken("imei").ToString();
-                    string msg1 = token.SelectToken("msg").ToString();
-                    int tblm = se.tbl_mpesa_phone_imei.Where(i => i.imei == imei_no).Count();
+                    string imei = value[0].imei;
+                    int tblm = se.tbl_mpesa_phone_imei.Where(i => i.imei == imei).Count();
                     if (tblm < 1)
                     {
                         res = null;
                     }
                     else
                     {
-                        res = record_mpesa_msg_phone(msg1, imei_no);
+                        res = record_mpesa_msg_phone(value[0].msg, value[0].imei);
                     }
                 }
                 catch (Exception k)
@@ -1185,65 +1094,80 @@ namespace sunamiapi.Controllers.api
             return res;
         }
 
-        public List<object> getCustomerDetails()
+        public List<postnewcustomer> getCustomerDetails()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            List<object> list = new List<object>(from i in se.tbl_customer
+            List<postnewcustomer> list = new List<postnewcustomer>(from i in se.tbl_customer
                                                      //where i.active_status == true
                                                  orderby i.Id descending
-                                                 select new
+                                                 select new postnewcustomer
                                                  {
-                                                     Name = i.customer_name,
-                                                     ID = i.customer_id,
-                                                     Occupation = i.occupation,
-                                                     Mobile = i.phone_numbers,
+                                                     name = i.customer_name,
+                                                     id = i.customer_id,
+                                                     occupation = i.occupation,
+                                                     number1 = i.phone_numbers,
                                                      village = i.village_name,
                                                      location = i.location,
                                                      city = i.city,
                                                      installdate = i.install_date,
-                                                     Witness = i.next_of_kin,
-                                                     Witness_ID = i.nok_mobile,
-                                                     status = i.active_status
+                                                     witness = i.next_of_kin,
+                                                     witnessid = i.nok_mobile,
+                                                     status = i.active_status,
+                                                     country = i.country,
+                                                     agentcode = i.agentcode,
+                                                     witnessnumber = i.witness_mobile_number
                                                  }
                       );
             se.Dispose();
             return list;
         }
 
-        public object getSingleCustomerDetails(string id)
+        public postnewcustomer getSingleCustomerDetails(string id)
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            tbl_customer i = se.tbl_customer.FirstOrDefault(t1 => t1.customer_id == id);
-            object customer = (new
+            try
             {
-                Name = i.customer_name,
-                ID = i.customer_id,
-                Occupation = i.occupation,
-                Mobile = i.phone_numbers,
-                Mobile2 = i.phone_numbers2,
-                Mobile3 = i.phone_numbers3,
-                village = i.village_name,
-                location = i.location,
-                city = i.city,
-                installdate = i.install_date.Value.Date,
-                Witness = i.next_of_kin,
-                Witness_ID = i.nok_mobile,
-                status = i.active_status,
-                Package = i.package_type
-            });
-
-            se.Dispose();
-            return customer;
+                tbl_customer i = se.tbl_customer.FirstOrDefault(t1 => t1.customer_id == id);
+                postnewcustomer customer = (new postnewcustomer
+                {
+                    name = i.customer_name,
+                    id = i.customer_id,
+                    occupation = i.occupation,
+                    number1 = i.phone_numbers,
+                    number2 = i.phone_numbers2,
+                    number3 = i.phone_numbers3,
+                    village = i.village_name,
+                    location = i.location,
+                    city = i.city,
+                    installdate = i.install_date.Value.Date,
+                    witness = i.next_of_kin,
+                    witnessid = i.nok_mobile,
+                    status = i.active_status,
+                    package = i.package_type,
+                    country = i.country,
+                    agentcode = i.agentcode,
+                    witnessnumber = i.witness_mobile_number
+                });
+                return customer;
+            }
+            catch
+            {
+                return null;
+            }
+            finally
+            {
+                se.Dispose();
+            }
         }
 
-        public List<object> getSystemDetails()
+        public List<getsunamisystemresponse> getSystemDetails()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            List<object> list = new List<object>(from ts in se.tbl_system
+            List<getsunamisystemresponse> list = new List<getsunamisystemresponse>(from ts in se.tbl_system
                                                  join tc in se.tbl_customer on ts.customer_id equals tc.customer_id
                                                  join tsc in se.tbl_sunami_controller on ts.imei_number equals tsc.imei
                                                  orderby tc.Id descending
-                                                 select new
+                                                 select new getsunamisystemresponse
                                                  {
                                                      Owner = tc.customer_name,
                                                      installdate = "i" + tc.install_date,
@@ -1257,15 +1181,15 @@ namespace sunamiapi.Controllers.api
             return list;
         }
 
-        public List<object> getswitchlogs()
+        public List<getswitchlogresponse> getswitchlogs()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            List<object> list = new List<object>(from ts in se.tbl_switch_logs
+            List<getswitchlogresponse> list = new List<getswitchlogresponse>(from ts in se.tbl_switch_logs
                                                  join tc in se.tbl_customer on ts.customer_id equals tc.customer_id
                                                  join tsci in se.tbl_system on ts.customer_id equals tsci.customer_id
                                                  join tscn in se.tbl_sunami_controller on tsci.imei_number equals tscn.imei
                                                  orderby ts.Id descending
-                                                 select new
+                                                 select new getswitchlogresponse
                                                  {
                                                      Name = tc.customer_name,
                                                      Id = tc.customer_id,
@@ -1283,12 +1207,12 @@ namespace sunamiapi.Controllers.api
             return list;
         }
 
-        public List<object> getSunamiControllers()
+        public List<getsunamicontroller> getSunamiControllers()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            List<object> list = new List<object>(from ts in se.tbl_sunami_controller
-                                                 orderby ts.Id ascending
-                                                 select new
+            List<getsunamicontroller> list = new List<getsunamicontroller>(from ts in se.tbl_sunami_controller
+                                                 orderby ts.Id descending
+                                                 select new getsunamicontroller
                                                  {
                                                      Imei = ts.imei,
                                                      Sim_Number = ts.sim_no,
@@ -1312,18 +1236,18 @@ namespace sunamiapi.Controllers.api
             return list;
         }
 
-        public List<object> getCustomersWithNoController()
+        public List<NameIdResponse> getCustomersWithNoController()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             var list1 = se.tbl_system.Select(g => new { ids1 = g.customer_id }).ToList();
             var list2 = se.tbl_customer.Select(f => new { ids2 = f.customer_id, Name = f.customer_name }).ToList();
-            List<object> list = new List<object>(list2.Where(t => !list1.Any(t2 => t2.ids1 == t.ids2)).Select(r => new { Name = r.Name, Id = r.ids2 }));
+            List<NameIdResponse> list = new List<NameIdResponse>(list2.Where(t => !list1.Any(t2 => t2.ids1 == t.ids2)).Select(r => new NameIdResponse { Name = r.Name, Id = r.ids2 }));
             se.Dispose();
             return list;
         }
 
         [HttpPost]
-        public string postLinkController([FromBody]JArray value)
+        public string postLinkController([FromBody]postlinkcontroller[] value)
         {
             db_a0a592_sunamiEntities se;
             try
@@ -1337,19 +1261,14 @@ namespace sunamiapi.Controllers.api
             string res = "";
             try
             {
-                //{ imei: this.imei, sim: this.sim, provider: this.provider, version: this.version, loogeduser: this.disname }
-                JToken token = JObject.Parse(value[0].ToString());
-                string imei = token.SelectToken("imei").ToString();
-                string loogeduser = token.SelectToken("loogeduser").ToString();
-                string customer_id = token.SelectToken("customer_id").ToString();
-
+                string customer_id = value[0].customer_id;
                 int ts4 = se.tbl_system.Where(i => i.customer_id == customer_id).Count();
                 if (ts4 == 0)
                 {
                     tbl_system ts = new tbl_system();
-                    ts.customer_id = customer_id;
+                    ts.customer_id = value[0].customer_id;
                     ts.active_status = false;
-                    ts.imei_number = imei;
+                    ts.imei_number = value[0].imei;
                     ts.current_lat = null;
                     ts.current_lon = null;
                     ts.last_connected_to_db_date = DateTime.Today;
@@ -1370,13 +1289,13 @@ namespace sunamiapi.Controllers.api
             return res;
         }
 
-        public List<object> getIssues()
+        public List<getissueresponse> getIssues()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            List<object> list = new List<object>(from tc in se.tbl_customer
+            List<getissueresponse> list = new List<getissueresponse>(from tc in se.tbl_customer
                                                  join ti in se.tbl_issues on tc.customer_id equals ti.customer_id
-                                                 orderby ti.Id ascending
-                                                 select new
+                                                 orderby ti.Id descending
+                                                 select new getissueresponse
                                                  {
                                                      customer = tc.customer_name,
                                                      Id = ti.Id,
@@ -1393,8 +1312,34 @@ namespace sunamiapi.Controllers.api
             return list;
         }
 
+        [HttpGet]
+        public List<getissueresponse> getIssuesPerCustomer(string id)
+        {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            List<getissueresponse> list = 
+                new List<getissueresponse>(from tc in se.tbl_customer
+                                            where tc.customer_id == id
+                                            join ti in se.tbl_issues on tc.customer_id equals ti.customer_id
+                                            orderby ti.Id descending
+                                            select new getissueresponse
+                                            {
+                                                customer = tc.customer_name,
+                                                Id = ti.Id,
+                                                reporter = ti.reporter,
+                                                issue = ti.issue,
+                                                date = ti.date,
+                                                priority = ti.priority,
+                                                status = ti.status,
+                                                solvedOn = ti.solvedOn,
+                                                solvedBy = ti.solvedBy,
+                                                comment = ti.comments
+                                            });
+            se.Dispose();
+            return list;
+        }
+
         [HttpPost]
-        public string postNewIssues([FromBody]JArray value)
+        public string postNewIssues([FromBody]postissuebody[] value)
         {
             db_a0a592_sunamiEntities se;
             try
@@ -1408,18 +1353,13 @@ namespace sunamiapi.Controllers.api
             string res = "";
             try
             {
-                JToken token = JObject.Parse(value[0].ToString());
-                string id = token.SelectToken("id").ToString();
-                string issue = token.SelectToken("issue").ToString();
-                string reporter = token.SelectToken("reporter").ToString();
-                string priority = token.SelectToken("priority").ToString();
                 tbl_issues ti = new tbl_issues();
-                ti.customer_id = id;
-                ti.priority = priority;
-                ti.issue = issue;
+                ti.customer_id = value[0].id;
+                ti.priority = value[0].priority;
+                ti.issue = value[0].issue;
                 ti.date = DateTime.Now;
                 ti.status = "pending";
-                ti.reporter = reporter;
+                ti.reporter = value[0].reporter;
                 se.tbl_issues.Add(ti);
                 se.SaveChanges();
                 res = "succesfull reported an issue";
@@ -1433,7 +1373,7 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpPost]
-        public string postSolveIssues([FromBody]JArray value)
+        public string postSolveIssues([FromBody]postissuesolvedbody[] value)
         {
             db_a0a592_sunamiEntities se;
             try
@@ -1447,16 +1387,12 @@ namespace sunamiapi.Controllers.api
             string res = "";
             try
             {
-                JToken token = JObject.Parse(value[0].ToString());
-                int Scustomer = int.Parse(token.SelectToken("Id").ToString());
-                string solver = token.SelectToken("Ssolver").ToString();
-                string Scomment = token.SelectToken("Scomment").ToString();
-
-                tbl_issues ti = se.tbl_issues.FirstOrDefault(f => f.Id == Scustomer);
+                int id = value[0].Id;
+                tbl_issues ti = se.tbl_issues.FirstOrDefault(f => f.Id == id);
                 ti.status = "solved";
                 ti.solvedOn = DateTime.Now;
-                ti.solvedBy = solver;
-                ti.comments = Scomment;
+                ti.solvedBy = value[0].Ssolver;
+                ti.comments = value[0].Scomment;
                 se.SaveChanges();
                 res = "succesfully solved an issue";
             }
@@ -1468,14 +1404,14 @@ namespace sunamiapi.Controllers.api
             return res;
         }
 
-        public List<object> getUninstalledSystems()
+        public List<getuninstalledsystems> getUninstalledSystems()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            List<object> list = new List<object>(from tu in se.tbl_uninstalled_systems
+            List<getuninstalledsystems> list = new List<getuninstalledsystems>(from tu in se.tbl_uninstalled_systems
                                                  join tc in se.tbl_customer
                                                  on tu.customer_id equals tc.customer_id
                                                  orderby tu.Id descending
-                                                 select new
+                                                 select new getuninstalledsystems
                                                  {
                                                      Name = tc.customer_name,
                                                      Id = tc.customer_id,
@@ -1490,8 +1426,9 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpPost]
-        public string postUninstall([FromBody]JArray value)
+        public string postUninstall([FromBody]postuninstallbody[] value)
         {
+            string customer_id = value[0].customer_id;
             db_a0a592_sunamiEntities se;
             try
             {
@@ -1501,17 +1438,11 @@ namespace sunamiapi.Controllers.api
             {
                 return g.Message;
             }
-            JToken token = JObject.Parse(value[0].ToString());
-            string date1 = token.SelectToken("date1").ToString();
-            string customer_id = token.SelectToken("customer_id").ToString();
-            string recorded_by = token.SelectToken("recorded_by").ToString();
-            string reason = token.SelectToken("reason").ToString();
-
             string res = "";
             try
             {
                 //yyyy-mm-dd e.g. 2017-04-05 - date1
-                DateTime date2 = getDate(date1);
+                DateTime date2 = getDate(value[0].date1);
 
                 //mark customer as inactive in customer db
                 tbl_customer tc = se.tbl_customer.FirstOrDefault(w => w.customer_id == customer_id);
@@ -1531,10 +1462,10 @@ namespace sunamiapi.Controllers.api
                 { }
 
                 tbl_uninstalled_systems us = new tbl_uninstalled_systems();
-                us.customer_id = customer_id;
+                us.customer_id = value[0].customer_id;
                 us.uninstall_date = date2;
-                us.recorded_by = recorded_by;
-                us.Reason = reason;
+                us.recorded_by = value[0].recorded_by;
+                us.Reason = value[0].reason;
                 us.previousRecords = possesions;
                 se.tbl_uninstalled_systems.Add(us);
 
@@ -1576,21 +1507,21 @@ namespace sunamiapi.Controllers.api
             return date2;
         }
 
-        public List<object> getActiveCustomersDetails()
+        public List<postnewcustomer> getActiveCustomersDetails()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             // List<object> list = new List<object>(se.tbl_customer.Where(r => r.active_status == true).Select(g => new
-            List<object> list = new List<object>(se.tbl_customer.Select(g => new
+            List<postnewcustomer> list = new List<postnewcustomer>(se.tbl_customer.Select(g => new postnewcustomer
             {
-                Name = g.customer_name,
-                Customer_id = g.customer_id
-            }).OrderBy(G => G.Name));
+                name = g.customer_name,
+                id = g.customer_id
+            }).OrderBy(G => G.name));
             se.Dispose();
             return list;
         }
 
         [HttpPost]
-        public string postExpense([FromBody]JArray value)
+        public string postExpense([FromBody]postexpensebody[] value)
         {
             db_a0a592_sunamiEntities se;
             try
@@ -1602,47 +1533,32 @@ namespace sunamiapi.Controllers.api
                 return g.Message;
             }
             string res = "error";
-            JToken token = JObject.Parse(value[0].ToString());
-            string description = token.SelectToken("category").ToString();
-            string amount = token.SelectToken("amount").ToString();
-            string recipient = token.SelectToken("recipient").ToString();
-            string dateset = token.SelectToken("dateset").ToString();
-            string vendor = token.SelectToken("vendor").ToString();
-
             //yyyy-mm-dd e.g. 2017-04-05 - date1
-            DateTime date2 = getDate(dateset);
-
-            string account = token.SelectToken("account").ToString();
-            string ref_code = token.SelectToken("ref_code").ToString();
-            string recordedBy = token.SelectToken("recordedBy").ToString();
-
-            //if image was sent as base64
-            string pic1 = token.SelectToken("pic1").ToString();
-            byte[] pic = Convert.FromBase64String(pic1);
+            DateTime date2 = getDate(value[0].dateset);
+            byte[] pic = Convert.FromBase64String(value[0].pic1);
 
             //get recipients email
             try
             {
+                string recipient = value[0].recipient;
                 string email = se.tbl_users.FirstOrDefault(f2 => f2.name == recipient).email;
-                recipient = email;
+                value[0].recipient = email;
             }
             catch
-            {
-
-            }
+            {}
 
             try
             {
                 tbl_expenses exp = new tbl_expenses();
-                exp.account = account;
-                exp.amount = amount;
-                exp.vendor = vendor;
-                exp.recipient = recipient;
+                exp.account = value[0].account;
+                exp.amount = value[0].amount;
+                exp.vendor = value[0].vendor;
+                exp.recipient = value[0].recipient;
                 exp.dateset = date2;
-                exp.ref_code = ref_code;
+                exp.ref_code = value[0].ref_code;
                 exp.image = pic;
-                exp.description = description;
-                exp.RecordedBy = recordedBy;
+                exp.description = value[0].category;
+                exp.RecordedBy = value[0].recordedBy;
                 se.tbl_expenses.Add(exp);
                 se.SaveChanges();
                 res = "successfully recorded new expense";
@@ -1667,18 +1583,18 @@ namespace sunamiapi.Controllers.api
             }
         }
 
-        public List<object> getAllExpenses()
+        public List<getexpensebody> getAllExpenses()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            var expenses = se.tbl_expenses.ToList();
+            var expenses = se.tbl_expenses.ToList().OrderByDescending(ff=>ff.Id);
 
-            List<object> li = new List<object>();
+            List<getexpensebody> li = new List<getexpensebody>();
             foreach (var f in expenses)
             {
                 string usernm = se.tbl_users.FirstOrDefault(f1 => f1.email == f.recipient).name;
                 if (f.image.Length < 2)
                 {
-                    li.Add(new
+                    li.Add(new getexpensebody
                     {
                         Id = f.Id,
                         Account = f.account,
@@ -1693,7 +1609,7 @@ namespace sunamiapi.Controllers.api
                 }
                 else
                 {
-                    li.Add(new
+                    li.Add(new getexpensebody
                     {
                         Id = f.Id,
                         Account = f.account,
@@ -1743,10 +1659,10 @@ namespace sunamiapi.Controllers.api
             return thumbnail(bmpReturn);
         }
 
-        public List<Object> getExpenseCategories()
+        public List<getexpensecategory> getExpenseCategories()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            List<object> list = new List<object>(se.tbl_expense_categories.Select(g => new
+            List<getexpensecategory> list = new List<getexpensecategory>(se.tbl_expense_categories.Select(g => new getexpensecategory
             {
                 Name = g.Name,
                 Details = g.Details
@@ -1755,14 +1671,14 @@ namespace sunamiapi.Controllers.api
             return list;
         }
 
-        public List<Object> getUserNames()
+        public List<UsersResponseBody> getUserNames()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            List<object> list1 = new List<object>();
+            List<UsersResponseBody> list1 = new List<UsersResponseBody>();
             var users = se.tbl_users.ToList().OrderBy(f => f.name);
             foreach (var g in users)
             {
-                list1.Add(new
+                list1.Add(new UsersResponseBody
                 {
                     Name = g.name,
                     email = g.email
@@ -1773,44 +1689,51 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpPost]
-        public string postNewCustomer([FromBody]JArray value)
+        public string postNewCustomer([FromBody]postnewcustomer[] value)
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             DateTime date2 = DateTime.Today;
             string item = "";
             string res = "error";
-            JToken token = JObject.Parse(value[0].ToString());
             try
             {
                 registerCustomer rc = new registerCustomer();
-                rc.Id = token.SelectToken("id").ToString();
-                rc.Box = token.SelectToken("box").ToString();
-                rc.City = token.SelectToken("city").ToString();
-                rc.LatG = token.SelectToken("latG").ToString();
-                rc.LonG = token.SelectToken("lonG").ToString();
-                rc.Name = token.SelectToken("name").ToString();
-                rc.Number = token.SelectToken("number1").ToString();
-                rc.Number2 = token.SelectToken("number2").ToString();
-                rc.Number3 = token.SelectToken("number3").ToString();
-                rc.Occupation = token.SelectToken("occupation").ToString();
-                rc.Village = token.SelectToken("village").ToString();
-                rc.Witness = token.SelectToken("witness").ToString();
-                rc.Witnessid = token.SelectToken("witnessid").ToString();
-                rc.Description = token.SelectToken("description").ToString();
+                rc.Id = value[0].id;
+                rc.Agentcode = value[0].agentcode;
+                rc.Witness_mobile = value[0].witnessnumber;
+                rc.Box = value[0].box;
+                rc.City = value[0].city;
+                rc.LatG = value[0].latG;
+                rc.LonG = value[0].lonG;
+                rc.Name = value[0].name;
+                rc.Number = value[0].number1;
+                rc.Number2 = value[0].number2;
+                rc.Number3 = value[0].number3;
+                rc.Occupation = value[0].occupation;
+                rc.Village = value[0].village;
+                rc.Witness = value[0].witness;
+                rc.Witnessid = value[0].witnessid;
+                rc.Description = value[0].description;
                 try
                 {
-                    rc.RecordedBy = token.SelectToken("recordedBy").ToString();
+                    rc.RecordedBy = value[0].recordedBy;
                 }
                 catch
                 {
                     rc.RecordedBy = "anonymous";
                 }
-                rc.Country = "Kenya";
-
                 try
                 {
-                    //rc.Package = token.SelectToken("package").ToString();
-                    rc.Package = "single_2018(100)";
+                    rc.Country = value[0].country;
+                }
+                catch
+                {
+                    rc.Country = "Kenya";
+                }
+                
+                try
+                {
+                    rc.Package = value[0].package;
                 }
                 catch
                 {
@@ -1818,7 +1741,7 @@ namespace sunamiapi.Controllers.api
                 }
                 try
                 {
-                    date2 = getDate(token.SelectToken("date1").ToString());//yyyy-mm-dd e.g. 2017-04-05 - date1
+                    date2 = getDate(value[0].date1);//yyyy-mm-dd e.g. 2017-04-05 - date1
                     rc.Install_date = date2;
                 }
                 catch
@@ -1827,16 +1750,14 @@ namespace sunamiapi.Controllers.api
                 }
                 try
                 {
-                    rc.Location = token.SelectToken("location").ToString();
+                    rc.Location = value[0].location;
                 }
                 catch
                 {
-                    rc.Location = token.SelectToken("village").ToString();
+                    rc.Location = value[0].village;
                 }
                 rc.record();
                 res = rc.Confirm;
-
-
 
                 // invoice new customer
                 //TODO - call invoice function - avoid duplication of code
@@ -1847,6 +1768,7 @@ namespace sunamiapi.Controllers.api
                     tbl_extra_package_customers epc = new tbl_extra_package_customers();
                     epc.customer_id = rc.Id;
                     epc.item = item;
+                    epc.agentcode = value[0].agentcode;
                     epc.date_given = date2;
                     se.tbl_extra_package_customers.Add(epc);
                     se.SaveChanges();
@@ -1869,7 +1791,7 @@ namespace sunamiapi.Controllers.api
             }
             if (!res.Contains("registered new customer"))
             {
-                logevent(token.SelectToken("recordedBy").ToString(), token.SelectToken("id").ToString(), DateTime.Now, res, "customer registration");
+                logevent(value[0].recordedBy, value[0].id, DateTime.Now, res, "customer registration");
             }
             se.Dispose();
             return res;
@@ -1897,7 +1819,7 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpPost]
-        public string postmakePayment([FromBody]JArray value)
+        public string postmakePayment([FromBody]postmakepaymentbody[] value)
         {
             string res = "";
             // Thread.Sleep(1000);
@@ -1915,14 +1837,13 @@ namespace sunamiapi.Controllers.api
             try
             {
                 string bankname = null;
-                JToken token = JObject.Parse(value[0].ToString());
-                string loggedUser = token.SelectToken("loggedUser").ToString();
-                string PayMode = token.SelectToken("PayMode").ToString();
-                string Code = token.SelectToken("Code").ToString();
-                string Id = token.SelectToken("Customer_Id").ToString();
+                string loggedUser = value[0].loggedUser;
+                string PayMode = value[0].PayMode;
+                string Code = value[0].Code;
+                string Id = value[0].Customer_Id;
                 try
                 {
-                    bankname = token.SelectToken("bankname").ToString();
+                    bankname = value[0].bankname;
                 }
                 catch { }
 
@@ -1936,25 +1857,31 @@ namespace sunamiapi.Controllers.api
 
                 else if (PayMode == "cash")
                 {
-                    pr.Mdate = getDate(token.SelectToken("date1").ToString());
-                    pr.Mpesa_amount = token.SelectToken("amount").ToString();
-                    if (Code.Length > 5)
-                    {
-                        PayMode = "mpesa";
-                    }
+                    pr.Mdate = getDate(value[0].date1);
+                    pr.Mpesa_amount = value[0].amount;
                 }
 
                 else if (PayMode == "bank")
                 {
-                    pr.Mdate = getDate(token.SelectToken("date1").ToString());
-                    pr.Mpesa_amount = token.SelectToken("amount").ToString();
+                    pr.Mdate = getDate(value[0].date1);
+                    pr.Mpesa_amount = value[0].amount;
                     if (bankname.Length > 2)
                     {
                         PayMode = PayMode + "_" + bankname;
                     }
                 }
 
+                else if (PayMode == "mtn_uganda")
+                {
+                    pr.Mdate = getDate(value[0].date1);
+                    pr.Mpesa_amount = value[0].amount;
+                }
 
+                else if (PayMode == "airtel_uganda")
+                {
+                    pr.Mdate = getDate(value[0].date1);
+                    pr.Mpesa_amount = value[0].amount;
+                }
 
                 pr.Loggedin = loggedUser;
                 pr.PayMode = PayMode;
@@ -1996,13 +1923,13 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpGet]
-        public List<object> eventlogs()
+        public List<geteventlogsresponse> eventlogs()
         {
-            List<object> list = new List<object>();
+            List<geteventlogsresponse> list = new List<geteventlogsresponse>();
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            list = new List<object>(from t in se.tbl_event_logs
+            list = new List<geteventlogsresponse>(from t in se.tbl_event_logs
                                     orderby t.Id descending
-                                    select new
+                                    select new geteventlogsresponse
                                     {
                                         Category = t.category_affected,
                                         CustomerId = t.customer_id,
@@ -2010,15 +1937,16 @@ namespace sunamiapi.Controllers.api
                                         Event = t.@event,
                                         LoggedInUser = t.loggedin_user
                                     });
+            se.Dispose();
             return list;
         }
 
         [HttpGet]
-        public List<object> getInventory(string id)
+        public List<tbl_inventory> getInventory(string id)
         {
             try
             {
-                List<object> inventory = new List<object>();
+                List<tbl_inventory> inventory = new List<tbl_inventory>();
                 DateTime date1 = getDate(id).AddDays(1);
                 db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
                 var items = se.tbl_inventory.Select(f => f.Item).Distinct().ToList();
@@ -2038,12 +1966,12 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpGet]
-        public List<object> getStockDetails(string id)
+        public List<tbl_inventory> getStockDetails(string id)
         {
             try
             {
                 db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-                List<object> inventory = new List<object>(se.tbl_inventory.Where(u => u.Item == id));
+                List<tbl_inventory> inventory = new List<tbl_inventory>(se.tbl_inventory.Where(u => u.Item == id));
                 se.Dispose();
                 return inventory;
             }
@@ -2054,21 +1982,16 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpPost]
-        public string postRecordItem([FromBody]JArray value)
+        public string postRecordItem([FromBody]postrecordstockitem[] value)
         {
             try
             {
                 db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-                JToken token = JObject.Parse(value[0].ToString());
-                string loggedUser = token.SelectToken("loogeduser").ToString();
-                string item = token.SelectToken("itemName").ToString();
-                string currentStock = token.SelectToken("Stock").ToString();
-                string units = token.SelectToken("units").ToString();
                 tbl_inventory ti = new tbl_inventory();
                 ti.date = DateTime.Now;
-                ti.Item = item;
-                ti.units = units;
-                ti.stock = int.Parse(currentStock);
+                ti.Item = value[0].itemName;
+                ti.units = value[0].units;
+                ti.stock = int.Parse(value[0].Stock);
                 se.tbl_inventory.Add(ti);
                 se.SaveChanges();
                 se.Dispose();
@@ -2080,37 +2003,32 @@ namespace sunamiapi.Controllers.api
             }
         }
 
-        public string postUpdateStock([FromBody] JArray value)
+        public string postUpdateStock([FromBody] postupdatestock[] value)
         {
             try
             {
                 int? stock = 0;
                 db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-                JToken token = JObject.Parse(value[0].ToString());
-                string loogeduser = token.SelectToken("loogeduser").ToString();
-                int? number = int.Parse(token.SelectToken("number").ToString());
-                string method = token.SelectToken("method").ToString();//dispense and add
-                string comment = token.SelectToken("comment").ToString();
-                string item = token.SelectToken("item").ToString();
+                string item = value[0].item;
                 int maxinv = se.tbl_inventory.Where(y => y.Item == item).Max(f => f.Id);
                 tbl_inventory ti = se.tbl_inventory.SingleOrDefault(fr => fr.Id == maxinv && fr.Item == item);
 
-                if (method == "dispense")
+                if (value[0].method == "dispense")
                 {
-                    stock = ti.stock - number;
+                    stock = ti.stock - value[0].number;
                     if (stock < 0)
                     {
-                        return "OUT OF STOCK, you cannot dispense " + number;
+                        return "OUT OF STOCK, you cannot dispense " + value[0].number;
                     }
                 }
-                else if (method == "add")
+                else if (value[0].method == "add")
                 {
-                    stock = ti.stock + number;
+                    stock = ti.stock + value[0].number;
                 }
                 tbl_inventory tia = new tbl_inventory();
-                tia.comments = comment;
+                tia.comments = value[0].comment;
                 tia.date = DateTime.Now;
-                tia.Item = item;
+                tia.Item = value[0].item;
                 tia.stock = stock;
                 tia.units = ti.units;
                 se.tbl_inventory.Add(tia);
@@ -2122,6 +2040,70 @@ namespace sunamiapi.Controllers.api
             {
                 return f.Message;
             }
+        }
+        
+        [HttpGet]
+        public List<object> getCustomerInvoicedItems(string id)
+        {
+            List<object> list = new List<object>();
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            list = new List<object>(from ei in se.tbl_extra_package_customers
+                                    where ei.customer_id == id
+                                    orderby ei.Id descending
+                                    select new
+                                    {
+                                        item = ei.item,
+                                        invoiceDate = ei.date_given
+                                    });
+            se.Dispose();
+            return list;
+        }
+        
+        [HttpPost]
+        public tbl_agents registerAgent([FromBody]tbl_agents value)
+        {
+            try
+            {
+                string idnumber = value.idnumber;
+                db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+                tbl_agents agent = new tbl_agents();
+                agent.dateofenrolment = value.dateofenrolment;
+                agent.firstname = value.firstname;
+                agent.lastname = value.lastname;
+                agent.idnumber = value.idnumber;
+                agent.country = value.country;
+                agent.email = value.email;
+                agent.location = value.location;
+                agent.phonenumber = value.phonenumber;
+                se.tbl_agents.Add(agent);
+                se.SaveChanges();
+                se.Dispose();
+                return se.tbl_agents.FirstOrDefault(gg => gg.idnumber == idnumber);
+
+            }
+            catch (Exception e)
+            {
+                String error = e.Message;
+                return null;
+            }
+        }
+
+        [HttpGet]
+        public List<tbl_agents> getAgents()
+        {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            List<tbl_agents> list = se.tbl_agents.ToList();
+            se.Dispose();
+            return list;
+        }
+
+        [HttpGet]
+        public List<tbl_extra_package_customers> getAgentSales(string id)
+        {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+            List<tbl_extra_package_customers> list = se.tbl_extra_package_customers.Where(rr=>rr.agentcode == id).ToList();
+            se.Dispose();
+            return list;
         }
     }
 }

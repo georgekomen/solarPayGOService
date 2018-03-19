@@ -12,13 +12,16 @@ namespace sunamiapi.Models.DatabaseModel
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_extra_package_customers
+    public partial class tbl_agents
     {
-        public int Id { get; set; }
-        public string customer_id { get; set; }
-        public string item { get; set; }
-        public System.DateTime date_given { get; set; }
-        public Nullable<System.DateTime> date_taken { get; set; }
-        public string agentcode { get; set; }
+        public int id { get; set; }
+        public string firstname { get; set; }
+        public string lastname { get; set; }
+        public System.DateTime dateofenrolment { get; set; }
+        public string idnumber { get; set; }
+        public string country { get; set; }
+        public string phonenumber { get; set; }
+        public string email { get; set; }
+        public string location { get; set; }
     }
 }
