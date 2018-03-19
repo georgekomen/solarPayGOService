@@ -1211,7 +1211,7 @@ namespace sunamiapi.Controllers.api
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             List<getsunamicontroller> list = new List<getsunamicontroller>(from ts in se.tbl_sunami_controller
-                                                 orderby ts.Id ascending
+                                                 orderby ts.Id descending
                                                  select new getsunamicontroller
                                                  {
                                                      Imei = ts.imei,
@@ -1294,7 +1294,7 @@ namespace sunamiapi.Controllers.api
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             List<getissueresponse> list = new List<getissueresponse>(from tc in se.tbl_customer
                                                  join ti in se.tbl_issues on tc.customer_id equals ti.customer_id
-                                                 orderby ti.Id ascending
+                                                 orderby ti.Id descending
                                                  select new getissueresponse
                                                  {
                                                      customer = tc.customer_name,
@@ -1320,7 +1320,7 @@ namespace sunamiapi.Controllers.api
                 new List<getissueresponse>(from tc in se.tbl_customer
                                             where tc.customer_id == id
                                             join ti in se.tbl_issues on tc.customer_id equals ti.customer_id
-                                            orderby ti.Id ascending
+                                            orderby ti.Id descending
                                             select new getissueresponse
                                             {
                                                 customer = tc.customer_name,
@@ -1586,7 +1586,7 @@ namespace sunamiapi.Controllers.api
         public List<getexpensebody> getAllExpenses()
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            var expenses = se.tbl_expenses.ToList();
+            var expenses = se.tbl_expenses.ToList().OrderByDescending(ff=>ff.Id);
 
             List<getexpensebody> li = new List<getexpensebody>();
             foreach (var f in expenses)
@@ -2062,12 +2062,30 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public tbl_agents registerAgent([FromBody]tbl_agents value)
         {
-            string idnumber = value.idnumber;
-            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-            se.tbl_agents.Add(value);
-            se.SaveChanges();
-            se.Dispose();
-            return se.tbl_agents.FirstOrDefault(gg => gg.idnumber == idnumber);
+            try
+            {
+                string idnumber = value.idnumber;
+                db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+                tbl_agents agent = new tbl_agents();
+                agent.dateofenrolment = value.dateofenrolment;
+                agent.firstname = value.firstname;
+                agent.lastname = value.lastname;
+                agent.idnumber = value.idnumber;
+                agent.country = value.country;
+                agent.email = value.email;
+                agent.location = value.location;
+                agent.phonenumber = value.phonenumber;
+                se.tbl_agents.Add(agent);
+                se.SaveChanges();
+                se.Dispose();
+                return se.tbl_agents.FirstOrDefault(gg => gg.idnumber == idnumber);
+
+            }
+            catch (Exception e)
+            {
+                String error = e.Message;
+                return null;
+            }
         }
 
         [HttpGet]
