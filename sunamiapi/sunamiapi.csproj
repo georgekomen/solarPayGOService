@@ -427,6 +427,9 @@
     <Compile Include="Models\DatabaseModel\tbl_event_logs.cs">
       <DependentUpon>SunamiDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_grants.cs">
+      <DependentUpon>SunamiDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DatabaseModel\tbl_inventory.cs">
       <DependentUpon>SunamiDB.tt</DependentUpon>
     </Compile>
