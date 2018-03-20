@@ -75,9 +75,11 @@ namespace sunamiapi.Controllers.api
 
                 list = calcInvoiceBtwnDatesm(beginDate, end1, list2).OrderByDescending(g => g.Percent).ToList();
             }
-            se.Dispose();
+            finally
+            {
+                se.Dispose();
+            }
             return list;
-
         }
 
         [HttpPost]
@@ -104,7 +106,10 @@ namespace sunamiapi.Controllers.api
 
                 list = calcInvoiceBtwnDatesm(beginDate, end1, list2).OrderByDescending(g => g.Percent).ToList();
             }
-            se.Dispose();
+            finally
+            {
+                se.Dispose();
+            }
             return list;
             //return null;
         }
@@ -377,7 +382,10 @@ namespace sunamiapi.Controllers.api
             catch
             {
             }
-            se.Dispose();
+            finally
+            {
+                se.Dispose();
+            }
 
             return controllers;
         }
@@ -398,9 +406,9 @@ namespace sunamiapi.Controllers.api
             }
             catch(Exception g)
             {
+                se.Dispose();
                 return g.Message;
             }
-            
         }
 
         [HttpPost]
@@ -1140,6 +1148,13 @@ namespace sunamiapi.Controllers.api
                                                      id = i.customer_id,
                                                      occupation = i.occupation,
                                                      number1 = i.phone_numbers,
+                                                     number2 = i.phone_numbers2,
+                                                     number3 = i.phone_numbers3,
+                                                     box = i.Po_Box_Address,
+                                                     package = i.package_type,
+                                                     latG = i.lat,
+                                                     lonG = i.lon,
+                                                     description = i.Description,
                                                      village = i.village_name,
                                                      location = i.location,
                                                      city = i.city,
@@ -1171,14 +1186,18 @@ namespace sunamiapi.Controllers.api
                     number1 = i.phone_numbers,
                     number2 = i.phone_numbers2,
                     number3 = i.phone_numbers3,
+                    box = i.Po_Box_Address,
+                    package = i.package_type,
+                    latG = i.lat,
+                    lonG = i.lon,
+                    description = i.Description,
                     village = i.village_name,
                     location = i.location,
                     city = i.city,
-                    installdate = i.install_date.Value.Date,
+                    installdate = i.install_date,
                     witness = i.next_of_kin,
                     witnessid = i.nok_mobile,
                     status = i.active_status,
-                    package = i.package_type,
                     country = i.country,
                     agentcode = i.agentcode,
                     witnessnumber = i.witness_mobile_number,
@@ -1748,9 +1767,7 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public string postNewCustomer([FromBody]postnewcustomer[] value)
         {
-            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             DateTime date2 = DateTime.Today;
-            string item = "";
             string res = "error";
             try
             {
@@ -1772,86 +1789,30 @@ namespace sunamiapi.Controllers.api
                 rc.Witnessid = value[0].witnessid;
                 rc.Description = value[0].description;
                 rc.Gender = value[0].gender;
-                try
-                {
-                    rc.RecordedBy = value[0].recordedBy;
-                }
-                catch
-                {
-                    rc.RecordedBy = "anonymous";
-                }
-                try
-                {
-                    rc.Country = value[0].country;
-                }
-                catch
-                {
-                    rc.Country = "Kenya";
-                }
-                
-                try
-                {
-                    rc.Package = value[0].package;
-                }
-                catch
-                {
-                    rc.Package = "single_2018(100)";
-                }
-                try
-                {
-                    date2 = getDate(value[0].date1);//yyyy-mm-dd e.g. 2017-04-05 - date1
-                    rc.Install_date = date2;
-                }
-                catch
-                {
+                rc.RecordedBy = value[0].recordedBy;
+                rc.Country = value[0].country;
+                rc.Package = value[0].package;
+                date2 = getDate(value[0].date1);//yyyy-mm-dd e.g. 2017-04-05 - date1
+                rc.Install_date = date2;
+                rc.Location = value[0].location;
 
-                }
-                try
-                {
-                    rc.Location = value[0].location;
-                }
-                catch
-                {
-                    rc.Location = value[0].village;
-                }
                 rc.record();
                 res = rc.Confirm;
-
                 // invoice new customer
                 //TODO - call invoice function - avoid duplication of code
-                item = rc.Package;
-
-                if (!se.tbl_extra_package_customers.Where(r => r.customer_id == value[0].id).Select(t => t.item).Contains(item))
-                {
-                    tbl_extra_package_customers epc = new tbl_extra_package_customers();
-                    epc.customer_id = value[0].id;
-                    epc.item = item;
-                    epc.agentcode = value[0].agentcode;
-                    epc.date_given = date2;
-                    se.tbl_extra_package_customers.Add(epc);
-                    se.SaveChanges();
-                    // this.logevent(rc.RecordedBy, rc.Id, DateTime.Today, "Invoiced customer a " + item, "Invoice Customer");
-                }
-                else
-                {
-                    tbl_extra_package_customers tepc = se.tbl_extra_package_customers.FirstOrDefault(f => f.customer_id == value[0].id && f.item == item);
-                    tepc.date_given = date2;
-                    se.SaveChanges();
-                }
+                string item = value[0].package;
+                string customer_id = value[0].id;
+               
                 // end of invoicing
-
             }
             catch (Exception kk)
             {
-                //res = "Error retrieving info from json sent";
-                res = kk.Message;
-
+                throw new Exception(kk.StackTrace);
             }
             if (!res.Contains("registered new customer"))
             {
                 logevent(value[0].recordedBy, value[0].id, DateTime.Now, res, "customer registration");
             }
-            se.Dispose();
             return res;
         }
 
@@ -1964,9 +1925,9 @@ namespace sunamiapi.Controllers.api
 
         private void logevent(string loggeduser, string customerid, DateTime date, string event1, string category)
         {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             try
             {
-                db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
                 tbl_event_logs ev = new tbl_event_logs();
                 ev.category_affected = category;
                 ev.customer_id = customerid;
@@ -1979,7 +1940,7 @@ namespace sunamiapi.Controllers.api
             }
             catch (Exception f)
             {
-
+                se.Dispose();
             }
         }
 
@@ -2005,11 +1966,12 @@ namespace sunamiapi.Controllers.api
         [HttpGet]
         public List<tbl_inventory> getInventory(string id)
         {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             try
             {
                 List<tbl_inventory> inventory = new List<tbl_inventory>();
                 DateTime date1 = getDate(id).AddDays(1);
-                db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+               
                 var items = se.tbl_inventory.Select(f => f.Item).Distinct().ToList();
                 foreach (var item in items)
                 {
@@ -2022,6 +1984,7 @@ namespace sunamiapi.Controllers.api
             }
             catch (Exception f)
             {
+                se.Dispose();
                 return null;
             }
         }
@@ -2029,15 +1992,17 @@ namespace sunamiapi.Controllers.api
         [HttpGet]
         public List<tbl_inventory> getStockDetails(string id)
         {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             try
             {
-                db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+                
                 List<tbl_inventory> inventory = new List<tbl_inventory>(se.tbl_inventory.Where(u => u.Item == id));
                 se.Dispose();
                 return inventory;
             }
             catch (Exception f)
             {
+                se.Dispose();
                 return null;
             }
         }
@@ -2045,9 +2010,10 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public string postRecordItem([FromBody]postrecordstockitem[] value)
         {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             try
             {
-                db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+                
                 tbl_inventory ti = new tbl_inventory();
                 ti.date = DateTime.Now;
                 ti.Item = value[0].itemName;
@@ -2060,16 +2026,18 @@ namespace sunamiapi.Controllers.api
             }
             catch (Exception f)
             {
+                se.Dispose();
                 return f.Message;
             }
         }
 
         public string postUpdateStock([FromBody] postupdatestock[] value)
         {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             try
             {
                 int? stock = 0;
-                db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+                
                 string item = value[0].item;
                 int maxinv = se.tbl_inventory.Where(y => y.Item == item).Max(f => f.Id);
                 tbl_inventory ti = se.tbl_inventory.SingleOrDefault(fr => fr.Id == maxinv && fr.Item == item);
@@ -2099,6 +2067,7 @@ namespace sunamiapi.Controllers.api
             }
             catch (Exception f)
             {
+                se.Dispose();
                 return f.Message;
             }
         }
@@ -2123,10 +2092,11 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public tbl_agents registerAgent([FromBody]agentpayload value)
         {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             try
             {
                 string idnumber = value.idnumber;
-                db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
+                
                 tbl_agents agent = new tbl_agents();
                 agent.dateofenrolment = value.dateofenrolment;
                 agent.firstname = value.firstname;
@@ -2138,12 +2108,14 @@ namespace sunamiapi.Controllers.api
                 agent.phonenumber = value.phonenumber;
                 se.tbl_agents.Add(agent);
                 se.SaveChanges();
+                tbl_agents agent1  = se.tbl_agents.FirstOrDefault(gg => gg.idnumber == idnumber);
                 se.Dispose();
-                return se.tbl_agents.FirstOrDefault(gg => gg.idnumber == idnumber);
+                return agent1;
 
             }
             catch (Exception e)
             {
+                se.Dispose();
                 String error = e.Message;
                 return null;
             }

@@ -9,7 +9,6 @@ namespace sunamiapi.classes
 {
     public class registerCustomer
     {
-        db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
         private string confirm = "";
         private DateTime install_date;
         private string id;
@@ -60,6 +59,7 @@ namespace sunamiapi.classes
 
         public void record()
         {
+            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             if (string.IsNullOrWhiteSpace(id) || string.IsNullOrEmpty(id))
             {
                 confirm += "Error! Id number not entered";
@@ -78,7 +78,6 @@ namespace sunamiapi.classes
                     }
                     if (install_date != null)
                     {
-                        
                         tc.install_date = install_date;
                     }
                     if (id != "" && id != null)
@@ -93,7 +92,6 @@ namespace sunamiapi.classes
                     {
                         tc.customer_name = name;
                     }
-                    
                     if (village != "" && village != null)
                     {
                         tc.village_name = village;
@@ -118,7 +116,6 @@ namespace sunamiapi.classes
                     {
                         tc.next_of_kin = witness;
                     }
-
                     if (witness_mobile != "" && witness_mobile != null)
                     {
                         tc.witness_mobile_number = witness_mobile;
@@ -127,7 +124,6 @@ namespace sunamiapi.classes
                     {
                         tc.agentcode = agentcode;
                     }
-
                     if (witnessid != "" && witnessid != null)
                     {
                         tc.nok_mobile = witnessid;
@@ -187,7 +183,6 @@ namespace sunamiapi.classes
                     }
                     se.SaveChanges();
                     confirm += "modified an existing customer data";
-
                 }
                 else
                 {
@@ -198,11 +193,7 @@ namespace sunamiapi.classes
                     tc.country = country;
                     tc.customer_name = name;                   
                     tc.village_name = village;
-                    try
-                    {
-                        tc.location = location;
-                    }
-                    catch { }
+                    tc.location = location;
                     tc.city = city;
                     tc.occupation = occupation;
                     tc.Po_Box_Address = box;
@@ -216,11 +207,8 @@ namespace sunamiapi.classes
                     tc.agentcode = agentcode;
                     tc.gender = gender;
                     tc.witness_mobile_number = witness_mobile;
-                    try
-                    {
-                        tc.install_date = install_date;
-                    }
-                    catch { }
+                    tc.install_date = install_date;
+                    
                     //check if number exixts in db
                     if (!se.tbl_customer.Select(g1 => g1.phone_numbers).Contains(number) && !se.tbl_customer.Select(g2 => g2.phone_numbers2).Contains(number) && !se.tbl_customer.Select(g3 => g3.phone_numbers3).Contains(number))
                     {
@@ -252,10 +240,33 @@ namespace sunamiapi.classes
                     se.SaveChanges();
                     confirm += "registered new customer";
                 }
+
+                if (!se.tbl_extra_package_customers.Where(r => r.customer_id == id).Select(t => t.item).Contains(package))
+                {
+                    tbl_extra_package_customers epc = new tbl_extra_package_customers();
+                    epc.customer_id = id;
+                    epc.item = package;
+                    epc.agentcode = agentcode;
+                    epc.date_given = install_date;
+                    se.tbl_extra_package_customers.Add(epc);
+                    se.SaveChanges();
+                    // this.logevent(rc.RecordedBy, rc.Id, DateTime.Today, "Invoiced customer a " + item, "Invoice Customer");
+                }
+                else
+                {
+                    tbl_extra_package_customers tepc = se.tbl_extra_package_customers.FirstOrDefault(f => f.customer_id == id && f.item == package);
+                    tepc.date_given = install_date;
+                    se.SaveChanges();
+                }
+                
             }
             catch (Exception kk)
             {
-                confirm += "an error occured while trying to register customer. Please contact the system admin";
+                throw new Exception(kk.StackTrace);
+            }
+            finally
+            {
+                se.Dispose();
             }
         }
     }
