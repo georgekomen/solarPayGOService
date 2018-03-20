@@ -368,6 +368,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="classes\agentpayload.cs" />
     <Compile Include="classes\chartdata.cs" />
     <Compile Include="classes\chartdates.cs" />
     <Compile Include="classes\extraPackageInvoicing.cs" />

@@ -1818,10 +1818,10 @@ namespace sunamiapi.Controllers.api
                 //TODO - call invoice function - avoid duplication of code
                 item = rc.Package;
 
-                if (!se.tbl_extra_package_customers.Where(r => r.customer_id == rc.Id).Select(t => t.item).Contains(item))
+                if (!se.tbl_extra_package_customers.Where(r => r.customer_id == value[0].id).Select(t => t.item).Contains(item))
                 {
                     tbl_extra_package_customers epc = new tbl_extra_package_customers();
-                    epc.customer_id = rc.Id;
+                    epc.customer_id = value[0].id;
                     epc.item = item;
                     epc.agentcode = value[0].agentcode;
                     epc.date_given = date2;
@@ -1831,7 +1831,7 @@ namespace sunamiapi.Controllers.api
                 }
                 else
                 {
-                    tbl_extra_package_customers tepc = se.tbl_extra_package_customers.FirstOrDefault(f => f.customer_id == rc.Id && f.item == item);
+                    tbl_extra_package_customers tepc = se.tbl_extra_package_customers.FirstOrDefault(f => f.customer_id == value[0].id && f.item == item);
                     tepc.date_given = date2;
                     se.SaveChanges();
                 }
@@ -2118,7 +2118,7 @@ namespace sunamiapi.Controllers.api
         }
         
         [HttpPost]
-        public tbl_agents registerAgent([FromBody]tbl_agents value)
+        public tbl_agents registerAgent([FromBody]agentpayload value)
         {
             try
             {

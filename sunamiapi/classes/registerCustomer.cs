@@ -33,267 +33,28 @@ namespace sunamiapi.classes
         private string description;
         private string recordedBy;
 
-        //confirms created new 
-        public string Confirm
-        {
-            get
-            {
-                return confirm;
-            }
-
-        }
-
-
-        public string Id
-        {
-            get
-            {
-                return id;
-            }
-
-            set
-            {
-                id = value;
-            }
-        }
-
-        public string LatG
-        {
-            get
-            {
-                return latG;
-            }
-
-            set
-            {
-                latG = value;
-            }
-        }
-
-        public string LonG
-        {
-            get
-            {
-                return lonG;
-            }
-
-            set
-            {
-                lonG = value;
-            }
-        }
-
-        public string Package
-        {
-            get
-            {
-                return package;
-            }
-
-            set
-            {
-                package = value;
-            }
-        }
-        
-
-        public string Country
-        {
-            get
-            {
-                return country;
-            }
-
-            set
-            {
-                country = value;
-            }
-        }
-
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-
-            set
-            {
-                name = value;
-            }
-        }
-
-        public string Number
-        {
-            get
-            {
-                return number;
-            }
-
-            set
-            {
-                number = value;
-            }
-        }
-
-        public string Village
-        {
-            get
-            {
-                return village;
-            }
-
-            set
-            {
-                village = value;
-            }
-        }
-
-        public string Location
-        {
-            get
-            {
-                return location;
-            }
-
-            set
-            {
-                location = value;
-            }
-        }
-
-        public string City
-        {
-            get
-            {
-                return city;
-            }
-
-            set
-            {
-                city = value;
-            }
-        }
-
-        public string Occupation
-        {
-            get
-            {
-                return occupation;
-            }
-
-            set
-            {
-                occupation = value;
-            }
-        }
-
-        public string Box
-        {
-            get
-            {
-                return box;
-            }
-
-            set
-            {
-                box = value;
-            }
-        }
-
-        public string Witness
-        {
-            get
-            {
-                return witness;
-            }
-
-            set
-            {
-                witness = value;
-            }
-        }
-
-        public string Witnessid
-        {
-            get
-            {
-                return witnessid;
-            }
-
-            set
-            {
-                witnessid = value;
-            }
-        }
-
-        public string Number2
-        {
-            get
-            {
-                return number2;
-            }
-
-            set
-            {
-                number2 = value;
-            }
-        }
-
-        public string Number3
-        {
-            get
-            {
-                return number3;
-            }
-
-            set
-            {
-                number3 = value;
-            }
-        }
-
-        public DateTime Install_date
-        {
-            get
-            {
-                return install_date;
-            }
-
-            set
-            {
-                install_date = value;
-            }
-        }
-
-        public string Description
-        {
-            get
-            {
-                return description;
-            }
-
-            set
-            {
-                description = value;
-            }
-        }
-
-        public string RecordedBy
-        {
-            get
-            {
-                return recordedBy;
-            }
-
-            set
-            {
-                recordedBy = value;
-            }
-        }
-
+        public string Confirm { get => confirm; set => confirm = value; }
+        public DateTime Install_date { get => install_date; set => install_date = value; }
+        public string Id { get => id; set => id = value; }
+        public string LatG { get => latG; set => latG = value; }
+        public string LonG { get => lonG; set => lonG = value; }
+        public string Package { get => package; set => package = value; }
+        public string Country { get => country; set => country = value; }
+        public string Name { get => name; set => name = value; }
+        public string Number { get => number; set => number = value; }
+        public string Number2 { get => number2; set => number2 = value; }
+        public string Number3 { get => number3; set => number3 = value; }
+        public string Village { get => village; set => village = value; }
+        public string Location { get => location; set => location = value; }
+        public string City { get => city; set => city = value; }
+        public string Occupation { get => occupation; set => occupation = value; }
+        public string Box { get => box; set => box = value; }
+        public string Witness { get => witness; set => witness = value; }
+        public string Witnessid { get => witnessid; set => witnessid = value; }
         public string Witness_mobile { get => witness_mobile; set => witness_mobile = value; }
         public string Agentcode { get => agentcode; set => agentcode = value; }
+        public string Description { get => description; set => description = value; }
+        public string RecordedBy { get => recordedBy; set => recordedBy = value; }
 
         public void record()
         {
@@ -314,109 +75,108 @@ namespace sunamiapi.classes
                     {
                         tc.package_type = package;
                     }
-                    if (Install_date != null)
+                    if (install_date != null)
                     {
                         
-                        tc.install_date = Install_date;
+                        tc.install_date = install_date;
                     }
-                    if (Id != "" && Id != null)
+                    if (id != "" && id != null)
                     {
-                        tc.customer_id = Id;
+                        tc.customer_id = id;
                     }
-                    if (Country != "" && Country != null)
+                    if (country != "" && country != null)
                     {
-                        tc.country = Country;
+                        tc.country = country;
                     }
-                    if (Name != "" && Name != null)
+                    if (name != "" && name != null)
                     {
-                        tc.customer_name = Name;
+                        tc.customer_name = name;
                     }
                     
-                    if (Village != "" && Village != null)
+                    if (village != "" && village != null)
                     {
-                        tc.village_name = Village;
+                        tc.village_name = village;
                     }
-                    if (Location != "" && Location != null)
+                    if (location != "" && location != null)
                     {
-                        tc.location = Location;
+                        tc.location = location;
                     }
-                    if (City != "" && City != null)
+                    if (city != "" && city != null)
                     {
-                        tc.city = City;
+                        tc.city = city;
                     }
-                    if (Occupation != "" && Occupation != null)
+                    if (occupation != "" && occupation != null)
                     {
-                        tc.occupation = Occupation;
+                        tc.occupation = occupation;
                     }
-                    if (Box != "" && Box != null)
+                    if (box != "" && box != null)
                     {
-                        tc.Po_Box_Address = Box;
+                        tc.Po_Box_Address = box;
                     }
-                    if (Witness != "" && Witness != null)
+                    if (witness != "" && witness != null)
                     {
-                        tc.next_of_kin = Witness;
-                    }
-
-                    if (Witness_mobile != "" && Witness_mobile != null)
-                    {
-                        tc.witness_mobile_number = Witness_mobile;
-                    }
-                    if (Agentcode != "" && Agentcode != null)
-                    {
-                        tc.agentcode = Agentcode;
+                        tc.next_of_kin = witness;
                     }
 
-                    if (Witnessid != "" && Witnessid != null)
+                    if (witness_mobile != "" && witness_mobile != null)
                     {
-                        tc.nok_mobile = Witnessid;
+                        tc.witness_mobile_number = witness_mobile;
+                    }
+                    if (agentcode != "" && agentcode != null)
+                    {
+                        tc.agentcode = agentcode;
+                    }
+
+                    if (witnessid != "" && witnessid != null)
+                    {
+                        tc.nok_mobile = witnessid;
                     }
                     if (latG != "" && latG != null)
                     {
-                        tc.lon = LonG;
-                        tc.lat = LatG;
+                        tc.lon = lonG;
+                        tc.lat = latG;
                     }
                     if (!string.IsNullOrWhiteSpace(recordedBy) || !string.IsNullOrEmpty(recordedBy))
                     {
-                        tc.RecordedBy += "Modified By" + RecordedBy;
+                        tc.RecordedBy += "Modified By" + recordedBy;
                     }
                     if (!string.IsNullOrWhiteSpace(description) || !string.IsNullOrEmpty(description))
                     {
-                        tc.Description = Description;
+                        tc.Description = description;
                     }
-                    if (Number != "" && Number != null)
+                    if (number != "" && number != null)
                     {
                         //check if number exixts in db
-                        int cn = se.tbl_customer.Where(g1 => g1.phone_numbers == Number || g1.phone_numbers2 == Number || g1.phone_numbers3 == Number).Count();
+                        int cn = se.tbl_customer.Where(g1 => g1.phone_numbers == number || g1.phone_numbers2 == number || g1.phone_numbers3 == number).Count();
                         if (cn == 0)
                         {
-                            tc.phone_numbers = Number;
+                            tc.phone_numbers = number;
                         }
                         else
                         {
                             //number exists in db
                         }
                     }
-                    if (Number2 != "" && Number2 != null)
+                    if (number2 != "" && number2 != null)
                     {
                         //check if number exixts in db
-                        int cn = se.tbl_customer.Where(g1 => g1.phone_numbers == Number2 || g1.phone_numbers2 == Number2 || g1.phone_numbers3 == Number2).Count();
+                        int cn = se.tbl_customer.Where(g1 => g1.phone_numbers == number2 || g1.phone_numbers2 == number2 || g1.phone_numbers3 == number2).Count();
                         if (cn == 0)
                         {
-                            tc.phone_numbers2 = Number2;
+                            tc.phone_numbers2 = number2;
                         }
                         else
                         {
                             //number exists in db
                         }
-
                     }
-                    if (Number3 != "" && Number3 != null)
+                    if (number3 != "" && number3 != null)
                     {
                         //check if number exixts in db
-                        int cn = se.tbl_customer.Where(g1 => g1.phone_numbers == Number3 || g1.phone_numbers2 == Number3 || g1.phone_numbers3 == Number3).Count();
+                        int cn = se.tbl_customer.Where(g1 => g1.phone_numbers == number3 || g1.phone_numbers2 == number3 || g1.phone_numbers3 == number3).Count();
                         if (cn == 0)
                         {
-                            tc.phone_numbers3 = Number3;
+                            tc.phone_numbers3 = number3;
                         }
                         else
                         {
@@ -432,54 +192,56 @@ namespace sunamiapi.classes
                 {
                     // IF CUSTOMER DOESN'T EXISTS MAKE ENTRY
                     tbl_customer tc = new tbl_customer();
-                    tc.customer_id = Id;
+                    tc.customer_id = id;
                     tc.package_type = package;
-                    tc.country = Country;
-                    tc.customer_name = Name;                   
-                    tc.village_name = Village;
+                    tc.country = country;
+                    tc.customer_name = name;                   
+                    tc.village_name = village;
                     try
                     {
-                        tc.location = Location;
+                        tc.location = location;
                     }
                     catch { }
-                    tc.city = City;
-                    tc.occupation = Occupation;
-                    tc.Po_Box_Address = Box;
-                    tc.next_of_kin = Witness;
-                    tc.nok_mobile = Witnessid;
+                    tc.city = city;
+                    tc.occupation = occupation;
+                    tc.Po_Box_Address = box;
+                    tc.next_of_kin = witness;
+                    tc.nok_mobile = witnessid;
                     tc.active_status = true;
-                    tc.lon = LonG;
-                    tc.lat = LatG;
-                    tc.Description = Description;
-                    tc.RecordedBy = RecordedBy;
+                    tc.lon = lonG;
+                    tc.lat = latG;
+                    tc.Description = description;
+                    tc.RecordedBy = recordedBy;
+                    tc.agentcode = agentcode;
+                    tc.witness_mobile_number = witness_mobile;
                     try
                     {
-                        tc.install_date = Install_date;
+                        tc.install_date = install_date;
                     }
                     catch { }
-                    int cn = se.tbl_customer.Where(g1 => g1.phone_numbers == Number || g1.phone_numbers2 == Number || g1.phone_numbers3 == Number).Count();
+                    int cn = se.tbl_customer.Where(g1 => g1.phone_numbers == number || g1.phone_numbers2 == number || g1.phone_numbers3 == number).Count();
                     if (cn == 0)
                     {
-                        tc.phone_numbers = Number;
+                        tc.phone_numbers = number;
                     }
                     else
                     {
                         //number exists in db
                     }
 
-                    int cn1 = se.tbl_customer.Where(g1 => g1.phone_numbers == Number2 || g1.phone_numbers2 == Number2 || g1.phone_numbers3 == Number2).Count();
+                    int cn1 = se.tbl_customer.Where(g1 => g1.phone_numbers == number2 || g1.phone_numbers2 == number2 || g1.phone_numbers3 == number2).Count();
                     if (cn1 == 0)
                     {
-                        tc.phone_numbers2 = Number2;
+                        tc.phone_numbers2 = number2;
                     }
                     else
                     {
                         //number exists in db
                     }
-                    int cn2 = se.tbl_customer.Where(g1 => g1.phone_numbers == Number3 || g1.phone_numbers2 == Number3 || g1.phone_numbers3 == Number3).Count();
+                    int cn2 = se.tbl_customer.Where(g1 => g1.phone_numbers == number3 || g1.phone_numbers2 == number3 || g1.phone_numbers3 == number3).Count();
                     if (cn2 == 0)
                     {
-                        tc.phone_numbers3 = Number3;
+                        tc.phone_numbers3 = number3;
                     }
                     else
                     {
