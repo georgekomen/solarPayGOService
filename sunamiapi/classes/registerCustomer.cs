@@ -32,6 +32,7 @@ namespace sunamiapi.classes
         private string agentcode;
         private string description;
         private string recordedBy;
+        private string gender;
 
         public string Confirm { get => confirm; set => confirm = value; }
         public DateTime Install_date { get => install_date; set => install_date = value; }
@@ -55,6 +56,7 @@ namespace sunamiapi.classes
         public string Agentcode { get => agentcode; set => agentcode = value; }
         public string Description { get => description; set => description = value; }
         public string RecordedBy { get => recordedBy; set => recordedBy = value; }
+        public string Gender { get => gender; set => gender = value; }
 
         public void record()
         {
@@ -66,8 +68,7 @@ namespace sunamiapi.classes
             try
             {
                 //CHECK IF CUSTOMER EXISTS IN TBL_CUSTOMER
-                int g = se.tbl_customer.Where(o => o.customer_id == id).Count();
-                if (g >= 1)
+                if (se.tbl_customer.Select(o => o.customer_id).Contains(id))
                 {
                     //IF HE EXISTS - UPDATE ENTRY
                     tbl_customer tc = se.tbl_customer.FirstOrDefault(i => i.customer_id == id);
@@ -140,6 +141,10 @@ namespace sunamiapi.classes
                     {
                         tc.RecordedBy += "Modified By" + recordedBy;
                     }
+                    if (!string.IsNullOrWhiteSpace(gender) || !string.IsNullOrEmpty(gender))
+                    {
+                        tc.gender = gender;
+                    }
                     if (!string.IsNullOrWhiteSpace(description) || !string.IsNullOrEmpty(description))
                     {
                         tc.Description = description;
@@ -147,8 +152,7 @@ namespace sunamiapi.classes
                     if (number != "" && number != null)
                     {
                         //check if number exixts in db
-                        int cn = se.tbl_customer.Where(g1 => g1.phone_numbers == number || g1.phone_numbers2 == number || g1.phone_numbers3 == number).Count();
-                        if (cn == 0)
+                        if (!se.tbl_customer.Select(g1=>g1.phone_numbers).Contains(number) && !se.tbl_customer.Select(g2 => g2.phone_numbers2).Contains(number) && !se.tbl_customer.Select(g3 => g3.phone_numbers3).Contains(number))
                         {
                             tc.phone_numbers = number;
                         }
@@ -160,8 +164,7 @@ namespace sunamiapi.classes
                     if (number2 != "" && number2 != null)
                     {
                         //check if number exixts in db
-                        int cn = se.tbl_customer.Where(g1 => g1.phone_numbers == number2 || g1.phone_numbers2 == number2 || g1.phone_numbers3 == number2).Count();
-                        if (cn == 0)
+                        if (!se.tbl_customer.Select(g1 => g1.phone_numbers).Contains(number2) && !se.tbl_customer.Select(g2 => g2.phone_numbers2).Contains(number2) && !se.tbl_customer.Select(g3 => g3.phone_numbers3).Contains(number2))
                         {
                             tc.phone_numbers2 = number2;
                         }
@@ -173,8 +176,7 @@ namespace sunamiapi.classes
                     if (number3 != "" && number3 != null)
                     {
                         //check if number exixts in db
-                        int cn = se.tbl_customer.Where(g1 => g1.phone_numbers == number3 || g1.phone_numbers2 == number3 || g1.phone_numbers3 == number3).Count();
-                        if (cn == 0)
+                        if (!se.tbl_customer.Select(g1 => g1.phone_numbers).Contains(number3) && !se.tbl_customer.Select(g2 => g2.phone_numbers2).Contains(number3) && !se.tbl_customer.Select(g3 => g3.phone_numbers3).Contains(number3))
                         {
                             tc.phone_numbers3 = number3;
                         }
@@ -182,13 +184,12 @@ namespace sunamiapi.classes
                         {
                             //number exists in db
                         }
-
                     }
                     se.SaveChanges();
                     confirm += "modified an existing customer data";
 
                 }
-                else if (g < 1)
+                else
                 {
                     // IF CUSTOMER DOESN'T EXISTS MAKE ENTRY
                     tbl_customer tc = new tbl_customer();
@@ -213,14 +214,15 @@ namespace sunamiapi.classes
                     tc.Description = description;
                     tc.RecordedBy = recordedBy;
                     tc.agentcode = agentcode;
+                    tc.gender = gender;
                     tc.witness_mobile_number = witness_mobile;
                     try
                     {
                         tc.install_date = install_date;
                     }
                     catch { }
-                    int cn = se.tbl_customer.Where(g1 => g1.phone_numbers == number || g1.phone_numbers2 == number || g1.phone_numbers3 == number).Count();
-                    if (cn == 0)
+                    //check if number exixts in db
+                    if (!se.tbl_customer.Select(g1 => g1.phone_numbers).Contains(number) && !se.tbl_customer.Select(g2 => g2.phone_numbers2).Contains(number) && !se.tbl_customer.Select(g3 => g3.phone_numbers3).Contains(number))
                     {
                         tc.phone_numbers = number;
                     }
@@ -228,9 +230,8 @@ namespace sunamiapi.classes
                     {
                         //number exists in db
                     }
-
-                    int cn1 = se.tbl_customer.Where(g1 => g1.phone_numbers == number2 || g1.phone_numbers2 == number2 || g1.phone_numbers3 == number2).Count();
-                    if (cn1 == 0)
+                    //check if number exixts in db
+                    if (!se.tbl_customer.Select(g1 => g1.phone_numbers).Contains(number2) && !se.tbl_customer.Select(g2 => g2.phone_numbers2).Contains(number2) && !se.tbl_customer.Select(g3 => g3.phone_numbers3).Contains(number2))
                     {
                         tc.phone_numbers2 = number2;
                     }
@@ -238,8 +239,8 @@ namespace sunamiapi.classes
                     {
                         //number exists in db
                     }
-                    int cn2 = se.tbl_customer.Where(g1 => g1.phone_numbers == number3 || g1.phone_numbers2 == number3 || g1.phone_numbers3 == number3).Count();
-                    if (cn2 == 0)
+                    //check if number exixts in db
+                    if (!se.tbl_customer.Select(g1 => g1.phone_numbers).Contains(number3) && !se.tbl_customer.Select(g2 => g2.phone_numbers2).Contains(number3) && !se.tbl_customer.Select(g3 => g3.phone_numbers3).Contains(number3))
                     {
                         tc.phone_numbers3 = number3;
                     }

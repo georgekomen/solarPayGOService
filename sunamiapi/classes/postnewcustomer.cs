@@ -30,6 +30,7 @@ namespace sunamiapi.classes
         private string _location;
         private string _country;
         private string _package;
+        private string _gender;
 
         public string id { get => _id; set => _id = value; }
         public string box { get => _box; set => _box = value; }
@@ -54,5 +55,6 @@ namespace sunamiapi.classes
         public bool? status { get => _status; set => _status = value; }
         public string agentcode { get => _agentcode; set => _agentcode = value; }
         public string witnessnumber { get => _witnessnumber; set => _witnessnumber = value; }
+        public string gender { get => _gender; set => _gender = value; }
     }
 }

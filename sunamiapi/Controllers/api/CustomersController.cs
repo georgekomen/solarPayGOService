@@ -1149,7 +1149,8 @@ namespace sunamiapi.Controllers.api
                                                      status = i.active_status,
                                                      country = i.country,
                                                      agentcode = i.agentcode,
-                                                     witnessnumber = i.witness_mobile_number
+                                                     witnessnumber = i.witness_mobile_number,
+                                                     gender = i.gender
                                                  }
                       );
             se.Dispose();
@@ -1180,7 +1181,8 @@ namespace sunamiapi.Controllers.api
                     package = i.package_type,
                     country = i.country,
                     agentcode = i.agentcode,
-                    witnessnumber = i.witness_mobile_number
+                    witnessnumber = i.witness_mobile_number,
+                    gender = i.gender
                 });
                 return customer;
             }
@@ -1769,6 +1771,7 @@ namespace sunamiapi.Controllers.api
                 rc.Witness = value[0].witness;
                 rc.Witnessid = value[0].witnessid;
                 rc.Description = value[0].description;
+                rc.Gender = value[0].gender;
                 try
                 {
                     rc.RecordedBy = value[0].recordedBy;
