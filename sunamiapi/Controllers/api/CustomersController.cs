@@ -457,7 +457,8 @@ namespace sunamiapi.Controllers.api
                     firstname = customername.Split(' ').Length > 0 ? customername.Split(' ') : new string[] { customername };
                     if (message.StartsWith("send"))
                     {
-                        msgs = "Jambo " + firstname[0].ToUpper() + ", " + message.Replace(@"send", @"");
+                        //msgs = "Jambo " + firstname[0].ToUpper() + ", " + message.Replace(@"send", @"");
+                        msgs = message.Replace(@"send", @"");
                         sendmsg(sim_no, msgs, se1, cust_idd, ss);
                     }
                     else if (message.StartsWith("remind"))
