@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'E:\IMPORTANT\dropBox\Dropbox\sunami angular app\sunamiapi\sunamiapi\Models\DatabaseModel\SunamiDB.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\g.komen\Documents\my old codes\sunami_api\sunamiapi\Models\DatabaseModel\SunamiDB.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

@@ -62,34 +62,6 @@ namespace sunamiapi.Controllers
                     }
                     else
                     {
-
-                        try
-                        {
-                            int? f = se.tbl_imei_sim_numbers.Where(h => h.imei == imei).Count();
-                            if (f < 1)
-                            {
-                                //record imei in tbl_imei_sim_numbers
-                                tbl_imei_sim_numbers imeiR = new tbl_imei_sim_numbers();
-                                imeiR.imei = imei;
-                                se.tbl_imei_sim_numbers.Add(imeiR);
-                                se.SaveChanges();
-                                Response.Clear();
-                                Response.Write("*0#*0#*+254713014492#smsd$Success%s*connected to server#e");//on/off , post interval(0-10mins) , gsm reset , sms feedback number
-                                Response.End();
-                            }
-                            else
-                            {
-                                Response.Clear();
-                                Response.Write("*0#*0#*+254713014492#smsd$Success%s*connected to server#e");//on/off , post interval(0-10mins) , gsm reset , sms feedback number
-                                Response.End();
-                            }
-
-
-                        }
-                        catch (Exception j)
-                        {
-
-                        }
                     }
                 }
                 else

@@ -14,7 +14,18 @@ namespace sunamiapi.Models.DatabaseModel
     
     public partial class tbl_sub_county
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public tbl_sub_county()
+        {
+            this.tbl_office = new HashSet<tbl_office>();
+        }
+    
         public int id { get; set; }
         public string sub_county_name { get; set; }
+        public int tbl_county_id { get; set; }
+    
+        public virtual tbl_county tbl_county { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tbl_office> tbl_office { get; set; }
     }
 }

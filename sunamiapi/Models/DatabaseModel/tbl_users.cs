@@ -14,6 +14,13 @@ namespace sunamiapi.Models.DatabaseModel
     
     public partial class tbl_users
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public tbl_users()
+        {
+            this.tbl_grants = new HashSet<tbl_grants>();
+            this.tbl_office = new HashSet<tbl_office>();
+        }
+    
         public int Id { get; set; }
         public string email { get; set; }
         public string name { get; set; }
@@ -22,5 +29,10 @@ namespace sunamiapi.Models.DatabaseModel
         public System.DateTime time { get; set; }
         public string token { get; set; }
         public Nullable<int> office_id { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tbl_grants> tbl_grants { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tbl_office> tbl_office { get; set; }
     }
 }

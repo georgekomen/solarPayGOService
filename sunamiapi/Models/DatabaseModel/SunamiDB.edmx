@@ -465,6 +465,8 @@
           <Property Name="time" Type="DateTime" Nullable="false" />
           <Property Name="token" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
           <Property Name="office_id" Type="Int32" />
+          <NavigationProperty Name="tbl_grants" Relationship="db_a0a592_sunamiModel.tbl_userstbl_grants" FromRole="tbl_users" ToRole="tbl_grants" />
+          <NavigationProperty Name="tbl_office" Relationship="db_a0a592_sunamiModel.tbl_userstbl_office" FromRole="tbl_users" ToRole="tbl_office" />
         </EntityType>
         <EntityContainer Name="db_a0a592_sunamiEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="tbl_customer" EntityType="Self.tbl_customer" />
@@ -491,6 +493,26 @@
           <EntitySet Name="tbl_office" EntityType="db_a0a592_sunamiModel.tbl_office" />
           <EntitySet Name="tbl_permissions" EntityType="db_a0a592_sunamiModel.tbl_permissions" />
           <EntitySet Name="tbl_sub_county" EntityType="db_a0a592_sunamiModel.tbl_sub_county" />
+          <AssociationSet Name="tbl_countrytbl_county" Association="db_a0a592_sunamiModel.tbl_countrytbl_county">
+            <End Role="tbl_country" EntitySet="tbl_country" />
+            <End Role="tbl_county" EntitySet="tbl_county" />
+          </AssociationSet>
+          <AssociationSet Name="tbl_countytbl_sub_county" Association="db_a0a592_sunamiModel.tbl_countytbl_sub_county">
+            <End Role="tbl_county" EntitySet="tbl_county" />
+            <End Role="tbl_sub_county" EntitySet="tbl_sub_county" />
+          </AssociationSet>
+          <AssociationSet Name="tbl_sub_countytbl_office" Association="db_a0a592_sunamiModel.tbl_sub_countytbl_office">
+            <End Role="tbl_sub_county" EntitySet="tbl_sub_county" />
+            <End Role="tbl_office" EntitySet="tbl_office" />
+          </AssociationSet>
+          <AssociationSet Name="tbl_userstbl_grants" Association="db_a0a592_sunamiModel.tbl_userstbl_grants">
+            <End Role="tbl_users" EntitySet="tbl_users" />
+            <End Role="tbl_grants" EntitySet="tbl_grants" />
+          </AssociationSet>
+          <AssociationSet Name="tbl_userstbl_office" Association="db_a0a592_sunamiModel.tbl_userstbl_office">
+            <End Role="tbl_users" EntitySet="tbl_users" />
+            <End Role="tbl_office" EntitySet="tbl_office" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="tbl_sunami_controller">
           <Key>
@@ -601,6 +623,8 @@
           <Property Name="email" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="permission_name" Type="String" Nullable="false" MaxLength="65535" FixedLength="false" Unicode="false" />
           <Property Name="office_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="tbl_users" Relationship="db_a0a592_sunamiModel.tbl_userstbl_grants" FromRole="tbl_grants" ToRole="tbl_users" />
+          <Property Name="tbl_usersId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="tbl_country">
           <Key>
@@ -608,6 +632,7 @@
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="country_name" Type="String" Nullable="false" MaxLength="65535" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_county" Relationship="db_a0a592_sunamiModel.tbl_countrytbl_county" FromRole="tbl_country" ToRole="tbl_county" />
         </EntityType>
         <EntityType Name="tbl_county">
           <Key>
@@ -615,6 +640,9 @@
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="county_name" Type="String" Nullable="false" MaxLength="65535" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_country" Relationship="db_a0a592_sunamiModel.tbl_countrytbl_county" FromRole="tbl_county" ToRole="tbl_country" />
+          <Property Name="tbl_country_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="tbl_sub_county" Relationship="db_a0a592_sunamiModel.tbl_countytbl_sub_county" FromRole="tbl_county" ToRole="tbl_sub_county" />
         </EntityType>
         <EntityType Name="tbl_office">
           <Key>
@@ -622,6 +650,10 @@
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="office_name" Type="String" Nullable="false" MaxLength="65535" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_sub_county" Relationship="db_a0a592_sunamiModel.tbl_sub_countytbl_office" FromRole="tbl_office" ToRole="tbl_sub_county" />
+          <Property Name="tbl_sub_county_id" Type="Int32" Nullable="false" />
+          <Property Name="tbl_usersId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="tbl_users" Relationship="db_a0a592_sunamiModel.tbl_userstbl_office" FromRole="tbl_office" ToRole="tbl_users" />
         </EntityType>
         <EntityType Name="tbl_permissions">
           <Key>
@@ -636,7 +668,62 @@
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="sub_county_name" Type="String" Nullable="false" MaxLength="65535" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_county" Relationship="db_a0a592_sunamiModel.tbl_countytbl_sub_county" FromRole="tbl_sub_county" ToRole="tbl_county" />
+          <Property Name="tbl_county_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="tbl_office" Relationship="db_a0a592_sunamiModel.tbl_sub_countytbl_office" FromRole="tbl_sub_county" ToRole="tbl_office" />
         </EntityType>
+        <Association Name="tbl_countrytbl_county">
+          <End Type="db_a0a592_sunamiModel.tbl_country" Role="tbl_country" Multiplicity="1" />
+          <End Type="db_a0a592_sunamiModel.tbl_county" Role="tbl_county" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_country">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_county">
+              <PropertyRef Name="tbl_country_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="tbl_countytbl_sub_county">
+          <End Type="db_a0a592_sunamiModel.tbl_county" Role="tbl_county" Multiplicity="1" />
+          <End Type="db_a0a592_sunamiModel.tbl_sub_county" Role="tbl_sub_county" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_county">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_sub_county">
+              <PropertyRef Name="tbl_county_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="tbl_sub_countytbl_office">
+          <End Type="db_a0a592_sunamiModel.tbl_sub_county" Role="tbl_sub_county" Multiplicity="1" />
+          <End Type="db_a0a592_sunamiModel.tbl_office" Role="tbl_office" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_sub_county">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_office">
+              <PropertyRef Name="tbl_sub_county_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="tbl_userstbl_grants">
+          <End Type="db_a0a592_sunamiModel.tbl_users" Role="tbl_users" Multiplicity="1" />
+          <End Type="db_a0a592_sunamiModel.tbl_grants" Role="tbl_grants" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tbl_grants">
+              <PropertyRef Name="tbl_usersId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="tbl_userstbl_office">
+          <End Type="db_a0a592_sunamiModel.tbl_users" Role="tbl_users" Multiplicity="*" />
+          <End Type="db_a0a592_sunamiModel.tbl_office" Role="tbl_office" Multiplicity="*" />
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
