@@ -12,12 +12,9 @@ namespace sunamiapi.Models.DatabaseModel
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_fault_code
+    public partial class tbl_sub_county
     {
-        public int Id { get; set; }
-        public string code { get; set; }
-        public string description { get; set; }
-        public string cause { get; set; }
-        public string fix { get; set; }
+        public int id { get; set; }
+        public string sub_county_name { get; set; }
     }
 }

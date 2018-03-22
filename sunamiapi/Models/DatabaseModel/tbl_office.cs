@@ -12,13 +12,9 @@ namespace sunamiapi.Models.DatabaseModel
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_packages
+    public partial class tbl_office
     {
-        public int Id { get; set; }
-        public string type { get; set; }
-        public int amount_per_day { get; set; }
-        public string description { get; set; }
-        public int deposit { get; set; }
-        public System.DateTime date_deposit { get; set; }
+        public int id { get; set; }
+        public string office_name { get; set; }
     }
 }

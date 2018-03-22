@@ -20,5 +20,6 @@ namespace sunamiapi.Models.DatabaseModel
         public System.DateTime date { get; set; }
         public string @event { get; set; }
         public string category_affected { get; set; }
+        public Nullable<int> office_id { get; set; }
     }
 }

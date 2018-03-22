@@ -19,5 +19,6 @@ namespace sunamiapi.Models.DatabaseModel
         public int amount_per_day { get; set; }
         public int extra_pay_period { get; set; }
         public int deposit { get; set; }
+        public Nullable<int> office_id { get; set; }
     }
 }

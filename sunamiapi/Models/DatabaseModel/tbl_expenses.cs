@@ -24,5 +24,6 @@ namespace sunamiapi.Models.DatabaseModel
         public byte[] image { get; set; }
         public string RecordedBy { get; set; }
         public string vendor { get; set; }
+        public Nullable<int> office_id { get; set; }
     }
 }

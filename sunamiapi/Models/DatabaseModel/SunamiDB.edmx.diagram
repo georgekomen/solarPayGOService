@@ -4,23 +4,17 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="4d1df97d537845bf8b9b3527a3cb1185" Name="Diagram1" ZoomLevel="71">
+      <Diagram DiagramId="4d1df97d537845bf8b9b3527a3cb1185" Name="Diagram1" ZoomLevel="63">
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_customer" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_extra_item" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_extra_package_customers" Width="1.5" PointX="2.75" PointY="2.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_fault_code" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_faults" Width="1.5" PointX="4.75" PointY="2.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_imei_sim_numbers" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_issues" Width="1.5" PointX="0.75" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_issues" Width="1.5" PointX="0.875" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_mpesa_payments" Width="1.5" PointX="6.75" PointY="2.375" IsExpanded="true" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_mpesa_phone_imei" Width="1.5" PointX="2.75" PointY="4.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_packages" Width="1.5" PointX="4.75" PointY="5.125" IsExpanded="true" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_payments" Width="1.5" PointX="6.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_paymode" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_system" Width="1.5" PointX="8.75" PointY="2.125" IsExpanded="true" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_uninstalled_systems" Width="1.5" PointX="8.75" PointY="4.5" IsExpanded="true" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_users" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="db_a0a592_sunamiModel.todolistdb" Width="1.5" PointX="0.75" PointY="8.5" IsExpanded="true" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_sunami_controller" Width="1.5" PointX="2.75" PointY="5.875" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_switch_logs" Width="1.5" PointX="8.75" PointY="6.5" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_expense_categories" Width="1.5" PointX="6.75" PointY="7.875" />
@@ -30,6 +24,11 @@
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_inventory" Width="1.5" PointX="6.75" PointY="9.5" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_agents" Width="1.5" PointX="0.75" PointY="11.75" />
         <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_grants" Width="1.5" PointX="3.375" PointY="11.75" />
+        <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_country" Width="1.5" PointX="11.375" PointY="4.75" />
+        <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_county" Width="1.5" PointX="11.375" PointY="7.75" />
+        <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_office" Width="1.5" PointX="11.375" PointY="10.75" />
+        <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_permissions" Width="1.5" PointX="5.375" PointY="12.75" />
+        <EntityTypeShape EntityType="db_a0a592_sunamiModel.tbl_sub_county" Width="1.5" PointX="7.375" PointY="12.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

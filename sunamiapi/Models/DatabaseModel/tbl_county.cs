@@ -12,14 +12,9 @@ namespace sunamiapi.Models.DatabaseModel
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_faults
+    public partial class tbl_county
     {
-        public int Id { get; set; }
-        public string customer_id { get; set; }
-        public Nullable<System.DateTime> fault_date { get; set; }
-        public string description { get; set; }
-        public string error_code { get; set; }
-        public Nullable<bool> fixed_status { get; set; }
-        public string imei_number { get; set; }
+        public int id { get; set; }
+        public string county_name { get; set; }
     }
 }

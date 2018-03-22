@@ -23,5 +23,6 @@ namespace sunamiapi.Models.DatabaseModel
         public string phonenumber { get; set; }
         public string email { get; set; }
         public string location { get; set; }
+        public Nullable<int> office_id { get; set; }
     }
 }

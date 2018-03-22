@@ -12,9 +12,9 @@ namespace sunamiapi.Models.DatabaseModel
     using System;
     using System.Collections.Generic;
     
-    public partial class todolistdb
+    public partial class tbl_permissions
     {
-        public int Id { get; set; }
-        public string task { get; set; }
+        public int id { get; set; }
+        public string permission_name { get; set; }
     }
 }

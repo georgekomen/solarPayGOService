@@ -12,9 +12,9 @@ namespace sunamiapi.Models.DatabaseModel
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_paymode
+    public partial class tbl_country
     {
-        public int Id { get; set; }
-        public string paymode { get; set; }
+        public int id { get; set; }
+        public string country_name { get; set; }
     }
 }

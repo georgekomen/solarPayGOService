@@ -20,5 +20,6 @@ namespace sunamiapi.Models.DatabaseModel
         public System.DateTime date { get; set; }
         public string units { get; set; }
         public string comments { get; set; }
+        public Nullable<int> office_id { get; set; }
     }
 }

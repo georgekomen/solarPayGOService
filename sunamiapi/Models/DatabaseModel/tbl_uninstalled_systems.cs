@@ -20,5 +20,6 @@ namespace sunamiapi.Models.DatabaseModel
         public string Reason { get; set; }
         public string recorded_by { get; set; }
         public string previousRecords { get; set; }
+        public Nullable<int> office_id { get; set; }
     }
 }

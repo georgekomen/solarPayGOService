@@ -24,5 +24,6 @@ namespace sunamiapi.Models.DatabaseModel
         public string solvedBy { get; set; }
         public Nullable<System.DateTime> solvedOn { get; set; }
         public string comments { get; set; }
+        public Nullable<int> office_id { get; set; }
     }
 }

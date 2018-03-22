@@ -425,6 +425,12 @@
     <Compile Include="Models\DatabaseModel\tbl_agents.cs">
       <DependentUpon>SunamiDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_country.cs">
+      <DependentUpon>SunamiDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_county.cs">
+      <DependentUpon>SunamiDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DatabaseModel\tbl_event_logs.cs">
       <DependentUpon>SunamiDB.tt</DependentUpon>
     </Compile>
@@ -432,6 +438,15 @@
       <DependentUpon>SunamiDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DatabaseModel\tbl_inventory.cs">
+      <DependentUpon>SunamiDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_office.cs">
+      <DependentUpon>SunamiDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_permissions.cs">
+      <DependentUpon>SunamiDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_sub_county.cs">
       <DependentUpon>SunamiDB.tt</DependentUpon>
     </Compile>
     <Compile Include="updatelocation.aspx.cs">
@@ -477,15 +492,6 @@
     <Compile Include="Models\DatabaseModel\tbl_extra_package_customers.cs">
       <DependentUpon>SunamiDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_faults.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_fault_code.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_imei_sim_numbers.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\DatabaseModel\tbl_issues.cs">
       <DependentUpon>SunamiDB.tt</DependentUpon>
     </Compile>
@@ -498,13 +504,7 @@
     <Compile Include="Models\DatabaseModel\tbl_mpesa_phone_imei.cs">
       <DependentUpon>SunamiDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_packages.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\DatabaseModel\tbl_payments.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_paymode.cs">
       <DependentUpon>SunamiDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DatabaseModel\tbl_sunami_controller.cs">
@@ -520,9 +520,6 @@
       <DependentUpon>SunamiDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DatabaseModel\tbl_users.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\todolistdb.cs">
       <DependentUpon>SunamiDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\IdentityModels.cs" />

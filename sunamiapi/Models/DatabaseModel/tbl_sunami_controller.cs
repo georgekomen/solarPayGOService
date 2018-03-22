@@ -21,5 +21,6 @@ namespace sunamiapi.Models.DatabaseModel
         public string version { get; set; }
         public System.DateTime date_manufactured { get; set; }
         public string recorded_by { get; set; }
+        public Nullable<int> office_id { get; set; }
     }
 }
