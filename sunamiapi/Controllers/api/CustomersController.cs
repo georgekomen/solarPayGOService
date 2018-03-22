@@ -684,8 +684,7 @@ namespace sunamiapi.Controllers.api
                         tc = se.tbl_customer.FirstOrDefault(g => g.customer_id == customer_id);
                         var customernames = tc.customer_name.Split(' ');
                         sendSms ss = new sendSms();
-                        ss.sendSmsThroughGateway(sim_no, "smsc$1%$+254713014492%smsd$" + customernames[0] + "%s*solar yako imezimwa#e", customer_id);
-                        //ss.sendSmsThroughGateway(tc.phone_numbers, customernames[0] + ", Sunami solar inakujulisha kuwa solar yako imewashwa", customer_id);
+                        ss.sendSmsThroughGateway(sim_no, "smsc$1%$+254713014492%smsd$" + customernames[0] + "%s*solar yako imewashwa#e", customer_id);
                     }
 
                     tbl_switch_logs sl = new tbl_switch_logs();
@@ -736,8 +735,7 @@ namespace sunamiapi.Controllers.api
                         tc = se.tbl_customer.FirstOrDefault(g => g.customer_id == customer_id);
                         var customernames = tc.customer_name.Split(' ');
                         sendSms ss = new sendSms();
-                        ss.sendSmsThroughGateway(sim_no, "smsc$0%$+254713014492%smsd$" + customernames[0] + "%s*solar yako imewashwa#e", customer_id);
-                        //ss.sendSmsThroughGateway(tc.phone_numbers, customernames[0] + ", Sunami solar inakujulisha kuwa solar yako inazimwa leo kutokana na deni. Tafadhali lipa ili iwashwe tena", customer_id);
+                        ss.sendSmsThroughGateway(sim_no, "smsc$0%$+254713014492%smsd$" + customernames[0] + "%s*solar yako imezimwa#e", customer_id);
                     }
                     int sl1 = se.tbl_switch_logs.Where(h => h.customer_id == customer_id).Max(j => j.Id);
                     tbl_switch_logs sl = se.tbl_switch_logs.FirstOrDefault(h => h.customer_id == customer_id && h.Id == sl1);
