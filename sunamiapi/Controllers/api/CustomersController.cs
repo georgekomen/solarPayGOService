@@ -69,8 +69,7 @@ namespace sunamiapi.Controllers.api
             }
             catch
             {
-                string enddate = DateTime.Today.ToString();
-                end1 = Convert.ToDateTime(enddate, info);
+                end1 = DateTime.Today;
                 List<tbl_customer> list2 = se.tbl_customer.Where(g => g.install_date <= end1 && g.active_status == true).ToList();
 
                 list = calcInvoiceBtwnDatesm(beginDate, end1, list2).OrderByDescending(g => g.Percent).ToList();
@@ -137,7 +136,7 @@ namespace sunamiapi.Controllers.api
                 En = end.Date.ToString("dd/MM/yyyy");
 
                 extraPackageInvoicing ep = new classes.extraPackageInvoicing();
-                Count += ep.extr_invoice(start, end, tc1);
+                Count += ep.extr_invoice(start, end, tc1, se);
                 Comment += "\n" + ep.Comment;
                 Paid = ep.Paid;
 
