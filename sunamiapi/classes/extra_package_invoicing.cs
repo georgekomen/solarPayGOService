@@ -9,11 +9,11 @@ namespace sunamiapi.classes
     public class extra_package_invoicing
     {
         db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-        private int invoice;
+        private int? invoice;
         private string comment;
-        private int ext_daily_invoice;
+        private int? ext_daily_invoice;
 
-        public int Invoice
+        public int? Invoice
         {
             get
             {
@@ -34,7 +34,7 @@ namespace sunamiapi.classes
             }
         }
 
-        public int Ext_daily_invoice
+        public int? Ext_daily_invoice
         {
             get
             {
@@ -47,10 +47,10 @@ namespace sunamiapi.classes
             }
         }
 
-        public int extr_invoice(DateTime? start, DateTime end, string Id)
+        public int? extr_invoice(DateTime? start, DateTime end, string Id)
         {
-            int deposit = 0;
-            int cumm_invoice = 0;
+            int? deposit = 0;
+            int? cumm_invoice = 0;
             comment = null;
             //GET LIST OF ALL EXTRa items a customer has
             var items = se.tbl_extra_package_customers.Where(r => r.customer_id == Id).Select(i => new { it = i.item }).ToList();
@@ -67,10 +67,10 @@ namespace sunamiapi.classes
                         //get deposit
                         deposit += se.tbl_extra_item.FirstOrDefault(g => g.item == item).deposit;
                         //get cumm_invoice -- get date given item
-                        DateTime date_given = se.tbl_extra_package_customers.FirstOrDefault(t => t.customer_id == Id).date_given;
-                        int days = (end - date_given).Days;
+                        DateTime? date_given = se.tbl_extra_package_customers.FirstOrDefault(t => t.customer_id == Id).date_given;
+                        int days = (end - date_given).Value.Days;
                         //get how much he pays per day
-                        int per_day = se.tbl_extra_item.FirstOrDefault(e => e.item == item).amount_per_day;
+                        int? per_day = se.tbl_extra_item.FirstOrDefault(e => e.item == item).amount_per_day;
                         //get cumm invoice
                         ext_daily_invoice += per_day;
                         cumm_invoice += days * per_day;

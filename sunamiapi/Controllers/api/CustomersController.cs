@@ -120,7 +120,7 @@ namespace sunamiapi.Controllers.api
             List<paymentRatesClassPerClient> li = new List<paymentRatesClassPerClient>();
             string Comment;
             int? Paid;
-            int Count;
+            int? Count;
             string St;
             string En;
 
@@ -285,7 +285,7 @@ namespace sunamiapi.Controllers.api
                 List<tbl_customer> lsc = se.tbl_customer.Where(rr => rr.install_date <= endformatedTime).ToList();
 
                 List<paymentRatesClassPerClient> list = calcInvoiceBtwnDatesm(formatedTime, endformatedTime, lsc);
-                int invoice = 0;
+                int? invoice = 0;
                 int? paid = 0;
                 int? percent = 0;
                 try
@@ -474,7 +474,7 @@ namespace sunamiapi.Controllers.api
                         List<tbl_customer> tc = se1.tbl_customer.Where(gg => gg.customer_id == num.idnumber).ToList();
                         List<paymentRatesClassPerClient> list = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, tc);
                         msg = message.Replace(@"remind", @"");
-                        int invoice = list[0].Invoice;
+                        int? invoice = list[0].Invoice;
                         int? paid = list[0].Amount;
                         int? not_paid = invoice - paid;
                         if (not_paid < 0)
@@ -946,7 +946,7 @@ namespace sunamiapi.Controllers.api
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             int daily_invoice = 0;
-            int total_invoice = 0;
+            int? total_invoice = 0;
             int? paid = 0;
             int? not_paid = 0;
             string name = "";
@@ -1973,7 +1973,7 @@ namespace sunamiapi.Controllers.api
                 var items = se.tbl_inventory.Select(f => f.Item).Distinct().ToList();
                 foreach (var item in items)
                 {
-                    DateTime itemlistdate = se.tbl_inventory.Where(g => g.date <= date1 && g.Item == item).Max(f => f.date);
+                    DateTime? itemlistdate = se.tbl_inventory.Where(g => g.date <= date1 && g.Item == item).Max(f => f.date);
                     tbl_inventory itemlist = se.tbl_inventory.FirstOrDefault(g => g.date == itemlistdate && g.Item == item);
                     inventory.Add(itemlist);
                 }

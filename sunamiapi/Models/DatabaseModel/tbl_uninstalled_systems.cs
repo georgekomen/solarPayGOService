@@ -16,7 +16,7 @@ namespace sunamiapi.Models.DatabaseModel
     {
         public int Id { get; set; }
         public string customer_id { get; set; }
-        public System.DateTime uninstall_date { get; set; }
+        public Nullable<System.DateTime> uninstall_date { get; set; }
         public string Reason { get; set; }
         public string recorded_by { get; set; }
         public string previousRecords { get; set; }

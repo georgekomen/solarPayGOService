@@ -25,8 +25,8 @@ namespace sunamiapi.Models.DatabaseModel
         public string email { get; set; }
         public string name { get; set; }
         public string level { get; set; }
-        public bool allow { get; set; }
-        public System.DateTime time { get; set; }
+        public Nullable<bool> allow { get; set; }
+        public Nullable<System.DateTime> time { get; set; }
         public string token { get; set; }
         public Nullable<int> office_id { get; set; }
     

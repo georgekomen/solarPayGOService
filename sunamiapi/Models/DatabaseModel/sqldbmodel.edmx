@@ -1,0 +1,1199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="db_a0a592_sunamiModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'DB_A0A592_sunami.dbo.db_a0a592_sunami' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="db_a0a592_sunami">
+          <Property Name="   Database db_a0a592_sunami" Type="varchar" MaxLength="50" />
+        </EntityType>-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DB_A0A592_sunami.dbo.Query' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="tbl_agents">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="firstname" Type="varchar" MaxLength="15" />
+          <Property Name="lastname" Type="varchar" MaxLength="15" />
+          <Property Name="dateofenrolment" Type="datetime" />
+          <Property Name="idnumber" Type="varchar" MaxLength="15" />
+          <Property Name="country" Type="varchar" MaxLength="15" />
+          <Property Name="phonenumber" Type="varchar" MaxLength="15" />
+          <Property Name="email" Type="varchar" MaxLength="15" />
+          <Property Name="location" Type="varchar" MaxLength="15" />
+          <Property Name="office_id" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_country">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="country_name" Type="varchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_county">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="county_name" Type="varchar(max)" Nullable="false" />
+          <Property Name="tbl_country_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_customer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="customer_id" Type="varchar(max)" />
+          <Property Name="customer_name" Type="varchar(max)" />
+          <Property Name="phone_numbers" Type="varchar(max)" />
+          <Property Name="phone_numbers2" Type="varchar(max)" />
+          <Property Name="phone_numbers3" Type="varchar(max)" />
+          <Property Name="village_name" Type="varchar(max)" />
+          <Property Name="location" Type="varchar(max)" />
+          <Property Name="city" Type="varchar(max)" />
+          <Property Name="Po_Box_Address" Type="varchar(max)" />
+          <Property Name="next_of_kin" Type="varchar(max)" />
+          <Property Name="nok_mobile" Type="varchar(max)" />
+          <Property Name="active_status" Type="bit" />
+          <Property Name="occupation" Type="varchar(max)" />
+          <Property Name="lon" Type="varchar(max)" />
+          <Property Name="lat" Type="varchar(max)" />
+          <Property Name="country" Type="varchar(max)" />
+          <Property Name="install_date" Type="datetime" />
+          <Property Name="package_type" Type="varchar(max)" />
+          <Property Name="RecordedBy" Type="varchar(max)" />
+          <Property Name="Description" Type="varchar(max)" />
+          <Property Name="agentcode" Type="nvarchar(max)" />
+          <Property Name="witness_mobile_number" Type="varchar" MaxLength="15" />
+          <Property Name="gender" Type="varchar(max)" />
+          <Property Name="office_id" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_event_logs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="customer_id" Type="varchar(max)" />
+          <Property Name="loggedin_user" Type="varchar(max)" />
+          <Property Name="date" Type="datetime" />
+          <Property Name="event" Type="varchar(max)" />
+          <Property Name="category_affected" Type="varchar(max)" />
+          <Property Name="office_id" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_expense_categories">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar(max)" />
+          <Property Name="Details" Type="varchar(max)" />
+          <Property Name="office_id" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_expenses">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="description" Type="varchar(max)" />
+          <Property Name="amount" Type="varchar(max)" />
+          <Property Name="recipient" Type="varchar(max)" />
+          <Property Name="dateset" Type="datetime" />
+          <Property Name="account" Type="varchar(max)" />
+          <Property Name="ref_code" Type="varchar(max)" />
+          <Property Name="image" Type="varbinary(max)" />
+          <Property Name="RecordedBy" Type="varchar(max)" />
+          <Property Name="vendor" Type="varchar(max)" />
+          <Property Name="office_id" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_extra_item">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="item" Type="varchar(max)" />
+          <Property Name="amount_per_day" Type="int" />
+          <Property Name="extra_pay_period" Type="int" />
+          <Property Name="deposit" Type="int" />
+          <Property Name="office_id" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_extra_package_customers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="customer_id" Type="varchar(max)" />
+          <Property Name="item" Type="varchar(max)" />
+          <Property Name="date_given" Type="datetime" />
+          <Property Name="date_taken" Type="datetime" />
+          <Property Name="agentcode" Type="varchar" MaxLength="15" />
+        </EntityType>
+        <EntityType Name="tbl_grants">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="permission_name" Type="varchar(max)" Nullable="false" />
+          <Property Name="office_id" Type="int" Nullable="false" />
+          <Property Name="tbl_usersId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_inventory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Item" Type="varchar(max)" />
+          <Property Name="stock" Type="int" />
+          <Property Name="date" Type="datetime" />
+          <Property Name="units" Type="varchar(max)" />
+          <Property Name="comments" Type="varchar(max)" />
+          <Property Name="office_id" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_issues">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="issue" Type="varchar(max)" />
+          <Property Name="date" Type="datetime" />
+          <Property Name="reporter" Type="varchar(max)" />
+          <Property Name="status" Type="varchar(max)" />
+          <Property Name="customer_id" Type="varchar(max)" />
+          <Property Name="priority" Type="varchar(max)" />
+          <Property Name="solvedBy" Type="varchar(max)" />
+          <Property Name="solvedOn" Type="datetime" />
+          <Property Name="comments" Type="varchar(max)" />
+          <Property Name="office_id" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_messages">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="customer_id" Type="varchar(max)" />
+          <Property Name="message" Type="varchar(max)" />
+          <Property Name="date" Type="datetime" />
+          <Property Name="office_id" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_mpesa_payments">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="number" Type="varchar(max)" />
+          <Property Name="amount" Type="varchar(max)" />
+          <Property Name="transaction_code" Type="varchar(max)" />
+          <Property Name="date" Type="datetime" />
+          <Property Name="message" Type="varchar(max)" />
+          <Property Name="phone_imei" Type="varchar(max)" />
+          <Property Name="office_id" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_mpesa_phone_imei">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="imei" Type="varchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_office">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="office_name" Type="varchar(max)" Nullable="false" />
+          <Property Name="tbl_sub_county_id" Type="int" Nullable="false" />
+          <Property Name="tbl_usersId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_payments">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="customer_id" Type="varchar(max)" />
+          <Property Name="imei_number" Type="varchar(max)" />
+          <Property Name="amount_payed" Type="int" />
+          <Property Name="payment_method" Type="varchar(max)" />
+          <Property Name="payment_date" Type="datetime" />
+          <Property Name="phone_number" Type="varchar(max)" />
+          <Property Name="balance" Type="int" />
+          <Property Name="transaction_code" Type="varchar(max)" />
+          <Property Name="date_recorded" Type="datetime" />
+          <Property Name="person_recording" Type="varchar(max)" />
+          <Property Name="office_id" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_permissions">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="permission_name" Type="varchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_sub_county">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="sub_county_name" Type="varchar(max)" Nullable="false" />
+          <Property Name="tbl_county_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_sunami_controller">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="imei" Type="varchar(max)" />
+          <Property Name="sim_no" Type="varchar(max)" />
+          <Property Name="provider" Type="varchar(max)" />
+          <Property Name="version" Type="varchar(max)" />
+          <Property Name="date_manufactured" Type="datetime" />
+          <Property Name="recorded_by" Type="varchar(max)" />
+          <Property Name="office_id" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_switch_logs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="customer_id" Type="varchar(max)" />
+          <Property Name="switch_off_payrate" Type="varchar(max)" />
+          <Property Name="switch_off_date" Type="datetime" />
+          <Property Name="switch_on_date" Type="datetime" />
+          <Property Name="switch_on_payrate" Type="varchar(max)" />
+          <Property Name="switched_off_by" Type="varchar(max)" />
+          <Property Name="switched_on_by" Type="varchar(max)" />
+          <Property Name="office_id" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_system">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="customer_id" Type="varchar(max)" />
+          <Property Name="active_status" Type="bit" />
+          <Property Name="current_lon" Type="varchar(max)" />
+          <Property Name="current_lat" Type="varchar(max)" />
+          <Property Name="last_connected_to_db_date" Type="datetime" />
+          <Property Name="imei_number" Type="varchar(max)" />
+          <Property Name="office_id" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_uninstalled_systems">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="customer_id" Type="varchar(max)" />
+          <Property Name="uninstall_date" Type="datetime" />
+          <Property Name="Reason" Type="varchar(max)" />
+          <Property Name="recorded_by" Type="varchar(max)" />
+          <Property Name="previousRecords" Type="varchar(max)" />
+          <Property Name="office_id" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="email" Type="varchar(max)" />
+          <Property Name="name" Type="varchar(max)" />
+          <Property Name="level" Type="varchar(max)" />
+          <Property Name="allow" Type="bit" />
+          <Property Name="time" Type="datetime" />
+          <Property Name="token" Type="varchar(max)" />
+          <Property Name="office_id" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_userstbl_office">
+          <Key>
+            <PropertyRef Name="tbl_users_Id" />
+            <PropertyRef Name="tbl_office_id" />
+          </Key>
+          <Property Name="tbl_users_Id" Type="int" Nullable="false" />
+          <Property Name="tbl_office_id" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_tbl_countrytbl_county">
+          <End Role="tbl_country" Type="Self.tbl_country" Multiplicity="1" />
+          <End Role="tbl_county" Type="Self.tbl_county" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_country">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_county">
+              <PropertyRef Name="tbl_country_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_countytbl_sub_county">
+          <End Role="tbl_county" Type="Self.tbl_county" Multiplicity="1" />
+          <End Role="tbl_sub_county" Type="Self.tbl_sub_county" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_county">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_sub_county">
+              <PropertyRef Name="tbl_county_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_sub_countytbl_office">
+          <End Role="tbl_sub_county" Type="Self.tbl_sub_county" Multiplicity="1" />
+          <End Role="tbl_office" Type="Self.tbl_office" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_sub_county">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_office">
+              <PropertyRef Name="tbl_sub_county_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_userstbl_grants">
+          <End Role="tbl_users" Type="Self.tbl_users" Multiplicity="1" />
+          <End Role="tbl_grants" Type="Self.tbl_grants" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tbl_grants">
+              <PropertyRef Name="tbl_usersId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_userstbl_office_tbl_office">
+          <End Role="tbl_office" Type="Self.tbl_office" Multiplicity="1" />
+          <End Role="tbl_userstbl_office" Type="Self.tbl_userstbl_office" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_office">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_userstbl_office">
+              <PropertyRef Name="tbl_office_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_userstbl_office_tbl_users">
+          <End Role="tbl_users" Type="Self.tbl_users" Multiplicity="1" />
+          <End Role="tbl_userstbl_office" Type="Self.tbl_userstbl_office" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tbl_userstbl_office">
+              <PropertyRef Name="tbl_users_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="db_a0a592_sunamiModelStoreContainer">
+          <EntitySet Name="tbl_agents" EntityType="Self.tbl_agents" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_country" EntityType="Self.tbl_country" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_county" EntityType="Self.tbl_county" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_customer" EntityType="Self.tbl_customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_event_logs" EntityType="Self.tbl_event_logs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_expense_categories" EntityType="Self.tbl_expense_categories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_expenses" EntityType="Self.tbl_expenses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_extra_item" EntityType="Self.tbl_extra_item" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_extra_package_customers" EntityType="Self.tbl_extra_package_customers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_grants" EntityType="Self.tbl_grants" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_inventory" EntityType="Self.tbl_inventory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_issues" EntityType="Self.tbl_issues" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_messages" EntityType="Self.tbl_messages" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_mpesa_payments" EntityType="Self.tbl_mpesa_payments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_mpesa_phone_imei" EntityType="Self.tbl_mpesa_phone_imei" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_office" EntityType="Self.tbl_office" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_payments" EntityType="Self.tbl_payments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_permissions" EntityType="Self.tbl_permissions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_sub_county" EntityType="Self.tbl_sub_county" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_sunami_controller" EntityType="Self.tbl_sunami_controller" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_switch_logs" EntityType="Self.tbl_switch_logs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_system" EntityType="Self.tbl_system" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_uninstalled_systems" EntityType="Self.tbl_uninstalled_systems" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_users" EntityType="Self.tbl_users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_userstbl_office" EntityType="Self.tbl_userstbl_office" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_tbl_countrytbl_county" Association="Self.FK_tbl_countrytbl_county">
+            <End Role="tbl_country" EntitySet="tbl_country" />
+            <End Role="tbl_county" EntitySet="tbl_county" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_countytbl_sub_county" Association="Self.FK_tbl_countytbl_sub_county">
+            <End Role="tbl_county" EntitySet="tbl_county" />
+            <End Role="tbl_sub_county" EntitySet="tbl_sub_county" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_sub_countytbl_office" Association="Self.FK_tbl_sub_countytbl_office">
+            <End Role="tbl_sub_county" EntitySet="tbl_sub_county" />
+            <End Role="tbl_office" EntitySet="tbl_office" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_userstbl_grants" Association="Self.FK_tbl_userstbl_grants">
+            <End Role="tbl_users" EntitySet="tbl_users" />
+            <End Role="tbl_grants" EntitySet="tbl_grants" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_userstbl_office_tbl_office" Association="Self.FK_tbl_userstbl_office_tbl_office">
+            <End Role="tbl_office" EntitySet="tbl_office" />
+            <End Role="tbl_userstbl_office" EntitySet="tbl_userstbl_office" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_userstbl_office_tbl_users" Association="Self.FK_tbl_userstbl_office_tbl_users">
+            <End Role="tbl_users" EntitySet="tbl_users" />
+            <End Role="tbl_userstbl_office" EntitySet="tbl_userstbl_office" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="db_a0a592_sunamiModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tbl_agents">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="firstname" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="lastname" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="dateofenrolment" Type="DateTime" Precision="3" />
+          <Property Name="idnumber" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="country" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="phonenumber" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="location" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="office_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_country">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="country_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tbl_county" Relationship="Self.FK_tbl_countrytbl_county" FromRole="tbl_country" ToRole="tbl_county" />
+        </EntityType>
+        <EntityType Name="tbl_county">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="county_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tbl_country_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="tbl_country" Relationship="Self.FK_tbl_countrytbl_county" FromRole="tbl_county" ToRole="tbl_country" />
+          <NavigationProperty Name="tbl_sub_county" Relationship="Self.FK_tbl_countytbl_sub_county" FromRole="tbl_county" ToRole="tbl_sub_county" />
+        </EntityType>
+        <EntityType Name="tbl_customer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="customer_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="customer_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="phone_numbers" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="phone_numbers2" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="phone_numbers3" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="village_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="location" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="city" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Po_Box_Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="next_of_kin" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="nok_mobile" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="active_status" Type="Boolean" />
+          <Property Name="occupation" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="lon" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="lat" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="country" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="install_date" Type="DateTime" Precision="3" />
+          <Property Name="package_type" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="RecordedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="agentcode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="witness_mobile_number" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="gender" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="office_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_event_logs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="customer_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="loggedin_user" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="date" Type="DateTime" Precision="3" />
+          <Property Name="event" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="category_affected" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="office_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_expense_categories">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Details" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="office_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_expenses">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="amount" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="recipient" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="dateset" Type="DateTime" Precision="3" />
+          <Property Name="account" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="ref_code" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="image" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="RecordedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="vendor" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="office_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_extra_item">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="item" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="amount_per_day" Type="Int32" />
+          <Property Name="extra_pay_period" Type="Int32" />
+          <Property Name="deposit" Type="Int32" />
+          <Property Name="office_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_extra_package_customers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="customer_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="item" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="date_given" Type="DateTime" Precision="3" />
+          <Property Name="date_taken" Type="DateTime" Precision="3" />
+          <Property Name="agentcode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_grants">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="email" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="permission_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="office_id" Type="Int32" Nullable="false" />
+          <Property Name="tbl_usersId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="tbl_users" Relationship="Self.FK_tbl_userstbl_grants" FromRole="tbl_grants" ToRole="tbl_users" />
+        </EntityType>
+        <EntityType Name="tbl_inventory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Item" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="stock" Type="Int32" />
+          <Property Name="date" Type="DateTime" Precision="3" />
+          <Property Name="units" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="office_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_issues">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="issue" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="date" Type="DateTime" Precision="3" />
+          <Property Name="reporter" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="status" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="customer_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="priority" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="solvedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="solvedOn" Type="DateTime" Precision="3" />
+          <Property Name="comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="office_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_messages">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="customer_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="date" Type="DateTime" Precision="3" />
+          <Property Name="office_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_mpesa_payments">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="number" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="amount" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="transaction_code" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="date" Type="DateTime" Precision="3" />
+          <Property Name="message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="phone_imei" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="office_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_mpesa_phone_imei">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="imei" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_office">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="office_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tbl_sub_county_id" Type="Int32" Nullable="false" />
+          <Property Name="tbl_usersId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="tbl_sub_county" Relationship="Self.FK_tbl_sub_countytbl_office" FromRole="tbl_office" ToRole="tbl_sub_county" />
+          <NavigationProperty Name="tbl_users" Relationship="Self.tbl_userstbl_office" FromRole="tbl_office" ToRole="tbl_users" />
+        </EntityType>
+        <EntityType Name="tbl_payments">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="customer_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="imei_number" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="amount_payed" Type="Int32" />
+          <Property Name="payment_method" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="payment_date" Type="DateTime" Precision="3" />
+          <Property Name="phone_number" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="balance" Type="Int32" />
+          <Property Name="transaction_code" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="date_recorded" Type="DateTime" Precision="3" />
+          <Property Name="person_recording" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="office_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_permissions">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="permission_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_sub_county">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="sub_county_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tbl_county_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="tbl_county" Relationship="Self.FK_tbl_countytbl_sub_county" FromRole="tbl_sub_county" ToRole="tbl_county" />
+          <NavigationProperty Name="tbl_office" Relationship="Self.FK_tbl_sub_countytbl_office" FromRole="tbl_sub_county" ToRole="tbl_office" />
+        </EntityType>
+        <EntityType Name="tbl_sunami_controller">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="imei" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="sim_no" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="provider" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="version" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="date_manufactured" Type="DateTime" Precision="3" />
+          <Property Name="recorded_by" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="office_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_switch_logs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="customer_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="switch_off_payrate" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="switch_off_date" Type="DateTime" Precision="3" />
+          <Property Name="switch_on_date" Type="DateTime" Precision="3" />
+          <Property Name="switch_on_payrate" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="switched_off_by" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="switched_on_by" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="office_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_system">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="customer_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="active_status" Type="Boolean" />
+          <Property Name="current_lon" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="current_lat" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="last_connected_to_db_date" Type="DateTime" Precision="3" />
+          <Property Name="imei_number" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="office_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_uninstalled_systems">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="customer_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="uninstall_date" Type="DateTime" Precision="3" />
+          <Property Name="Reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="recorded_by" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="previousRecords" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="office_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="email" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="level" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="allow" Type="Boolean" />
+          <Property Name="time" Type="DateTime" Precision="3" />
+          <Property Name="token" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="office_id" Type="Int32" />
+          <NavigationProperty Name="tbl_grants" Relationship="Self.FK_tbl_userstbl_grants" FromRole="tbl_users" ToRole="tbl_grants" />
+          <NavigationProperty Name="tbl_office" Relationship="Self.tbl_userstbl_office" FromRole="tbl_users" ToRole="tbl_office" />
+        </EntityType>
+        <Association Name="FK_tbl_countrytbl_county">
+          <End Role="tbl_country" Type="Self.tbl_country" Multiplicity="1" />
+          <End Role="tbl_county" Type="Self.tbl_county" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_country">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_county">
+              <PropertyRef Name="tbl_country_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_countytbl_sub_county">
+          <End Role="tbl_county" Type="Self.tbl_county" Multiplicity="1" />
+          <End Role="tbl_sub_county" Type="Self.tbl_sub_county" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_county">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_sub_county">
+              <PropertyRef Name="tbl_county_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_userstbl_grants">
+          <End Role="tbl_users" Type="Self.tbl_users" Multiplicity="1" />
+          <End Role="tbl_grants" Type="Self.tbl_grants" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tbl_grants">
+              <PropertyRef Name="tbl_usersId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_sub_countytbl_office">
+          <End Role="tbl_sub_county" Type="Self.tbl_sub_county" Multiplicity="1" />
+          <End Role="tbl_office" Type="Self.tbl_office" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_sub_county">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_office">
+              <PropertyRef Name="tbl_sub_county_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="tbl_userstbl_office">
+          <End Role="tbl_office" Type="Self.tbl_office" Multiplicity="*" />
+          <End Role="tbl_users" Type="Self.tbl_users" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="db_a0a592_sunamiEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tbl_agents" EntityType="Self.tbl_agents" />
+          <EntitySet Name="tbl_country" EntityType="Self.tbl_country" />
+          <EntitySet Name="tbl_county" EntityType="Self.tbl_county" />
+          <EntitySet Name="tbl_customer" EntityType="Self.tbl_customer" />
+          <EntitySet Name="tbl_event_logs" EntityType="Self.tbl_event_logs" />
+          <EntitySet Name="tbl_expense_categories" EntityType="Self.tbl_expense_categories" />
+          <EntitySet Name="tbl_expenses" EntityType="Self.tbl_expenses" />
+          <EntitySet Name="tbl_extra_item" EntityType="Self.tbl_extra_item" />
+          <EntitySet Name="tbl_extra_package_customers" EntityType="Self.tbl_extra_package_customers" />
+          <EntitySet Name="tbl_grants" EntityType="Self.tbl_grants" />
+          <EntitySet Name="tbl_inventory" EntityType="Self.tbl_inventory" />
+          <EntitySet Name="tbl_issues" EntityType="Self.tbl_issues" />
+          <EntitySet Name="tbl_messages" EntityType="Self.tbl_messages" />
+          <EntitySet Name="tbl_mpesa_payments" EntityType="Self.tbl_mpesa_payments" />
+          <EntitySet Name="tbl_mpesa_phone_imei" EntityType="Self.tbl_mpesa_phone_imei" />
+          <EntitySet Name="tbl_office" EntityType="Self.tbl_office" />
+          <EntitySet Name="tbl_payments" EntityType="Self.tbl_payments" />
+          <EntitySet Name="tbl_permissions" EntityType="Self.tbl_permissions" />
+          <EntitySet Name="tbl_sub_county" EntityType="Self.tbl_sub_county" />
+          <EntitySet Name="tbl_sunami_controller" EntityType="Self.tbl_sunami_controller" />
+          <EntitySet Name="tbl_switch_logs" EntityType="Self.tbl_switch_logs" />
+          <EntitySet Name="tbl_system" EntityType="Self.tbl_system" />
+          <EntitySet Name="tbl_uninstalled_systems" EntityType="Self.tbl_uninstalled_systems" />
+          <EntitySet Name="tbl_users" EntityType="Self.tbl_users" />
+          <AssociationSet Name="FK_tbl_countrytbl_county" Association="Self.FK_tbl_countrytbl_county">
+            <End Role="tbl_country" EntitySet="tbl_country" />
+            <End Role="tbl_county" EntitySet="tbl_county" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_countytbl_sub_county" Association="Self.FK_tbl_countytbl_sub_county">
+            <End Role="tbl_county" EntitySet="tbl_county" />
+            <End Role="tbl_sub_county" EntitySet="tbl_sub_county" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_userstbl_grants" Association="Self.FK_tbl_userstbl_grants">
+            <End Role="tbl_users" EntitySet="tbl_users" />
+            <End Role="tbl_grants" EntitySet="tbl_grants" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_sub_countytbl_office" Association="Self.FK_tbl_sub_countytbl_office">
+            <End Role="tbl_sub_county" EntitySet="tbl_sub_county" />
+            <End Role="tbl_office" EntitySet="tbl_office" />
+          </AssociationSet>
+          <AssociationSet Name="tbl_userstbl_office" Association="Self.tbl_userstbl_office">
+            <End Role="tbl_office" EntitySet="tbl_office" />
+            <End Role="tbl_users" EntitySet="tbl_users" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="db_a0a592_sunamiModelStoreContainer" CdmEntityContainer="db_a0a592_sunamiEntities">
+          <EntitySetMapping Name="tbl_agents">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_agents">
+              <MappingFragment StoreEntitySet="tbl_agents">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="firstname" ColumnName="firstname" />
+                <ScalarProperty Name="lastname" ColumnName="lastname" />
+                <ScalarProperty Name="dateofenrolment" ColumnName="dateofenrolment" />
+                <ScalarProperty Name="idnumber" ColumnName="idnumber" />
+                <ScalarProperty Name="country" ColumnName="country" />
+                <ScalarProperty Name="phonenumber" ColumnName="phonenumber" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="location" ColumnName="location" />
+                <ScalarProperty Name="office_id" ColumnName="office_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_country">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_country">
+              <MappingFragment StoreEntitySet="tbl_country">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="country_name" ColumnName="country_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_county">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_county">
+              <MappingFragment StoreEntitySet="tbl_county">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="county_name" ColumnName="county_name" />
+                <ScalarProperty Name="tbl_country_id" ColumnName="tbl_country_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_customer">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_customer">
+              <MappingFragment StoreEntitySet="tbl_customer">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="customer_id" ColumnName="customer_id" />
+                <ScalarProperty Name="customer_name" ColumnName="customer_name" />
+                <ScalarProperty Name="phone_numbers" ColumnName="phone_numbers" />
+                <ScalarProperty Name="phone_numbers2" ColumnName="phone_numbers2" />
+                <ScalarProperty Name="phone_numbers3" ColumnName="phone_numbers3" />
+                <ScalarProperty Name="village_name" ColumnName="village_name" />
+                <ScalarProperty Name="location" ColumnName="location" />
+                <ScalarProperty Name="city" ColumnName="city" />
+                <ScalarProperty Name="Po_Box_Address" ColumnName="Po_Box_Address" />
+                <ScalarProperty Name="next_of_kin" ColumnName="next_of_kin" />
+                <ScalarProperty Name="nok_mobile" ColumnName="nok_mobile" />
+                <ScalarProperty Name="active_status" ColumnName="active_status" />
+                <ScalarProperty Name="occupation" ColumnName="occupation" />
+                <ScalarProperty Name="lon" ColumnName="lon" />
+                <ScalarProperty Name="lat" ColumnName="lat" />
+                <ScalarProperty Name="country" ColumnName="country" />
+                <ScalarProperty Name="install_date" ColumnName="install_date" />
+                <ScalarProperty Name="package_type" ColumnName="package_type" />
+                <ScalarProperty Name="RecordedBy" ColumnName="RecordedBy" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="agentcode" ColumnName="agentcode" />
+                <ScalarProperty Name="witness_mobile_number" ColumnName="witness_mobile_number" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="office_id" ColumnName="office_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_event_logs">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_event_logs">
+              <MappingFragment StoreEntitySet="tbl_event_logs">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="customer_id" ColumnName="customer_id" />
+                <ScalarProperty Name="loggedin_user" ColumnName="loggedin_user" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="event" ColumnName="event" />
+                <ScalarProperty Name="category_affected" ColumnName="category_affected" />
+                <ScalarProperty Name="office_id" ColumnName="office_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_expense_categories">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_expense_categories">
+              <MappingFragment StoreEntitySet="tbl_expense_categories">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Details" ColumnName="Details" />
+                <ScalarProperty Name="office_id" ColumnName="office_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_expenses">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_expenses">
+              <MappingFragment StoreEntitySet="tbl_expenses">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+                <ScalarProperty Name="recipient" ColumnName="recipient" />
+                <ScalarProperty Name="dateset" ColumnName="dateset" />
+                <ScalarProperty Name="account" ColumnName="account" />
+                <ScalarProperty Name="ref_code" ColumnName="ref_code" />
+                <ScalarProperty Name="image" ColumnName="image" />
+                <ScalarProperty Name="RecordedBy" ColumnName="RecordedBy" />
+                <ScalarProperty Name="vendor" ColumnName="vendor" />
+                <ScalarProperty Name="office_id" ColumnName="office_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_extra_item">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_extra_item">
+              <MappingFragment StoreEntitySet="tbl_extra_item">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="item" ColumnName="item" />
+                <ScalarProperty Name="amount_per_day" ColumnName="amount_per_day" />
+                <ScalarProperty Name="extra_pay_period" ColumnName="extra_pay_period" />
+                <ScalarProperty Name="deposit" ColumnName="deposit" />
+                <ScalarProperty Name="office_id" ColumnName="office_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_extra_package_customers">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_extra_package_customers">
+              <MappingFragment StoreEntitySet="tbl_extra_package_customers">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="customer_id" ColumnName="customer_id" />
+                <ScalarProperty Name="item" ColumnName="item" />
+                <ScalarProperty Name="date_given" ColumnName="date_given" />
+                <ScalarProperty Name="date_taken" ColumnName="date_taken" />
+                <ScalarProperty Name="agentcode" ColumnName="agentcode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_grants">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_grants">
+              <MappingFragment StoreEntitySet="tbl_grants">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="permission_name" ColumnName="permission_name" />
+                <ScalarProperty Name="office_id" ColumnName="office_id" />
+                <ScalarProperty Name="tbl_usersId" ColumnName="tbl_usersId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_inventory">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_inventory">
+              <MappingFragment StoreEntitySet="tbl_inventory">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Item" ColumnName="Item" />
+                <ScalarProperty Name="stock" ColumnName="stock" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="units" ColumnName="units" />
+                <ScalarProperty Name="comments" ColumnName="comments" />
+                <ScalarProperty Name="office_id" ColumnName="office_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_issues">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_issues">
+              <MappingFragment StoreEntitySet="tbl_issues">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="issue" ColumnName="issue" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="reporter" ColumnName="reporter" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="customer_id" ColumnName="customer_id" />
+                <ScalarProperty Name="priority" ColumnName="priority" />
+                <ScalarProperty Name="solvedBy" ColumnName="solvedBy" />
+                <ScalarProperty Name="solvedOn" ColumnName="solvedOn" />
+                <ScalarProperty Name="comments" ColumnName="comments" />
+                <ScalarProperty Name="office_id" ColumnName="office_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_messages">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_messages">
+              <MappingFragment StoreEntitySet="tbl_messages">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="customer_id" ColumnName="customer_id" />
+                <ScalarProperty Name="message" ColumnName="message" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="office_id" ColumnName="office_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_mpesa_payments">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_mpesa_payments">
+              <MappingFragment StoreEntitySet="tbl_mpesa_payments">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="number" ColumnName="number" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+                <ScalarProperty Name="transaction_code" ColumnName="transaction_code" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="message" ColumnName="message" />
+                <ScalarProperty Name="phone_imei" ColumnName="phone_imei" />
+                <ScalarProperty Name="office_id" ColumnName="office_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_mpesa_phone_imei">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_mpesa_phone_imei">
+              <MappingFragment StoreEntitySet="tbl_mpesa_phone_imei">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="imei" ColumnName="imei" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_office">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_office">
+              <MappingFragment StoreEntitySet="tbl_office">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="office_name" ColumnName="office_name" />
+                <ScalarProperty Name="tbl_sub_county_id" ColumnName="tbl_sub_county_id" />
+                <ScalarProperty Name="tbl_usersId" ColumnName="tbl_usersId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_payments">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_payments">
+              <MappingFragment StoreEntitySet="tbl_payments">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="customer_id" ColumnName="customer_id" />
+                <ScalarProperty Name="imei_number" ColumnName="imei_number" />
+                <ScalarProperty Name="amount_payed" ColumnName="amount_payed" />
+                <ScalarProperty Name="payment_method" ColumnName="payment_method" />
+                <ScalarProperty Name="payment_date" ColumnName="payment_date" />
+                <ScalarProperty Name="phone_number" ColumnName="phone_number" />
+                <ScalarProperty Name="balance" ColumnName="balance" />
+                <ScalarProperty Name="transaction_code" ColumnName="transaction_code" />
+                <ScalarProperty Name="date_recorded" ColumnName="date_recorded" />
+                <ScalarProperty Name="person_recording" ColumnName="person_recording" />
+                <ScalarProperty Name="office_id" ColumnName="office_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_permissions">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_permissions">
+              <MappingFragment StoreEntitySet="tbl_permissions">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="permission_name" ColumnName="permission_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_sub_county">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_sub_county">
+              <MappingFragment StoreEntitySet="tbl_sub_county">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="sub_county_name" ColumnName="sub_county_name" />
+                <ScalarProperty Name="tbl_county_id" ColumnName="tbl_county_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_sunami_controller">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_sunami_controller">
+              <MappingFragment StoreEntitySet="tbl_sunami_controller">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="imei" ColumnName="imei" />
+                <ScalarProperty Name="sim_no" ColumnName="sim_no" />
+                <ScalarProperty Name="provider" ColumnName="provider" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="date_manufactured" ColumnName="date_manufactured" />
+                <ScalarProperty Name="recorded_by" ColumnName="recorded_by" />
+                <ScalarProperty Name="office_id" ColumnName="office_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_switch_logs">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_switch_logs">
+              <MappingFragment StoreEntitySet="tbl_switch_logs">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="customer_id" ColumnName="customer_id" />
+                <ScalarProperty Name="switch_off_payrate" ColumnName="switch_off_payrate" />
+                <ScalarProperty Name="switch_off_date" ColumnName="switch_off_date" />
+                <ScalarProperty Name="switch_on_date" ColumnName="switch_on_date" />
+                <ScalarProperty Name="switch_on_payrate" ColumnName="switch_on_payrate" />
+                <ScalarProperty Name="switched_off_by" ColumnName="switched_off_by" />
+                <ScalarProperty Name="switched_on_by" ColumnName="switched_on_by" />
+                <ScalarProperty Name="office_id" ColumnName="office_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_system">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_system">
+              <MappingFragment StoreEntitySet="tbl_system">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="customer_id" ColumnName="customer_id" />
+                <ScalarProperty Name="active_status" ColumnName="active_status" />
+                <ScalarProperty Name="current_lon" ColumnName="current_lon" />
+                <ScalarProperty Name="current_lat" ColumnName="current_lat" />
+                <ScalarProperty Name="last_connected_to_db_date" ColumnName="last_connected_to_db_date" />
+                <ScalarProperty Name="imei_number" ColumnName="imei_number" />
+                <ScalarProperty Name="office_id" ColumnName="office_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_uninstalled_systems">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_uninstalled_systems">
+              <MappingFragment StoreEntitySet="tbl_uninstalled_systems">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="customer_id" ColumnName="customer_id" />
+                <ScalarProperty Name="uninstall_date" ColumnName="uninstall_date" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="recorded_by" ColumnName="recorded_by" />
+                <ScalarProperty Name="previousRecords" ColumnName="previousRecords" />
+                <ScalarProperty Name="office_id" ColumnName="office_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_users">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_users">
+              <MappingFragment StoreEntitySet="tbl_users">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="level" ColumnName="level" />
+                <ScalarProperty Name="allow" ColumnName="allow" />
+                <ScalarProperty Name="time" ColumnName="time" />
+                <ScalarProperty Name="token" ColumnName="token" />
+                <ScalarProperty Name="office_id" ColumnName="office_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="tbl_userstbl_office" TypeName="db_a0a592_sunamiModel.tbl_userstbl_office" StoreEntitySet="tbl_userstbl_office">
+            <EndProperty Name="tbl_office">
+              <ScalarProperty Name="id" ColumnName="tbl_office_id" />
+            </EndProperty>
+            <EndProperty Name="tbl_users">
+              <ScalarProperty Name="Id" ColumnName="tbl_users_Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -9,7 +9,7 @@ namespace sunamiapi.classes
     {
         private List<payrecordClass> payrecord;
         private int daily_invoice;
-        private int total_invoice;
+        private int? total_invoice;
         private int? paid;
         private int? not_paid;
         private string name;
@@ -41,7 +41,7 @@ namespace sunamiapi.classes
             }
         }
 
-        public int Total_invoice
+        public int? Total_invoice
         {
             get
             {

@@ -16,7 +16,7 @@ namespace sunamiapi.Models.DatabaseModel
     {
         public int Id { get; set; }
         public string issue { get; set; }
-        public System.DateTime date { get; set; }
+        public Nullable<System.DateTime> date { get; set; }
         public string reporter { get; set; }
         public string status { get; set; }
         public string customer_id { get; set; }

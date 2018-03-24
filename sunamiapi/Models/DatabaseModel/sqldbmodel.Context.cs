@@ -25,29 +25,29 @@ namespace sunamiapi.Models.DatabaseModel
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<tbl_agents> tbl_agents { get; set; }
+        public virtual DbSet<tbl_country> tbl_country { get; set; }
+        public virtual DbSet<tbl_county> tbl_county { get; set; }
         public virtual DbSet<tbl_customer> tbl_customer { get; set; }
+        public virtual DbSet<tbl_event_logs> tbl_event_logs { get; set; }
+        public virtual DbSet<tbl_expense_categories> tbl_expense_categories { get; set; }
+        public virtual DbSet<tbl_expenses> tbl_expenses { get; set; }
         public virtual DbSet<tbl_extra_item> tbl_extra_item { get; set; }
         public virtual DbSet<tbl_extra_package_customers> tbl_extra_package_customers { get; set; }
+        public virtual DbSet<tbl_grants> tbl_grants { get; set; }
+        public virtual DbSet<tbl_inventory> tbl_inventory { get; set; }
         public virtual DbSet<tbl_issues> tbl_issues { get; set; }
+        public virtual DbSet<tbl_messages> tbl_messages { get; set; }
         public virtual DbSet<tbl_mpesa_payments> tbl_mpesa_payments { get; set; }
         public virtual DbSet<tbl_mpesa_phone_imei> tbl_mpesa_phone_imei { get; set; }
+        public virtual DbSet<tbl_office> tbl_office { get; set; }
         public virtual DbSet<tbl_payments> tbl_payments { get; set; }
+        public virtual DbSet<tbl_permissions> tbl_permissions { get; set; }
+        public virtual DbSet<tbl_sub_county> tbl_sub_county { get; set; }
+        public virtual DbSet<tbl_sunami_controller> tbl_sunami_controller { get; set; }
+        public virtual DbSet<tbl_switch_logs> tbl_switch_logs { get; set; }
         public virtual DbSet<tbl_system> tbl_system { get; set; }
         public virtual DbSet<tbl_uninstalled_systems> tbl_uninstalled_systems { get; set; }
         public virtual DbSet<tbl_users> tbl_users { get; set; }
-        public virtual DbSet<tbl_sunami_controller> tbl_sunami_controller { get; set; }
-        public virtual DbSet<tbl_switch_logs> tbl_switch_logs { get; set; }
-        public virtual DbSet<tbl_expense_categories> tbl_expense_categories { get; set; }
-        public virtual DbSet<tbl_expenses> tbl_expenses { get; set; }
-        public virtual DbSet<tbl_messages> tbl_messages { get; set; }
-        public virtual DbSet<tbl_event_logs> tbl_event_logs { get; set; }
-        public virtual DbSet<tbl_inventory> tbl_inventory { get; set; }
-        public virtual DbSet<tbl_agents> tbl_agents { get; set; }
-        public virtual DbSet<tbl_grants> tbl_grants { get; set; }
-        public virtual DbSet<tbl_country> tbl_country { get; set; }
-        public virtual DbSet<tbl_county> tbl_county { get; set; }
-        public virtual DbSet<tbl_office> tbl_office { get; set; }
-        public virtual DbSet<tbl_permissions> tbl_permissions { get; set; }
-        public virtual DbSet<tbl_sub_county> tbl_sub_county { get; set; }
     }
 }

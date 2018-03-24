@@ -9,13 +9,13 @@ namespace sunamiapi.classes
     public class extraPackageInvoicing
     {
         db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-        private int invoice;
+        private int? invoice;
         private string comment;
-        private int ext_daily_invoice;
+        private int? ext_daily_invoice;
         private Boolean calculatedPaid = false;
         private int? paid;
 
-        public int Invoice
+        public int? Invoice
         {
             get
             {
@@ -36,7 +36,7 @@ namespace sunamiapi.classes
             }
         }
 
-        public int Ext_daily_invoice
+        public int? Ext_daily_invoice
         {
             get
             {
@@ -51,13 +51,13 @@ namespace sunamiapi.classes
 
         public int? Paid { get => paid; set => paid = value; }
 
-        public int extr_invoice(DateTime? start, DateTime end, tbl_customer tc1)
+        public int? extr_invoice(DateTime? start, DateTime end, tbl_customer tc1)
         {
             string Id = tc1.customer_id;
             int days_switched_off = 0;
             int days = 0;
             comment = null;
-            int itemDeposit = 0;
+            int? itemDeposit = 0;
             paid = 0;
             var items = se.tbl_extra_package_customers.Where(r => r.customer_id == Id).Select(i => new { _item = i.item }).ToList();
             foreach (var item1 in items)
@@ -76,7 +76,7 @@ namespace sunamiapi.classes
                             itemDeposit = tep.deposit;
                             if(tp.date_taken == null)
                             {
-                                days = (end - tp.date_given).Days;
+                                days = (end - tp.date_given).Value.Days;
                             }
                             else
                             {
@@ -86,7 +86,7 @@ namespace sunamiapi.classes
                                 }
                                 else
                                 {
-                                    days = (end - tp.date_given).Days;
+                                    days = (end - tp.date_given).Value.Days;
                                 }
                             }
                         }
@@ -136,7 +136,7 @@ namespace sunamiapi.classes
                                 }
                                 else
                                 {
-                                    days_switched_off += (DateTime.Today - tp.date_given).Days;
+                                    days_switched_off += (DateTime.Today - tp.date_given).Value.Days;
                                 }
                             }
                         }
