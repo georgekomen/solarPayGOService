@@ -30,20 +30,20 @@ namespace sunamiapi.Controllers.api
         private bool allowsendsms = true;
         public DateTime beginDate;
         public DateTimeFormatInfo info = new CultureInfo("en-us", false).DateTimeFormat;//MMddyyyy
-        string[] user_permissions = null;
-        int[] user_offices = null;
+        public List<string> user_permissions = new List<string>();
+        public List <int> user_offices = new List<int>();
         public CustomersController()
         {
             try
             {
-                user_permissions = System.Web.HttpContext.Current.Request.QueryString.Get("user_permissions").Split(',');
+                user_permissions = System.Web.HttpContext.Current.Request.QueryString.Get("user_permissions").Split(',').ToList();
             }
             catch
             {}
             try
             {
-                string[] user_offices1 = System.Web.HttpContext.Current.Request.QueryString.Get("api_key").Split(',');
-                user_offices = user_offices1.Select(int.Parse).ToArray();
+                string[] user_offices1 = System.Web.HttpContext.Current.Request.QueryString.Get("user_offices").Split(',');
+                user_offices = user_offices1.Select(int.Parse).ToList();
             }
             catch
             {}
@@ -59,7 +59,7 @@ namespace sunamiapi.Controllers.api
 
         public List<Icustomer> getCustomerLocations()
         {
-            getDataLists gdl = new getDataLists();
+            getDataLists gdl = new getDataLists(user_offices);
             return gdl.getCustomerLocations();
         }
 
@@ -335,7 +335,7 @@ namespace sunamiapi.Controllers.api
                 monthStart = Convert.ToDateTime(month1 + "/01/" + year1, info);
                 //DateTime monthend = DateTime.Today;
                 monthend1 = monthStart.AddMonths(1).AddDays(-1);
-                gdl = new getDataLists();
+                gdl = new getDataLists(user_offices);
             }
             catch
             {
@@ -344,7 +344,7 @@ namespace sunamiapi.Controllers.api
                 year1 = DateTime.Today.Year;
                 monthStart = Convert.ToDateTime(month1 + "/01/" + year1, info);
                 monthend1 = DateTime.Today;
-                gdl = new getDataLists();
+                gdl = new getDataLists(user_offices);
             }
             return gdl.getPaymentSummaryReport(monthStart, monthend1, beginDate);
         }
