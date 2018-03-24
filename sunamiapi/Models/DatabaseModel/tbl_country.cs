@@ -12,27 +12,18 @@ namespace sunamiapi.Models.DatabaseModel
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_users
+    public partial class tbl_country
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tbl_users()
+        public tbl_country()
         {
-            this.tbl_grants = new HashSet<tbl_grants>();
-            this.tbl_office = new HashSet<tbl_office>();
+            this.tbl_county = new HashSet<tbl_county>();
         }
     
-        public int Id { get; set; }
-        public string email { get; set; }
-        public string name { get; set; }
-        public string level { get; set; }
-        public Nullable<bool> allow { get; set; }
-        public Nullable<System.DateTime> time { get; set; }
-        public string token { get; set; }
-        public Nullable<int> office_id { get; set; }
+        public int id { get; set; }
+        public string country_name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tbl_grants> tbl_grants { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tbl_office> tbl_office { get; set; }
+        public virtual ICollection<tbl_county> tbl_county { get; set; }
     }
 }

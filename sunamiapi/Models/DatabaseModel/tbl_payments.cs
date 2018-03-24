@@ -25,5 +25,6 @@ namespace sunamiapi.Models.DatabaseModel
         public string transaction_code { get; set; }
         public Nullable<System.DateTime> date_recorded { get; set; }
         public string person_recording { get; set; }
+        public Nullable<int> office_id { get; set; }
     }
 }

@@ -16,6 +16,10 @@ namespace sunamiapi.Models.DatabaseModel
     {
         public int id { get; set; }
         public string email { get; set; }
-        public string grants { get; set; }
+        public string permission_name { get; set; }
+        public int office_id { get; set; }
+        public int tbl_usersId { get; set; }
+    
+        public virtual tbl_users tbl_users { get; set; }
     }
 }

@@ -366,7 +366,7 @@ namespace sunamiapi.classes
         private void preparesms(db_a0a592_sunamiEntities se, bool sendNotification)
         {
             int? paid = 0;
-            int invoice = 0;
+            int? invoice = 0;
             try
             {
                 try

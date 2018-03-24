@@ -17,11 +17,12 @@ namespace sunamiapi.Models.DatabaseModel
         public int id { get; set; }
         public string firstname { get; set; }
         public string lastname { get; set; }
-        public System.DateTime dateofenrolment { get; set; }
+        public Nullable<System.DateTime> dateofenrolment { get; set; }
         public string idnumber { get; set; }
         public string country { get; set; }
         public string phonenumber { get; set; }
         public string email { get; set; }
         public string location { get; set; }
+        public Nullable<int> office_id { get; set; }
     }
 }

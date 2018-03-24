@@ -21,5 +21,6 @@ namespace sunamiapi.Models.DatabaseModel
         public Nullable<System.DateTime> date { get; set; }
         public string message { get; set; }
         public string phone_imei { get; set; }
+        public Nullable<int> office_id { get; set; }
     }
 }

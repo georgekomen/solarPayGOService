@@ -11,7 +11,7 @@ namespace sunamiapi.classes
         private string name;
         private string id;
         private int? amount;
-        private int invoice;
+        private int? invoice;
         private int? percent;
         private string from;
         private string to;
@@ -59,7 +59,7 @@ namespace sunamiapi.classes
             }
         }
 
-        public int Invoice
+        public int? Invoice
         {
             get
             {

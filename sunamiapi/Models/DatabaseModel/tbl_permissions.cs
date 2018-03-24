@@ -12,14 +12,9 @@ namespace sunamiapi.Models.DatabaseModel
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_inventory
+    public partial class tbl_permissions
     {
-        public int Id { get; set; }
-        public string Item { get; set; }
-        public Nullable<int> stock { get; set; }
-        public Nullable<System.DateTime> date { get; set; }
-        public string units { get; set; }
-        public string comments { get; set; }
-        public Nullable<int> office_id { get; set; }
+        public int id { get; set; }
+        public string permission_name { get; set; }
     }
 }

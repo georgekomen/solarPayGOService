@@ -30,9 +30,23 @@ namespace sunamiapi.Controllers.api
         private bool allowsendsms = true;
         public DateTime beginDate;
         public DateTimeFormatInfo info = new CultureInfo("en-us", false).DateTimeFormat;//MMddyyyy
-
+        string[] user_permissions = null;
+        int[] user_offices = null;
         public CustomersController()
         {
+            try
+            {
+                user_permissions = System.Web.HttpContext.Current.Request.QueryString.Get("user_permissions").Split(',');
+            }
+            catch
+            {}
+            try
+            {
+                string[] user_offices1 = System.Web.HttpContext.Current.Request.QueryString.Get("api_key").Split(',');
+                user_offices = user_offices1.Select(int.Parse).ToArray();
+            }
+            catch
+            {}
             try
             {
                 string beginDate1 = "07/01/2016";
@@ -40,9 +54,7 @@ namespace sunamiapi.Controllers.api
 
             }
             catch
-            {
-
-            }
+            {}
         }
 
         public List<Icustomer> getCustomerLocations()
@@ -69,8 +81,7 @@ namespace sunamiapi.Controllers.api
             }
             catch
             {
-                string enddate = DateTime.Today.ToString();
-                end1 = Convert.ToDateTime(enddate, info);
+                end1 = DateTime.Today;
                 List<tbl_customer> list2 = se.tbl_customer.Where(g => g.install_date <= end1 && g.active_status == true).ToList();
 
                 list = calcInvoiceBtwnDatesm(beginDate, end1, list2).OrderByDescending(g => g.Percent).ToList();
@@ -118,17 +129,13 @@ namespace sunamiapi.Controllers.api
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             List<paymentRatesClassPerClient> li = new List<paymentRatesClassPerClient>();
-            string Comment;
-            int? Paid;
-            int Count;
-            string St;
-            string En;
-
             foreach (var tc1 in list2)
             {
-                Comment = null;
-                Count = 0;
-                Paid = 0;
+                string St;
+                string En;
+                string Comment = null;
+                int? Count = 0;
+                int? Paid = 0;
                 bool? status = false;
                 if (tc1.install_date >= start)
                 {
@@ -141,7 +148,7 @@ namespace sunamiapi.Controllers.api
                 En = end.Date.ToString("dd/MM/yyyy");
 
                 extraPackageInvoicing ep = new classes.extraPackageInvoicing();
-                Count += ep.extr_invoice(start, end, tc1);
+                Count += ep.extr_invoice(start, end, tc1, se);
                 Comment += "\n" + ep.Comment;
                 Paid = ep.Paid;
 
@@ -285,7 +292,7 @@ namespace sunamiapi.Controllers.api
                 List<tbl_customer> lsc = se.tbl_customer.Where(rr => rr.install_date <= endformatedTime).ToList();
 
                 List<paymentRatesClassPerClient> list = calcInvoiceBtwnDatesm(formatedTime, endformatedTime, lsc);
-                int invoice = 0;
+                int? invoice = 0;
                 int? paid = 0;
                 int? percent = 0;
                 try
@@ -474,7 +481,7 @@ namespace sunamiapi.Controllers.api
                         List<tbl_customer> tc = se1.tbl_customer.Where(gg => gg.customer_id == num.idnumber).ToList();
                         List<paymentRatesClassPerClient> list = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, tc);
                         msg = message.Replace(@"remind", @"");
-                        int invoice = list[0].Invoice;
+                        int? invoice = list[0].Invoice;
                         int? paid = list[0].Amount;
                         int? not_paid = invoice - paid;
                         if (not_paid < 0)
@@ -946,7 +953,7 @@ namespace sunamiapi.Controllers.api
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             int daily_invoice = 0;
-            int total_invoice = 0;
+            int? total_invoice = 0;
             int? paid = 0;
             int? not_paid = 0;
             string name = "";
@@ -1973,7 +1980,7 @@ namespace sunamiapi.Controllers.api
                 var items = se.tbl_inventory.Select(f => f.Item).Distinct().ToList();
                 foreach (var item in items)
                 {
-                    DateTime itemlistdate = se.tbl_inventory.Where(g => g.date <= date1 && g.Item == item).Max(f => f.date);
+                    DateTime? itemlistdate = se.tbl_inventory.Where(g => g.date <= date1 && g.Item == item).Max(f => f.date);
                     tbl_inventory itemlist = se.tbl_inventory.FirstOrDefault(g => g.date == itemlistdate && g.Item == item);
                     inventory.Add(itemlist);
                 }

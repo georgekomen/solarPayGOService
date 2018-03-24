@@ -16,7 +16,7 @@ namespace sunamiapi.Models.DatabaseModel
     {
         public int Id { get; set; }
         public string issue { get; set; }
-        public System.DateTime date { get; set; }
+        public Nullable<System.DateTime> date { get; set; }
         public string reporter { get; set; }
         public string status { get; set; }
         public string customer_id { get; set; }
@@ -24,5 +24,6 @@ namespace sunamiapi.Models.DatabaseModel
         public string solvedBy { get; set; }
         public Nullable<System.DateTime> solvedOn { get; set; }
         public string comments { get; set; }
+        public Nullable<int> office_id { get; set; }
     }
 }

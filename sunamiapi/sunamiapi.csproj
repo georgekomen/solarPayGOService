@@ -47,12 +47,6 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Devart.Data, Version=5.0.1878.0, Culture=neutral, PublicKeyToken=09af7300eec23701, processorArchitecture=MSIL">
-      <HintPath>..\packages\dotConnect.Express.for.MySQL.8.10.1086\lib\Devart.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="Devart.Data.MySql, Version=8.10.1086.0, Culture=neutral, PublicKeyToken=09af7300eec23701, processorArchitecture=MSIL">
-      <HintPath>..\packages\dotConnect.Express.for.MySQL.8.10.1086\lib\Devart.Data.MySql.dll</HintPath>
-    </Reference>
     <Reference Include="Flurl, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Flurl.2.5.0\lib\net40\Flurl.dll</HintPath>
       <Private>True</Private>
@@ -162,26 +156,6 @@
     </Reference>
     <Reference Include="Microsoft.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebHelpers.3.2.3\lib\net45\Microsoft.Web.Helpers.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MySql.Data, Version=6.10.6.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\packages\MySql.Data.6.10.6\lib\net452\MySql.Data.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MySql.Data.Entity.EF6, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\packages\MySql.Data.Entity.6.9.9\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MySql.Data.EntityFrameworkCore, Version=6.10.6.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\packages\MySql.Data.EntityFrameworkCore.6.10.6\lib\net452\MySql.Data.EntityFrameworkCore.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MySQL.Data.EntityFrameworkCore.Design, Version=6.10.6.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\MySQL\MySQL Connector Net 6.10.6\Assemblies\v4.5.2\MySQL.Data.EntityFrameworkCore.Design.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql.Web, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\packages\MySql.Web.6.9.9\lib\net45\MySql.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -333,41 +307,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
-    <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
-    <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
-    <Compile Include="Areas\HelpPage\Controllers\HelpController.cs" />
-    <Compile Include="Areas\HelpPage\HelpPageAreaRegistration.cs" />
-    <Compile Include="Areas\HelpPage\HelpPageConfigurationExtensions.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\CollectionModelDescription.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\ComplexTypeModelDescription.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\DictionaryModelDescription.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\EnumTypeModelDescription.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\EnumValueDescription.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\IModelDocumentationProvider.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\KeyValuePairModelDescription.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelDescription.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelDescriptionGenerator.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelNameAttribute.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelNameHelper.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\ParameterAnnotation.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\ParameterDescription.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\SimpleTypeModelDescription.cs" />
-    <Compile Include="Areas\HelpPage\Models\HelpPageApiModel.cs" />
-    <Compile Include="Areas\HelpPage\SampleGeneration\HelpPageSampleGenerator.cs" />
-    <Compile Include="Areas\HelpPage\SampleGeneration\HelpPageSampleKey.cs" />
-    <Compile Include="Areas\HelpPage\SampleGeneration\ImageSample.cs" />
-    <Compile Include="Areas\HelpPage\SampleGeneration\InvalidSample.cs" />
-    <Compile Include="Areas\HelpPage\SampleGeneration\ObjectGenerator.cs" />
-    <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
-    <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
-    <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="classes\agentpayload.cs" />
     <Compile Include="classes\chartdata.cs" />
     <Compile Include="classes\chartdates.cs" />
@@ -419,20 +363,93 @@
     <Compile Include="codeIncludes\getDataLists.cs" />
     <Compile Include="codeIncludes\sendMail.cs" />
     <Compile Include="codeIncludes\sendSms.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\api\CustomersController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Models\DatabaseModel\sqldbmodel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>sqldbmodel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\sqldbmodel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\sqldbmodel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>sqldbmodel.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Models\DatabaseModel\tbl_agents.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_country.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_county.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_customer.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DatabaseModel\tbl_event_logs.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_expenses.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_expense_categories.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_extra_item.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_extra_package_customers.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DatabaseModel\tbl_grants.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DatabaseModel\tbl_inventory.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_issues.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_messages.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_mpesa_payments.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_mpesa_phone_imei.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_office.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_payments.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_permissions.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_sub_county.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_sunami_controller.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_switch_logs.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_system.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_uninstalled_systems.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\tbl_users.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
     </Compile>
     <Compile Include="updatelocation.aspx.cs">
       <DependentUpon>updatelocation.aspx</DependentUpon>
@@ -441,171 +458,38 @@
     <Compile Include="updatelocation.aspx.designer.cs">
       <DependentUpon>updatelocation.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AccountBindingModels.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\DatabaseModel\SunamiDB.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SunamiDB.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\SunamiDB.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\SunamiDB.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SunamiDB.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_customer.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_expenses.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_expense_categories.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_extra_item.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_extra_package_customers.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_faults.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_fault_code.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_imei_sim_numbers.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_issues.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_messages.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_mpesa_payments.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_mpesa_phone_imei.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_packages.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_payments.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_paymode.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_sunami_controller.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_switch_logs.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_system.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_uninstalled_systems.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\tbl_users.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\todolistdb.cs">
-      <DependentUpon>SunamiDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\ApplicationOAuthProvider.cs" />
-    <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\HelpPage\HelpPage.css" />
+    <EntityDeploy Include="Models\DatabaseModel\sqldbmodel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>sqldbmodel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\DatabaseModel\sqldbmodel.edmx.diagram">
+      <DependentUpon>sqldbmodel.edmx</DependentUpon>
+    </Content>
     <None Include="Properties\PublishProfiles\ftp Sunamiapi.pubxml" />
     <None Include="Properties\PublishProfiles\Webdeploy sunami.pubxml" />
-    <None Include="Scripts\jquery-3.2.1.intellisense.js" />
-    <Content Include="docs\MySqlCommand.xml" />
-    <Content Include="docs\MySqlCommandBuilder.xml" />
-    <Content Include="docs\MySqlConnection.xml" />
-    <Content Include="docs\MySqlConnectionStringBuilder.xml" />
-    <Content Include="docs\MySqlDataAdapter.xml" />
-    <Content Include="docs\MySqlDataReader.xml" />
-    <Content Include="docs\MySqlException.xml" />
-    <Content Include="docs\MySqlHelper.xml" />
-    <Content Include="docs\MySqlParameter.xml" />
-    <Content Include="docs\MySqlParameterCollection.xml" />
-    <Content Include="docs\MySqlTransaction.xml" />
-    <Content Include="Scripts\jquery-3.2.1.js" />
-    <Content Include="Scripts\jquery-3.2.1.min.js" />
-    <Content Include="Scripts\jquery-3.2.1.slim.js" />
-    <Content Include="Scripts\jquery-3.2.1.slim.min.js" />
+    <Content Include="Models\DatabaseModel\sqldbmodel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>sqldbmodel.edmx</DependentUpon>
+      <LastGenOutput>sqldbmodel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\DatabaseModel\sqldbmodel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>sqldbmodel.edmx</DependentUpon>
+      <LastGenOutput>sqldbmodel.cs</LastGenOutput>
+    </Content>
     <Content Include="updatelocation.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Models\DatabaseModel\SunamiDB.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>SunamiDB.edmx</DependentUpon>
-      <LastGenOutput>SunamiDB.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\DatabaseModel\SunamiDB.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>SunamiDB.edmx</DependentUpon>
-      <LastGenOutput>SunamiDB.cs</LastGenOutput>
-    </Content>
-    <Content Include="Areas\HelpPage\Views\Web.config" />
-    <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\ResourceModel.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\Index.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\TextSample.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\SimpleTypeModelDescription.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\Samples.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\Parameters.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ModelDescriptionLink.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\KeyValuePairModelDescription.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\InvalidSample.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ImageSample.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\HelpPageApiModel.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\EnumTypeModelDescription.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\DictionaryModelDescription.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ComplexTypeModelDescription.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EntityDeploy Include="Models\DatabaseModel\SunamiDB.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>SunamiDB.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\DatabaseModel\SunamiDB.edmx.diagram">
-      <DependentUpon>SunamiDB.edmx</DependentUpon>
-    </Content>
-    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\jquery-3.2.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.2.1.min.map" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\respond.js" />
-    <Content Include="Scripts\respond.matchmedia.addListener.js" />
-    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
-    <Content Include="Scripts\respond.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -615,14 +499,6 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
-    <Content Include="Content\Site.css" />
-    <Content Include="Scripts\_references.js" />
-    <Content Include="Views\Web.config" />
-    <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

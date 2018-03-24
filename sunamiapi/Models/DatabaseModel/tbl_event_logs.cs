@@ -17,8 +17,9 @@ namespace sunamiapi.Models.DatabaseModel
         public int Id { get; set; }
         public string customer_id { get; set; }
         public string loggedin_user { get; set; }
-        public System.DateTime date { get; set; }
+        public Nullable<System.DateTime> date { get; set; }
         public string @event { get; set; }
         public string category_affected { get; set; }
+        public Nullable<int> office_id { get; set; }
     }
 }

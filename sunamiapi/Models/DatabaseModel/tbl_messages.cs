@@ -18,5 +18,6 @@ namespace sunamiapi.Models.DatabaseModel
         public string customer_id { get; set; }
         public string message { get; set; }
         public Nullable<System.DateTime> date { get; set; }
+        public Nullable<int> office_id { get; set; }
     }
 }

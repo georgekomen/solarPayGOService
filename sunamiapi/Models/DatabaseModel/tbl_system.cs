@@ -21,5 +21,6 @@ namespace sunamiapi.Models.DatabaseModel
         public string current_lat { get; set; }
         public Nullable<System.DateTime> last_connected_to_db_date { get; set; }
         public string imei_number { get; set; }
+        public Nullable<int> office_id { get; set; }
     }
 }

@@ -22,5 +22,6 @@ namespace sunamiapi.Models.DatabaseModel
         public string switch_on_payrate { get; set; }
         public string switched_off_by { get; set; }
         public string switched_on_by { get; set; }
+        public Nullable<int> office_id { get; set; }
     }
 }
