@@ -14,44 +14,12 @@ namespace sunamiapi.classes
         private int? ext_daily_invoice;
         private Boolean calculatedPaid = false;
         private int? paid;
-
-        public int? Invoice
-        {
-            get
-            {
-                return invoice;
-            }
-        }
-
-        public string Comment
-        {
-            get
-            {
-                return comment;
-            }
-
-            set
-            {
-                comment = value;
-            }
-        }
-
-        public int? Ext_daily_invoice
-        {
-            get
-            {
-                return ext_daily_invoice;
-            }
-
-            set
-            {
-                ext_daily_invoice = value;
-            }
-        }
-
         public int? Paid { get => paid; set => paid = value; }
+        public int? Invoice { get => invoice; set => invoice = value; }
+        public string Comment { get => comment; set => comment = value; }
+        public int? Ext_daily_invoice { get => ext_daily_invoice; set => ext_daily_invoice = value; }
 
-        public int? extr_invoice(DateTime? start, DateTime end, tbl_customer tc1)
+        public int? extr_invoice(DateTime? start, DateTime? end, tbl_customer tc1)
         {
             string Id = tc1.customer_id;
             int days_switched_off = 0;
@@ -109,8 +77,6 @@ namespace sunamiapi.classes
                             }
                         }
 
-
-
                         //stop invoicing when switched off
                         days_switched_off = 0;
                         //get days switched off
@@ -140,7 +106,6 @@ namespace sunamiapi.classes
                                 }
                             }
                         }
-
 
                         if (days_switched_off > 0)
                         {

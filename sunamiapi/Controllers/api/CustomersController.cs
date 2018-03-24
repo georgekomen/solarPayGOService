@@ -118,17 +118,13 @@ namespace sunamiapi.Controllers.api
         {
             db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             List<paymentRatesClassPerClient> li = new List<paymentRatesClassPerClient>();
-            string Comment;
-            int? Paid;
-            int? Count;
-            string St;
-            string En;
-
             foreach (var tc1 in list2)
             {
-                Comment = null;
-                Count = 0;
-                Paid = 0;
+                string St;
+                string En;
+                string Comment = null;
+                int? Count = 0;
+                int? Paid = 0;
                 bool? status = false;
                 if (tc1.install_date >= start)
                 {
