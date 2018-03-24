@@ -30,9 +30,23 @@ namespace sunamiapi.Controllers.api
         private bool allowsendsms = true;
         public DateTime beginDate;
         public DateTimeFormatInfo info = new CultureInfo("en-us", false).DateTimeFormat;//MMddyyyy
-
+        string[] user_permissions = null;
+        int[] user_offices = null;
         public CustomersController()
         {
+            try
+            {
+                user_permissions = System.Web.HttpContext.Current.Request.QueryString.Get("user_permissions").Split(',');
+            }
+            catch
+            {}
+            try
+            {
+                string[] user_offices1 = System.Web.HttpContext.Current.Request.QueryString.Get("api_key").Split(',');
+                user_offices = user_offices1.Select(int.Parse).ToArray();
+            }
+            catch
+            {}
             try
             {
                 string beginDate1 = "07/01/2016";
@@ -40,9 +54,7 @@ namespace sunamiapi.Controllers.api
 
             }
             catch
-            {
-
-            }
+            {}
         }
 
         public List<Icustomer> getCustomerLocations()
