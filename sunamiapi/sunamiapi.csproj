@@ -352,6 +352,7 @@
     <Compile Include="codeIncludes\getDataLists.cs" />
     <Compile Include="codeIncludes\sendSms.cs" />
     <Compile Include="Controllers\api\CustomersController.cs" />
+    <Compile Include="Controllers\security\SecurityController.cs" />
     <Compile Include="Models\DatabaseModel\sqldbmodel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
