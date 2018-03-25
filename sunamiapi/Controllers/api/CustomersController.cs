@@ -366,6 +366,7 @@ namespace sunamiapi.Controllers.api
                     sc.provider = value[0].provider;
                     sc.version = value[0].version;
                     sc.recorded_by = value[0].loogeduser;
+                    sc.office_id = user_offices[0];
                     se.tbl_sunami_controller.Add(sc);
                     se.SaveChanges();
 
@@ -621,7 +622,7 @@ namespace sunamiapi.Controllers.api
                 ts.last_connected_to_db_date = DateTime.Now;
                 tc = se.tbl_customer.FirstOrDefault(oo => oo.customer_id == ts.customer_id);
             }
-            logevent("system feedback", tc.customer_name+ " ID: "+ tc.customer_id, DateTime.Now,"Mobile: " + switchResponse.Address+"IMEI: " + switchResponse.Imei+ "SATUS: "+ switchResponse.Status, "switch feedback");
+            logevent("system feedback: "+ tc.customer_name, tc.customer_id, DateTime.Now,"Mobile: " + switchResponse.Address+"IMEI: " + switchResponse.Imei+ "STATUS: "+ switchResponse.Status, "switch feedback");
             se.SaveChanges();
         }
 
@@ -1248,6 +1249,7 @@ namespace sunamiapi.Controllers.api
                     ts.imei_number = value[0].imei;
                     ts.current_lat = null;
                     ts.current_lon = null;
+                    ts.office_id = user_offices[0];
                     ts.last_connected_to_db_date = DateTime.Today;
                     se.tbl_system.Add(ts);
                     se.SaveChanges();
@@ -1322,6 +1324,7 @@ namespace sunamiapi.Controllers.api
                 ti.issue = value[0].issue;
                 ti.date = DateTime.Now;
                 ti.status = "pending";
+                ti.office_id = user_offices[0];
                 ti.reporter = value[0].reporter;
                 se.tbl_issues.Add(ti);
                 se.SaveChanges();
@@ -1407,6 +1410,7 @@ namespace sunamiapi.Controllers.api
                 us.uninstall_date = date2;
                 us.recorded_by = value[0].recorded_by;
                 us.Reason = value[0].reason;
+                us.office_id = user_offices[0];
                 us.previousRecords = possesions;
                 se.tbl_uninstalled_systems.Add(us);
 
@@ -1486,6 +1490,7 @@ namespace sunamiapi.Controllers.api
                 exp.dateset = date2;
                 exp.ref_code = value[0].ref_code;
                 exp.image = pic;
+                exp.office_id = user_offices[0];
                 exp.description = value[0].category;
                 exp.RecordedBy = value[0].recordedBy;
                 se.tbl_expenses.Add(exp);
@@ -1639,6 +1644,7 @@ namespace sunamiapi.Controllers.api
                 date2 = getDate(value[0].date1);//yyyy-mm-dd e.g. 2017-04-05 - date1
                 rc.Install_date = date2;
                 rc.Location = value[0].location;
+                rc.Office_id = user_offices[0];
 
                 rc.record(se);
                 res = rc.Confirm;
@@ -1762,6 +1768,7 @@ namespace sunamiapi.Controllers.api
                 ev.date = date;
                 ev.@event = event1;
                 ev.loggedin_user = loggeduser;
+                ev.office_id = user_offices[0];
                 se.tbl_event_logs.Add(ev);
                 se.SaveChanges();
             }
@@ -1836,6 +1843,7 @@ namespace sunamiapi.Controllers.api
                 ti.Item = value[0].itemName;
                 ti.units = value[0].units;
                 ti.stock = int.Parse(value[0].Stock);
+                ti.office_id = user_offices[0];
                 se.tbl_inventory.Add(ti);
                 se.SaveChanges();
                 return "New item successfully recorded";
@@ -1874,6 +1882,7 @@ namespace sunamiapi.Controllers.api
                 tia.Item = value[0].item;
                 tia.stock = stock;
                 tia.units = ti.units;
+                tia.office_id = user_offices[0];
                 se.tbl_inventory.Add(tia);
                 se.SaveChanges();
                 return "successfully updated stocks";
@@ -1915,6 +1924,7 @@ namespace sunamiapi.Controllers.api
                 agent.email = value.email;
                 agent.location = value.location;
                 agent.phonenumber = value.phonenumber;
+                agent.office_id = user_offices[0];
                 se.tbl_agents.Add(agent);
                 se.SaveChanges();
                 tbl_agents agent1  = se.tbl_agents.FirstOrDefault(gg => gg.idnumber == idnumber);

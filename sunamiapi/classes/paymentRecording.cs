@@ -82,6 +82,7 @@ namespace sunamiapi.classes
                             tm.amount = mpesa_amount;
                             tm.transaction_code = code;
                             tm.date = mdate;
+                            tm.office_id = 1;
                             tm.phone_imei = phone_imei;
                             se.tbl_mpesa_payments.Add(tm);
                             se.SaveChanges();
@@ -127,6 +128,7 @@ namespace sunamiapi.classes
                             tm.message = msg;
                             tm.amount = mpesa_amount;
                             tm.number = paynumber;
+                            tm.office_id = 1;
                             tm.transaction_code = code;
                             tm.phone_imei = phone_imei;
                             se.tbl_mpesa_payments.Add(tm);
@@ -232,6 +234,7 @@ namespace sunamiapi.classes
                 }
                 tp.amount_payed = mpesa_amount1;
                 tp.customer_id = customer_id;
+                tp.office_id = tc1.office_id;
                 tp.payment_method = payMode;
                 tp.transaction_code = code;
                 if (!string.IsNullOrEmpty(code))
