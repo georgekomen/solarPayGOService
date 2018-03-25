@@ -22,6 +22,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Net.Mail;
+using Z.EntityFramework.Plus;
 
 namespace sunamiapi.Controllers.api
 {
@@ -36,6 +37,7 @@ namespace sunamiapi.Controllers.api
         public string logedinUser = "";
         public CustomersController()
         {
+            se.Filter<tbl_customer>(x => x.Where(c => c.office_id==1));
             try
             {
                 user_permissions = System.Web.HttpContext.Current.Request.QueryString.Get("user_permissions").Split(',').ToList();
@@ -59,7 +61,6 @@ namespace sunamiapi.Controllers.api
             {
                 string beginDate1 = "07/01/2016";
                 beginDate = Convert.ToDateTime(beginDate1, info);
-
             }
             catch
             {}
