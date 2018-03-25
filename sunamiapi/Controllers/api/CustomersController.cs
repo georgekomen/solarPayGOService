@@ -1723,7 +1723,7 @@ namespace sunamiapi.Controllers.api
                 pr.Loggedin = loggedUser;
                 pr.PayMode = PayMode;
                 pr.Code = Code;
-                pr.Id = Id;
+                pr.Customer_id = Id;
                 pr.process_transaction(se, true);
                 res += pr.Json;
                 return res;

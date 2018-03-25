@@ -12,31 +12,10 @@ namespace sunamiapi.classes
         private List<string> lineChartLabels;
         private List<MonthPayBreakDown> monthPayBreakDown;
 
-        public List<string> LineChartLabels
-        {
-            get
-            {
-                return lineChartLabels;
-            }
-
-            set
-            {
-                lineChartLabels = value;
-            }
-        }
-        public List<chartdata> LineChartData
-        {
-            get
-            {
-                return lineChartData;
-            }
-
-            set
-            {
-                lineChartData = value;
-            }
-        }
+     
         public List<MonthPayBreakDown> MonthPayBreakDown { get => monthPayBreakDown; set => monthPayBreakDown = value; }
+        public List<chartdata> LineChartData { get => lineChartData; set => lineChartData = value; }
+        public List<string> LineChartLabels { get => lineChartLabels; set => lineChartLabels = value; }
     }
 
     public class MonthPayBreakDown{

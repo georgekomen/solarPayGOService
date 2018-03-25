@@ -14,7 +14,6 @@ namespace sunamiapi.classes
         //pay flag-new or already recorded
         private string loggedin;
         private string code;
-        private string message1;
         private string message;//sms
         private string customer_id;
         private string payMode;
@@ -26,111 +25,17 @@ namespace sunamiapi.classes
         private string phone_imei;
         private string mpesa_number;
         private string customer_name;
-        public string Json
-        {
-            get
-            {
-                return json;
-            }
-        }
 
-        public string PayMode
-        {
-            set
-            {
-                payMode = value;
-            }
-        }
-
-        public string Mpesa_amount
-        {
-            set
-            {
-                mpesa_amount = value;
-            }
-        }
-
-        public DateTime Mdate
-        {
-            set
-            {
-                mdate = value;
-            }
-        }
-
-        public string Id
-        {
-            set
-            {
-                customer_id = value;
-            }
-        }
-
-
-        public string Message
-        {
-            get
-            {
-                return message;
-            }
-
-            set
-            {
-                message = value;
-            }
-        }
-        
-
-        public string Code
-        {
-            get
-            {
-                return code;
-            }
-
-            set
-            {
-                code = value;
-            }
-        }
-
-        public string Loggedin
-        {
-            get
-            {
-                return loggedin;
-            }
-
-            set
-            {
-                loggedin = value;
-            }
-        }
-
-        public string Phone_imei
-        {
-            get
-            {
-                return phone_imei;
-            }
-
-            set
-            {
-                phone_imei = value;
-            }
-        }
-        public string Paynumber
-        {
-            get
-            {
-                return paynumber;
-            }
-
-            set
-            {
-                paynumber = value;
-            }
-        }
+        public string Json { get => json; set => json = value; }
+        public string PayMode { get => payMode; set => payMode = value; }
+        public string Mpesa_amount { get => mpesa_amount; set => mpesa_amount = value; }
+        public DateTime Mdate { get => mdate; set => mdate = value; }
+        public string Loggedin { get => loggedin; set => loggedin = value; }
+        public string Code { get => code; set => code = value; }
+        public string Message { get => message; set => message = value; }
+        public string Paynumber { get => paynumber; set => paynumber = value; }
+        public string Phone_imei { get => phone_imei; set => phone_imei = value; }
+        public string Customer_id { get => customer_id; set => customer_id = value; }
 
         public void recordpayment(string msg, db_a0a592_sunamiEntities se, bool sendNotification)
         {
@@ -183,8 +88,6 @@ namespace sunamiapi.classes
                             json = "not received money message";
                         }
                     }
-
-
                 }
                 else if(msg.Contains("Confirmed.on"))
                 {
@@ -378,8 +281,9 @@ namespace sunamiapi.classes
                     //get when he should make next payment -- get todays date
                     DateTime toda = DateTime.Today;
                     //get invoice to date...............................
-                    extra_package_invoicing ep = new classes.extra_package_invoicing();
-                    invoice += ep.extr_invoice(instd, toda, customer_id);
+                    extraPackageInvoicing ep = new classes.extraPackageInvoicing();
+                    tbl_customer cus = se.tbl_customer.Where(ff => ff.customer_id == customer_id).Single();
+                    invoice += ep.extr_invoice((DateTime)instd, toda, cus, se);
                     //or how much he still needs to buy
                 } catch { }
                 int? bal = invoice - paid;

@@ -316,7 +316,6 @@
     <Compile Include="classes\chartdata.cs" />
     <Compile Include="classes\chartdates.cs" />
     <Compile Include="classes\extraPackageInvoicing.cs" />
-    <Compile Include="classes\extra_package_invoicing.cs" />
     <Compile Include="classes\geteventlogsresponse.cs" />
     <Compile Include="classes\getexpensebody.cs" />
     <Compile Include="classes\getexpensecategory.cs" />
@@ -357,11 +356,8 @@
     <Compile Include="classes\SwitchResponse.cs" />
     <Compile Include="classes\UsersResponseBody.cs" />
     <Compile Include="codeIncludes\AfricasTalkingGateway.cs" />
-    <Compile Include="codeIncludes\calcInvoiceBtwnDates.cs" />
-    <Compile Include="codeIncludes\calcInvoiceBtwnDates2.cs" />
     <Compile Include="codeIncludes\fetchSMS.cs" />
     <Compile Include="codeIncludes\getDataLists.cs" />
-    <Compile Include="codeIncludes\sendMail.cs" />
     <Compile Include="codeIncludes\sendSms.cs" />
     <Compile Include="Controllers\api\CustomersController.cs" />
     <Compile Include="Models\DatabaseModel\sqldbmodel.Context.cs">

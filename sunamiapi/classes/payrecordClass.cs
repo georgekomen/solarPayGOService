@@ -14,83 +14,11 @@ namespace sunamiapi.classes
         private string mpesaNumber;
         private string receiver;
 
-        public int? Amount
-        {
-            get
-            {
-                return amount;
-            }
-
-            set
-            {
-                amount = value;
-            }
-        }
-
-        public string PayDate
-        {
-            get
-            {
-                return payDate;
-            }
-
-            set
-            {
-                payDate = value;
-            }
-        }
-
-        public string PayMethod
-        {
-            get
-            {
-                return payMethod;
-            }
-
-            set
-            {
-                payMethod = value;
-            }
-        }
-
-        public string Code
-        {
-            get
-            {
-                return code;
-            }
-
-            set
-            {
-                code = value;
-            }
-        }
-
-        public string MpesaNumber
-        {
-            get
-            {
-                return mpesaNumber;
-            }
-
-            set
-            {
-                mpesaNumber = value;
-            }
-        }
-
-        public string Receiver
-        {
-            get
-            {
-                return receiver;
-            }
-
-            set
-            {
-                receiver = value;
-            }
-        }
-
+        public int? Amount { get => amount; set => amount = value; }
+        public string PayDate { get => payDate; set => payDate = value; }
+        public string PayMethod { get => payMethod; set => payMethod = value; }
+        public string Code { get => code; set => code = value; }
+        public string MpesaNumber { get => mpesaNumber; set => mpesaNumber = value; }
+        public string Receiver { get => receiver; set => receiver = value; }
     }
 }
