@@ -1664,10 +1664,13 @@ namespace sunamiapi.Controllers.api
         {
             try
             {
+                List<int> offices = new List<int>();
+                offices.Add((int)se.tbl_users.FirstOrDefault(f => f.email == id).tbl_office_id);
                 List<object> list = new List<object>(se.tbl_users.Where(f => f.email == id).Select(g => new
                 {
                     allowed = g.allow,
-                    level = g.level
+                    level = g.level,
+                    office_id = offices
                 }));
                 return list;
             }
