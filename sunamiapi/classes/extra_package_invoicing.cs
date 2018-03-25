@@ -8,7 +8,6 @@ namespace sunamiapi.classes
 {
     public class extra_package_invoicing
     {
-        db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
         private int? invoice;
         private string comment;
         private int? ext_daily_invoice;
@@ -47,7 +46,7 @@ namespace sunamiapi.classes
             }
         }
 
-        public int? extr_invoice(DateTime? start, DateTime end, string Id)
+        public int? extr_invoice(DateTime? start, DateTime end, string Id, db_a0a592_sunamiEntities se)
         {
             int? deposit = 0;
             int? cumm_invoice = 0;
