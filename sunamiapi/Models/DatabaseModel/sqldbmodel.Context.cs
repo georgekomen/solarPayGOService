@@ -22,6 +22,7 @@ namespace sunamiapi.Models.DatabaseModel
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            //modelBuilder.Entity<tbl_customer>()
             throw new UnintentionalCodeFirstException();
         }
     
