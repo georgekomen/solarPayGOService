@@ -37,7 +37,6 @@ namespace sunamiapi.Controllers.api
         public string logedinUser = "";
         public CustomersController()
         {
-            se.Filter<tbl_customer>(x => x.Where(c => c.office_id==1));
             try
             {
                 user_permissions = System.Web.HttpContext.Current.Request.QueryString.Get("user_permissions").Split(',').ToList();
@@ -64,6 +63,19 @@ namespace sunamiapi.Controllers.api
             }
             catch
             {}
+            se.Filter<tbl_customer>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+            se.Filter<tbl_agents>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+            se.Filter<tbl_event_logs>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+            se.Filter<tbl_expenses>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+            se.Filter<tbl_extra_item>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+            se.Filter<tbl_issues>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+            se.Filter<tbl_messages>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+            se.Filter<tbl_mpesa_payments>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+            se.Filter<tbl_payments>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+            se.Filter<tbl_sunami_controller>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+            se.Filter<tbl_switch_logs>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+            se.Filter<tbl_system>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+            se.Filter<tbl_uninstalled_systems>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
         }
 
         public List<Icustomer> getCustomerLocations()
