@@ -18,7 +18,6 @@ namespace sunamiapi.Models.DatabaseModel
         public tbl_users()
         {
             this.tbl_grants = new HashSet<tbl_grants>();
-            this.tbl_office = new HashSet<tbl_office>();
         }
     
         public int Id { get; set; }
@@ -28,11 +27,10 @@ namespace sunamiapi.Models.DatabaseModel
         public Nullable<bool> allow { get; set; }
         public Nullable<System.DateTime> time { get; set; }
         public string token { get; set; }
-        public Nullable<int> office_id { get; set; }
+        public Nullable<int> tbl_office_id { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tbl_grants> tbl_grants { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tbl_office> tbl_office { get; set; }
+        public virtual tbl_office tbl_office { get; set; }
     }
 }

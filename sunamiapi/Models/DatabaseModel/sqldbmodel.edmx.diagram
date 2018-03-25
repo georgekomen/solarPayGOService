@@ -33,7 +33,8 @@
         <AssociationConnector Association="db_a0a592_sunamiModel.FK_tbl_countytbl_sub_county" ManuallyRouted="false" />
         <AssociationConnector Association="db_a0a592_sunamiModel.FK_tbl_userstbl_grants" ManuallyRouted="false" />
         <AssociationConnector Association="db_a0a592_sunamiModel.FK_tbl_sub_countytbl_office" ManuallyRouted="false" />
-        <AssociationConnector Association="db_a0a592_sunamiModel.tbl_userstbl_office" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="db_a0a592_sunamiModel.sysdiagram" Width="1.5" PointX="14.375" PointY="0.75" />
+        <AssociationConnector Association="db_a0a592_sunamiModel.FK_tbl_officetbl_users" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

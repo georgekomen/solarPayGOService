@@ -5,6 +5,16 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="db_a0a592_sunamiModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
         <EntityType Name="tbl_agents">
           <Key>
             <PropertyRef Name="id" />
@@ -199,7 +209,6 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="office_name" Type="varchar(max)" Nullable="false" />
           <Property Name="tbl_sub_county_id" Type="int" Nullable="false" />
-          <Property Name="tbl_usersId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="tbl_payments">
           <Key>
@@ -296,15 +305,7 @@
           <Property Name="allow" Type="bit" />
           <Property Name="time" Type="datetime" />
           <Property Name="token" Type="varchar(max)" />
-          <Property Name="office_id" Type="int" />
-        </EntityType>
-        <EntityType Name="tbl_userstbl_office">
-          <Key>
-            <PropertyRef Name="tbl_users_Id" />
-            <PropertyRef Name="tbl_office_id" />
-          </Key>
-          <Property Name="tbl_users_Id" Type="int" Nullable="false" />
-          <Property Name="tbl_office_id" Type="int" Nullable="false" />
+          <Property Name="tbl_office_id" Type="int" />
         </EntityType>
         <Association Name="FK_tbl_countrytbl_county">
           <End Role="tbl_country" Type="Self.tbl_country" Multiplicity="1" />
@@ -327,6 +328,18 @@
             </Principal>
             <Dependent Role="tbl_sub_county">
               <PropertyRef Name="tbl_county_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_officetbl_users">
+          <End Role="tbl_office" Type="Self.tbl_office" Multiplicity="0..1" />
+          <End Role="tbl_users" Type="Self.tbl_users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_office">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_users">
+              <PropertyRef Name="tbl_office_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -354,31 +367,8 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_tbl_userstbl_office_tbl_office">
-          <End Role="tbl_office" Type="Self.tbl_office" Multiplicity="1" />
-          <End Role="tbl_userstbl_office" Type="Self.tbl_userstbl_office" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tbl_office">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="tbl_userstbl_office">
-              <PropertyRef Name="tbl_office_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tbl_userstbl_office_tbl_users">
-          <End Role="tbl_users" Type="Self.tbl_users" Multiplicity="1" />
-          <End Role="tbl_userstbl_office" Type="Self.tbl_userstbl_office" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tbl_users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="tbl_userstbl_office">
-              <PropertyRef Name="tbl_users_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="db_a0a592_sunamiModelStoreContainer">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_agents" EntityType="Self.tbl_agents" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_country" EntityType="Self.tbl_country" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_county" EntityType="Self.tbl_county" Schema="dbo" store:Type="Tables" />
@@ -403,7 +393,6 @@
           <EntitySet Name="tbl_system" EntityType="Self.tbl_system" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_uninstalled_systems" EntityType="Self.tbl_uninstalled_systems" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_users" EntityType="Self.tbl_users" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="tbl_userstbl_office" EntityType="Self.tbl_userstbl_office" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_tbl_countrytbl_county" Association="Self.FK_tbl_countrytbl_county">
             <End Role="tbl_country" EntitySet="tbl_country" />
             <End Role="tbl_county" EntitySet="tbl_county" />
@@ -412,6 +401,10 @@
             <End Role="tbl_county" EntitySet="tbl_county" />
             <End Role="tbl_sub_county" EntitySet="tbl_sub_county" />
           </AssociationSet>
+          <AssociationSet Name="FK_tbl_officetbl_users" Association="Self.FK_tbl_officetbl_users">
+            <End Role="tbl_office" EntitySet="tbl_office" />
+            <End Role="tbl_users" EntitySet="tbl_users" />
+          </AssociationSet>
           <AssociationSet Name="FK_tbl_sub_countytbl_office" Association="Self.FK_tbl_sub_countytbl_office">
             <End Role="tbl_sub_county" EntitySet="tbl_sub_county" />
             <End Role="tbl_office" EntitySet="tbl_office" />
@@ -419,14 +412,6 @@
           <AssociationSet Name="FK_tbl_userstbl_grants" Association="Self.FK_tbl_userstbl_grants">
             <End Role="tbl_users" EntitySet="tbl_users" />
             <End Role="tbl_grants" EntitySet="tbl_grants" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tbl_userstbl_office_tbl_office" Association="Self.FK_tbl_userstbl_office_tbl_office">
-            <End Role="tbl_office" EntitySet="tbl_office" />
-            <End Role="tbl_userstbl_office" EntitySet="tbl_userstbl_office" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tbl_userstbl_office_tbl_users" Association="Self.FK_tbl_userstbl_office_tbl_users">
-            <End Role="tbl_users" EntitySet="tbl_users" />
-            <End Role="tbl_userstbl_office" EntitySet="tbl_userstbl_office" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -631,9 +616,8 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="office_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="tbl_sub_county_id" Type="Int32" Nullable="false" />
-          <Property Name="tbl_usersId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="tbl_sub_county" Relationship="Self.FK_tbl_sub_countytbl_office" FromRole="tbl_office" ToRole="tbl_sub_county" />
-          <NavigationProperty Name="tbl_users" Relationship="Self.tbl_userstbl_office" FromRole="tbl_office" ToRole="tbl_users" />
+          <NavigationProperty Name="tbl_users" Relationship="db_a0a592_sunamiModel.FK_tbl_officetbl_users" FromRole="tbl_office" ToRole="tbl_users" />
         </EntityType>
         <EntityType Name="tbl_payments">
           <Key>
@@ -732,9 +716,9 @@
           <Property Name="allow" Type="Boolean" />
           <Property Name="time" Type="DateTime" Precision="3" />
           <Property Name="token" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="office_id" Type="Int32" />
           <NavigationProperty Name="tbl_grants" Relationship="Self.FK_tbl_userstbl_grants" FromRole="tbl_users" ToRole="tbl_grants" />
-          <NavigationProperty Name="tbl_office" Relationship="Self.tbl_userstbl_office" FromRole="tbl_users" ToRole="tbl_office" />
+          <Property Name="tbl_office_id" Type="Int32" Nullable="true" />
+          <NavigationProperty Name="tbl_office" Relationship="db_a0a592_sunamiModel.FK_tbl_officetbl_users" FromRole="tbl_users" ToRole="tbl_office" />
         </EntityType>
         <Association Name="FK_tbl_countrytbl_county">
           <End Role="tbl_country" Type="Self.tbl_country" Multiplicity="1" />
@@ -784,10 +768,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="tbl_userstbl_office">
-          <End Role="tbl_office" Type="Self.tbl_office" Multiplicity="*" />
-          <End Role="tbl_users" Type="Self.tbl_users" Multiplicity="*" />
-        </Association>
         <EntityContainer Name="db_a0a592_sunamiEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="tbl_agents" EntityType="Self.tbl_agents" />
           <EntitySet Name="tbl_country" EntityType="Self.tbl_country" />
@@ -829,11 +809,34 @@
             <End Role="tbl_sub_county" EntitySet="tbl_sub_county" />
             <End Role="tbl_office" EntitySet="tbl_office" />
           </AssociationSet>
-          <AssociationSet Name="tbl_userstbl_office" Association="Self.tbl_userstbl_office">
+          <EntitySet Name="sysdiagrams" EntityType="db_a0a592_sunamiModel.sysdiagram" />
+          <AssociationSet Name="FK_tbl_officetbl_users" Association="db_a0a592_sunamiModel.FK_tbl_officetbl_users">
             <End Role="tbl_office" EntitySet="tbl_office" />
             <End Role="tbl_users" EntitySet="tbl_users" />
           </AssociationSet>
         </EntityContainer>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_tbl_officetbl_users">
+          <End Type="db_a0a592_sunamiModel.tbl_office" Role="tbl_office" Multiplicity="0..1" />
+          <End Type="db_a0a592_sunamiModel.tbl_users" Role="tbl_users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_office">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_users">
+              <PropertyRef Name="tbl_office_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1048,7 +1051,6 @@
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="office_name" ColumnName="office_name" />
                 <ScalarProperty Name="tbl_sub_county_id" ColumnName="tbl_sub_county_id" />
-                <ScalarProperty Name="tbl_usersId" ColumnName="tbl_usersId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1146,6 +1148,7 @@
           <EntitySetMapping Name="tbl_users">
             <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_users">
               <MappingFragment StoreEntitySet="tbl_users">
+                <ScalarProperty Name="tbl_office_id" ColumnName="tbl_office_id" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="email" ColumnName="email" />
                 <ScalarProperty Name="name" ColumnName="name" />
@@ -1153,18 +1156,20 @@
                 <ScalarProperty Name="allow" ColumnName="allow" />
                 <ScalarProperty Name="time" ColumnName="time" />
                 <ScalarProperty Name="token" ColumnName="token" />
-                <ScalarProperty Name="office_id" ColumnName="office_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="tbl_userstbl_office" TypeName="db_a0a592_sunamiModel.tbl_userstbl_office" StoreEntitySet="tbl_userstbl_office">
-            <EndProperty Name="tbl_office">
-              <ScalarProperty Name="id" ColumnName="tbl_office_id" />
-            </EndProperty>
-            <EndProperty Name="tbl_users">
-              <ScalarProperty Name="Id" ColumnName="tbl_users_Id" />
-            </EndProperty>
-          </AssociationSetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="db_a0a592_sunamiModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

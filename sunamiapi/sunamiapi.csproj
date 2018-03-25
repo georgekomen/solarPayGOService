@@ -367,6 +367,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>sqldbmodel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\DatabaseModel\sysdiagram.cs">
+      <DependentUpon>sqldbmodel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DatabaseModel\tbl_agents.cs">
       <DependentUpon>sqldbmodel.tt</DependentUpon>
     </Compile>
