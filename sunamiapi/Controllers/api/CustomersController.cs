@@ -52,10 +52,20 @@ namespace sunamiapi.Controllers.api
             {}
             try
             {
-                logedinUser = System.Web.HttpContext.Current.Request.QueryString.Get("logedinUser");
+                logedinUser = System.Web.HttpContext.Current.Request.QueryString.Get("logedinUser").ToString();
             }
-            catch
-            { }
+            catch (Exception h)
+            {
+                throw h;
+            }
+            try
+            {
+                string user = se.tbl_users.FirstOrDefault(gg => gg.email == logedinUser).email;
+            }
+            catch(Exception h)
+            {
+                throw h;
+            }
             try
             {
                 string beginDate1 = "07/01/2016";
