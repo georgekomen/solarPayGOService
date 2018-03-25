@@ -10,18 +10,12 @@ namespace sunamiapi.codeIncludes
 {
     public class getDataLists
     {
-        private List<int> user_offices = new List<int>();
-        public getDataLists(List<int> user_offices1)
-        {
-            user_offices = user_offices1;
-        }
-        
         public List<Icustomer> getCustomerLocations(db_a0a592_sunamiEntities se)
         {
             List<Icustomer> li = new List<Icustomer>();
             var list =
             (from tc in se.tbl_customer
-             where tc.active_status == true & user_offices.Contains((int)tc.office_id)
+             where tc.active_status == true
              orderby tc.customer_name ascending
              select new { Customer_Name = tc.customer_name, Customer_Id = tc.customer_id, Customer_Lat = tc.lat, Customer_Lon = tc.lon }
             ).ToList();

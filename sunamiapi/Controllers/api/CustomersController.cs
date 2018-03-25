@@ -67,7 +67,7 @@ namespace sunamiapi.Controllers.api
 
         public List<Icustomer> getCustomerLocations()
         {
-            getDataLists gdl = new getDataLists(user_offices);
+            getDataLists gdl = new getDataLists();
             return gdl.getCustomerLocations(se);
         }
 
@@ -321,7 +321,7 @@ namespace sunamiapi.Controllers.api
                 monthStart = Convert.ToDateTime(month1 + "/01/" + year1, info);
                 //DateTime monthend = DateTime.Today;
                 monthend1 = monthStart.AddMonths(1).AddDays(-1);
-                gdl = new getDataLists(user_offices);
+                gdl = new getDataLists();
             }
             catch
             {
@@ -330,7 +330,7 @@ namespace sunamiapi.Controllers.api
                 year1 = DateTime.Today.Year;
                 monthStart = Convert.ToDateTime(month1 + "/01/" + year1, info);
                 monthend1 = DateTime.Today;
-                gdl = new getDataLists(user_offices);
+                gdl = new getDataLists();
             }
             return gdl.getPaymentSummaryReport(monthStart, monthend1, beginDate, se);
         }
