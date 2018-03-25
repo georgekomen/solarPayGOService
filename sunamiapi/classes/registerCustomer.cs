@@ -57,9 +57,8 @@ namespace sunamiapi.classes
         public string RecordedBy { get => recordedBy; set => recordedBy = value; }
         public string Gender { get => gender; set => gender = value; }
 
-        public void record()
+        public void record(db_a0a592_sunamiEntities se)
         {
-            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             if (string.IsNullOrWhiteSpace(id) || string.IsNullOrEmpty(id))
             {
                 confirm += "Error! Id number not entered";
@@ -263,10 +262,6 @@ namespace sunamiapi.classes
             catch (Exception kk)
             {
                 throw new Exception(kk.StackTrace);
-            }
-            finally
-            {
-                se.Dispose();
             }
         }
     }

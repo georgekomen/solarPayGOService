@@ -68,7 +68,7 @@ namespace sunamiapi.Controllers.api
         public List<Icustomer> getCustomerLocations()
         {
             getDataLists gdl = new getDataLists(user_offices);
-            return gdl.getCustomerLocations();
+            return gdl.getCustomerLocations(se);
         }
 
         [HttpPost]
@@ -332,7 +332,7 @@ namespace sunamiapi.Controllers.api
                 monthend1 = DateTime.Today;
                 gdl = new getDataLists(user_offices);
             }
-            return gdl.getPaymentSummaryReport(monthStart, monthend1, beginDate);
+            return gdl.getPaymentSummaryReport(monthStart, monthend1, beginDate, se);
         }
 
         [HttpPost]
@@ -1627,7 +1627,7 @@ namespace sunamiapi.Controllers.api
                 rc.Install_date = date2;
                 rc.Location = value[0].location;
 
-                rc.record();
+                rc.record(se);
                 res = rc.Confirm;
                 // invoice new customer
                 //TODO - call invoice function - avoid duplication of code

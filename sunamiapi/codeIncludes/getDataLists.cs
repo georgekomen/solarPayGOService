@@ -15,9 +15,8 @@ namespace sunamiapi.codeIncludes
         {
             user_offices = user_offices1;
         }
-
-        db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-        public List<Icustomer> getCustomerLocations()
+        
+        public List<Icustomer> getCustomerLocations(db_a0a592_sunamiEntities se)
         {
             List<Icustomer> li = new List<Icustomer>();
             var list =
@@ -72,7 +71,7 @@ namespace sunamiapi.codeIncludes
             return li;
         }
 
-        public List<summaryReport> getPaymentSummaryReport(DateTime start, DateTime end, DateTime beginDate)
+        public List<summaryReport> getPaymentSummaryReport(DateTime start, DateTime end, DateTime beginDate, db_a0a592_sunamiEntities se)
         {
             int customerNumber = se.tbl_customer.Where(k => k.active_status == true).Count();
             int issues = se.tbl_issues.Where(g => g.date >= start && g.date <= end).Count();
