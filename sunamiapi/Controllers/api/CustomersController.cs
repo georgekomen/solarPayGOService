@@ -56,7 +56,7 @@ namespace sunamiapi.Controllers.api
             }
             catch (Exception h)
             {
-                throw h;
+                //throw h;
             }
             try
             {
@@ -64,7 +64,7 @@ namespace sunamiapi.Controllers.api
             }
             catch(Exception h)
             {
-                throw h;
+                //throw h;
             }
             try
             {
@@ -1210,6 +1210,33 @@ namespace sunamiapi.Controllers.api
             return list;
         }
 
+
+        public List<getswitchlogresponse> getswitchlogsPerCustomer(string id)
+        {
+            List<getswitchlogresponse> list = new List<getswitchlogresponse>(from ts in se.tbl_switch_logs
+                                                                             where ts.customer_id == id
+                                                                             join tc in se.tbl_customer on ts.customer_id equals tc.customer_id
+                                                                             join tsci in se.tbl_system on ts.customer_id equals tsci.customer_id
+                                                                             join tscn in se.tbl_sunami_controller on tsci.imei_number equals tscn.imei
+                                                                             orderby ts.Id descending
+                                                                             select new getswitchlogresponse
+                                                                             {
+                                                                                 Name = tc.customer_name,
+                                                                                 Id = tc.customer_id,
+                                                                                 Imei = tsci.imei_number,
+                                                                                 Sim = tscn.sim_no,
+                                                                                 Switch_Off_Date = ts.switch_off_date,
+                                                                                 Switch_Off_payrate = ts.switch_off_payrate,
+                                                                                 Switch_Off_by = ts.switched_off_by,
+                                                                                 Switch_On_Date = ts.switch_on_date,
+                                                                                 Switch_on_payrate = ts.switch_on_payrate,
+                                                                                 Switch_on_by = ts.switched_on_by
+                                                                             }
+                    );
+            return list;
+        }
+
+
         public List<getsunamicontroller> getSunamiControllers()
         {
             List<getsunamicontroller> list = new List<getsunamicontroller>(from ts in se.tbl_sunami_controller
@@ -1801,6 +1828,24 @@ namespace sunamiapi.Controllers.api
                                         Event = t.@event,
                                         LoggedInUser = t.loggedin_user
                                     });
+            return list;
+        }
+
+        [HttpGet]
+        public List<geteventlogsresponse> eventlogsPerCustomer(string id)
+        {
+            List<geteventlogsresponse> list = new List<geteventlogsresponse>();
+            list = new List<geteventlogsresponse>(from t in se.tbl_event_logs
+                                                  where t.customer_id == id
+                                                  orderby t.Id descending
+                                                  select new geteventlogsresponse
+                                                  {
+                                                      Category = t.category_affected,
+                                                      CustomerId = t.customer_id,
+                                                      Date = t.date,
+                                                      Event = t.@event,
+                                                      LoggedInUser = t.loggedin_user
+                                                  });
             return list;
         }
 
