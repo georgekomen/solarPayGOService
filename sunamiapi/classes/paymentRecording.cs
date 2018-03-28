@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web;
+using Z.EntityFramework.Plus;
 
 namespace sunamiapi.classes
 {
@@ -63,14 +64,14 @@ namespace sunamiapi.classes
                     mpesa_amount = mpesa_amount.Substring(5, d - 5).ToString().Replace(@",", @"");
 
 
-                    if (se.tbl_mpesa_payments.Select(r1 => r1.transaction_code).Contains(code))
+                    if (se.tbl_mpesa_payments.AsNoFilter().Select(r1 => r1.transaction_code).Contains(code))
                     {
                         json = "unprocessed transaction recorded";
                         return;
                     }
                     else
                     {
-                        if (se.tbl_payments.Select(r1 => r1.transaction_code).Contains(code))
+                        if (se.tbl_payments.AsNoFilter().Select(r1 => r1.transaction_code).Contains(code))
                         {
                             json = "transaction code already recorded";
                             return;
@@ -108,14 +109,14 @@ namespace sunamiapi.classes
                     paynumber = "0" + paynumber.Substring(3, paynumber.Length - 3).ToString();
 
 
-                    if(se.tbl_payments.Select(r1 => r1.transaction_code).Contains(code))
+                    if(se.tbl_payments.AsNoFilter().Select(r1 => r1.transaction_code).Contains(code))
                     {
                         json = "payment already recorded";
                         return;
                     }
                     else
                     {
-                        if(se.tbl_mpesa_payments.Select(r1 => r1.transaction_code).Contains(code))
+                        if(se.tbl_mpesa_payments.AsNoFilter().Select(r1 => r1.transaction_code).Contains(code))
                         {
                             json = "message already recorded";
                             //dont send message then because it had been sent
@@ -155,7 +156,7 @@ namespace sunamiapi.classes
                     //get customer id- for mpesa and mledger from their phone numbers
                     try
                     {
-                        tc1 = se.tbl_customer.FirstOrDefault(i => i.phone_numbers == paynumber || i.phone_numbers2 == paynumber || i.phone_numbers3 == paynumber);
+                        tc1 = se.tbl_customer.AsNoFilter().FirstOrDefault(i => i.phone_numbers == paynumber || i.phone_numbers2 == paynumber || i.phone_numbers3 == paynumber);
                         mpesa_number = paynumber;
                         customer_id = tc1.customer_id;
                         try
@@ -185,7 +186,7 @@ namespace sunamiapi.classes
                 //get number of customer from cash payment's id number-number that receives sms
                 try
                 {
-                    tc1 = se.tbl_customer.FirstOrDefault(i => i.customer_id == customer_id);
+                    tc1 = se.tbl_customer.AsNoFilter().FirstOrDefault(i => i.customer_id == customer_id);
                     customer_id = tc1.customer_id;
                     var customernames = tc1.customer_name.Split(' ');
                     customer_name = customernames[0].ToUpper();
@@ -201,7 +202,7 @@ namespace sunamiapi.classes
                 //check if same payment had been recorded
                 try
                 {
-                    int tpp1 = se.tbl_payments.Where(i => i.amount_payed == mpesa_amount1 && i.payment_date == mdate && i.customer_id == customer_id && i.transaction_code == code).Count();
+                    int tpp1 = se.tbl_payments.AsNoFilter().Where(i => i.amount_payed == mpesa_amount1 && i.payment_date == mdate && i.customer_id == customer_id && i.transaction_code == code).Count();
                     if (tpp1 >= 1)
                     {
                         json = "payment already recorded";
@@ -210,7 +211,7 @@ namespace sunamiapi.classes
                     //also ensure the transaction code doesn't exist anywea
                     if (!string.IsNullOrEmpty(code))
                     {
-                        int tcc = se.tbl_payments.Where(j => j.transaction_code == code).Count();
+                        int tcc = se.tbl_payments.AsNoFilter().Where(j => j.transaction_code == code).Count();
                         if (tcc >= 1)
                         {
                             json = "payment already recorded";
@@ -278,14 +279,14 @@ namespace sunamiapi.classes
                 try
                 {
                     //get installation date
-                    DateTime? instd = se.tbl_customer.FirstOrDefault(h => h.customer_id == customer_id).install_date;//Value.Date.ToString("dd/MM/yyyy");
+                    DateTime? instd = se.tbl_customer.AsNoFilter().FirstOrDefault(h => h.customer_id == customer_id).install_date;//Value.Date.ToString("dd/MM/yyyy");
                                                                                                             //add all payments....................................
-                    paid = se.tbl_payments.Where(g => g.customer_id == customer_id).Sum(t => t.amount_payed);
+                    paid = se.tbl_payments.AsNoFilter().Where(g => g.customer_id == customer_id).Sum(t => t.amount_payed);
                     //get when he should make next payment -- get todays date
                     DateTime toda = DateTime.Today;
                     //get invoice to date...............................
                     extraPackageInvoicing ep = new classes.extraPackageInvoicing();
-                    tbl_customer cus = se.tbl_customer.Where(ff => ff.customer_id == customer_id).Single();
+                    tbl_customer cus = se.tbl_customer.AsNoFilter().Where(ff => ff.customer_id == customer_id).Single();
                     invoice += ep.extr_invoice((DateTime)instd, toda, cus, se);
                     //or how much he still needs to buy
                 } catch { }

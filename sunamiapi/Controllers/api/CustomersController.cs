@@ -73,19 +73,23 @@ namespace sunamiapi.Controllers.api
             }
             catch
             {}
-            se.Filter<tbl_customer>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
-            se.Filter<tbl_agents>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
-            se.Filter<tbl_event_logs>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
-            se.Filter<tbl_expenses>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
-            se.Filter<tbl_extra_item>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
-            se.Filter<tbl_issues>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
-            se.Filter<tbl_messages>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
-            se.Filter<tbl_mpesa_payments>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
-            se.Filter<tbl_payments>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
-            se.Filter<tbl_sunami_controller>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
-            se.Filter<tbl_switch_logs>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
-            se.Filter<tbl_system>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
-            se.Filter<tbl_uninstalled_systems>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+            try
+            {
+                se.Filter<tbl_customer>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+                se.Filter<tbl_agents>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+                se.Filter<tbl_event_logs>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+                se.Filter<tbl_expenses>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+                se.Filter<tbl_extra_item>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+                se.Filter<tbl_issues>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+                se.Filter<tbl_messages>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+                se.Filter<tbl_mpesa_payments>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+                se.Filter<tbl_payments>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+                se.Filter<tbl_sunami_controller>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+                se.Filter<tbl_switch_logs>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+                se.Filter<tbl_system>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+                se.Filter<tbl_uninstalled_systems>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
+            }
+            catch { }           
         }
 
         public List<Icustomer> getCustomerLocations()
@@ -610,27 +614,29 @@ namespace sunamiapi.Controllers.api
         public void recordSwitchResponse([FromBody]SwitchResponse switchResponse)
         {
             string res = " ";
-            tbl_system ts;
-            tbl_sunami_controller sc;
-            tbl_customer tc;
+            tbl_system ts = new tbl_system();
+            tbl_sunami_controller sc = new tbl_sunami_controller();
+            tbl_customer tc = new tbl_customer();
             try
             {
-                sc = se.tbl_sunami_controller.FirstOrDefault(ff => ff.sim_no == switchResponse.Address);
-                ts = se.tbl_system.FirstOrDefault(rr => rr.imei_number == sc.imei);
+                sc = se.tbl_sunami_controller.AsNoFilter().FirstOrDefault(ff => ff.sim_no == switchResponse.Address);
+                ts = se.tbl_system.AsNoFilter().FirstOrDefault(rr => rr.imei_number == sc.imei);
                 ts.last_connected_to_db_date = DateTime.Now;
-                tc = se.tbl_customer.FirstOrDefault(tt => tt.customer_id == ts.customer_id);
+                tc = se.tbl_customer.AsNoFilter().FirstOrDefault(tt => tt.customer_id == ts.customer_id);
                 foreach(tbl_sunami_controller tsc in se.tbl_sunami_controller.Where(ff => ff.sim_no == switchResponse.Address)){
                     if(switchResponse.Imei.Length > 10)
                     {
                         tsc.imei = switchResponse.Imei;
                     }
                 }
+                user_offices.Add((int)tc.office_id);
             }
             catch
             {
-                ts = se.tbl_system.FirstOrDefault(uu => uu.imei_number == switchResponse.Imei);
-                ts.last_connected_to_db_date = DateTime.Now;
+                ts = se.tbl_system.AsNoFilter().FirstOrDefault(uu => uu.imei_number == switchResponse.Imei);
+                ts.last_connected_to_db_date = DateTime.Today;
                 tc = se.tbl_customer.FirstOrDefault(oo => oo.customer_id == ts.customer_id);
+                user_offices.Add((int)tc.office_id);
             }
             logevent("system feedback: "+ tc.customer_name, tc.customer_id, DateTime.Now,"Mobile: " + switchResponse.Address+"IMEI: " + switchResponse.Imei+ "STATUS: "+ switchResponse.Status, "switch feedback");
             se.SaveChanges();
@@ -1811,6 +1817,7 @@ namespace sunamiapi.Controllers.api
             }
             catch (Exception f)
             {
+                throw f;
             }
         }
 

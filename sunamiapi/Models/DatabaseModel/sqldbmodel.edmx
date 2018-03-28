@@ -687,8 +687,8 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="customer_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="active_status" Type="Boolean" />
-          <Property Name="current_lon" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="current_lat" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="current_lon" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="true" />
+          <Property Name="current_lat" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="true" />
           <Property Name="last_connected_to_db_date" Type="DateTime" Precision="3" />
           <Property Name="imei_number" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="office_id" Type="Int32" />
