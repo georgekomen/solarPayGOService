@@ -760,8 +760,8 @@ namespace sunamiapi.Controllers.api
         public List<mpesaPayments> getmpesaPayments()
         {
             List<mpesaPayments> mp = new List<mpesaPayments>();
-            var list1 = se.tbl_payments.Select(g => new { code = g.transaction_code }).ToList();
-            var list2 = se.tbl_mpesa_payments.ToList();
+            var list1 = se.tbl_payments.Select(g => new { code = g.transaction_code }).FromCache().ToList();
+            var list2 = se.tbl_mpesa_payments.FromCache().ToList();
             //select from list2 where not in list1
             var list3 = list2.Where(p => list1.Any(p2 => p2.code == p.transaction_code)).Select(r => new
             {
@@ -801,7 +801,7 @@ namespace sunamiapi.Controllers.api
         {
             //date //ref //amount //number //message
 
-            var list1 = se.tbl_payments.Where(h => h.payment_method == "cash").ToList().OrderByDescending(gh => gh.Id);
+            var list1 = se.tbl_payments.Where(h => h.payment_method == "cash").FromCache().ToList().OrderByDescending(gh => gh.Id);
             List<mpesaPayments> mp = new List<mpesaPayments>(from i in list1
                                                select new mpesaPayments
                                                {
@@ -821,7 +821,7 @@ namespace sunamiapi.Controllers.api
         {
             //date //ref //amount //number //message
 
-            var list1 = se.tbl_payments.Where(h => h.payment_method.Contains("bank")).ToList().OrderByDescending(gh => gh.Id);
+            var list1 = se.tbl_payments.Where(h => h.payment_method.Contains("bank")).FromCache().ToList().OrderByDescending(gh => gh.Id);
             List<mpesaPayments> mp = new List<mpesaPayments>(from i in list1
                                                select new mpesaPayments
                                                {
@@ -861,7 +861,7 @@ namespace sunamiapi.Controllers.api
         {
             //date //ref //amount //number //message
 
-            var list1 = se.tbl_payments.Where(h => h.payment_method == "mpesa").ToList().OrderByDescending(gh => gh.Id);
+            var list1 = se.tbl_payments.Where(h => h.payment_method == "mpesa").FromCache().ToList().OrderByDescending(gh => gh.Id);
             List<mpesaPayments> mp = new List<mpesaPayments>(from i in list1
                                                select new mpesaPayments
                                                {
