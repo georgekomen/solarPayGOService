@@ -36,6 +36,7 @@
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="country_name" Type="varchar(max)" Nullable="false" />
+          <Property Name="currency" Type="ntext" />
         </EntityType>
         <EntityType Name="tbl_county">
           <Key>
@@ -440,6 +441,7 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="country_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="tbl_county" Relationship="Self.FK_tbl_countrytbl_county" FromRole="tbl_country" ToRole="tbl_county" />
+          <Property Name="currency" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="tbl_county">
           <Key>
@@ -862,6 +864,7 @@
           <EntitySetMapping Name="tbl_country">
             <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_country">
               <MappingFragment StoreEntitySet="tbl_country">
+                <ScalarProperty Name="currency" ColumnName="currency" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="country_name" ColumnName="country_name" />
               </MappingFragment>

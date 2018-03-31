@@ -1709,14 +1709,18 @@ namespace sunamiapi.Controllers.api
             return res;
         }
 
+        [HttpGet]
         public List<object> getUser(string id)
         {
             try
             {
                 List<int> offices = new List<int>();
-                offices.Add((int)se.tbl_users.FirstOrDefault(f => f.email == id).tbl_office_id);
+                int office_id = (int)se.tbl_users.FirstOrDefault(f => f.email == id).tbl_office_id;
+                offices.Add(office_id);
+                string currency = se.tbl_office.FirstOrDefault(ff => ff.id == office_id).tbl_sub_county.tbl_county.tbl_country.currency;
                 List<object> list = new List<object>(se.tbl_users.Where(f => f.email == id).Select(g => new
                 {
+                    currency = currency,
                     allowed = g.allow,
                     level = g.level,
                     office_id = offices
