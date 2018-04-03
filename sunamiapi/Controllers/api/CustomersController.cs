@@ -613,32 +613,31 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public void recordSwitchResponse([FromBody]SwitchResponse switchResponse)
         {
-            string res = " ";
             tbl_system ts = new tbl_system();
             tbl_sunami_controller sc = new tbl_sunami_controller();
             tbl_customer tc = new tbl_customer();
             try
             {
-                sc = se.tbl_sunami_controller.AsNoFilter().FirstOrDefault(ff => ff.sim_no == switchResponse.Address);
+                sc = se.tbl_sunami_controller.AsNoFilter().FirstOrDefault(ff => ff.sim_no == switchResponse.address);
                 ts = se.tbl_system.AsNoFilter().FirstOrDefault(rr => rr.imei_number == sc.imei);
                 ts.last_connected_to_db_date = DateTime.Now;
                 tc = se.tbl_customer.AsNoFilter().FirstOrDefault(tt => tt.customer_id == ts.customer_id);
-                foreach(tbl_sunami_controller tsc in se.tbl_sunami_controller.Where(ff => ff.sim_no == switchResponse.Address)){
-                    if(switchResponse.Imei.Length > 10)
+                foreach(tbl_sunami_controller tsc in se.tbl_sunami_controller.AsNoFilter().Where(ff => ff.sim_no == switchResponse.address)){
+                    if(switchResponse.imei.Length > 10)
                     {
-                        tsc.imei = switchResponse.Imei;
+                        tsc.imei = switchResponse.imei;
                     }
                 }
                 user_offices.Add((int)tc.office_id);
             }
             catch
             {
-                ts = se.tbl_system.AsNoFilter().FirstOrDefault(uu => uu.imei_number == switchResponse.Imei);
-                ts.last_connected_to_db_date = DateTime.Today;
-                tc = se.tbl_customer.FirstOrDefault(oo => oo.customer_id == ts.customer_id);
+                ts = se.tbl_system.AsNoFilter().FirstOrDefault(uu => uu.imei_number == switchResponse.imei);
+                ts.last_connected_to_db_date = DateTime.Now;
+                tc = se.tbl_customer.AsNoFilter().FirstOrDefault(oo => oo.customer_id == ts.customer_id);
                 user_offices.Add((int)tc.office_id);
             }
-            logevent("system feedback: "+ tc.customer_name, tc.customer_id, DateTime.Now,"Mobile: " + switchResponse.Address+"IMEI: " + switchResponse.Imei+ "STATUS: "+ switchResponse.Status, "switch feedback");
+            logevent("system feedback: "+ tc.customer_name, tc.customer_id, DateTime.Now," Mobile: " + switchResponse.address+" IMEI: " + switchResponse.imei+ " STATUS: "+ switchResponse.status, "switch feedback");
             se.SaveChanges();
         }
 
