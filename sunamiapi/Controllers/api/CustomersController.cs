@@ -101,135 +101,15 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public List<paymentRatesClassPerClient> GetPaymentActiveRates([FromBody] StartEndDate[] value)
         {
-            DateTime end1;
-            List<paymentRatesClassPerClient> list = new List<paymentRatesClassPerClient>();
-            try
-            {
-                //yyyy-mm-dd e.g. 2017-04-05 - date1
-                beginDate = getDate(value[0].startDate);
-                end1 = getDate(value[0].endDate);
-                //get whole list of customers
-                List<tbl_customer> list2 = se.tbl_customer.Where(g => g.install_date <= end1 && g.active_status == true).ToList();
-
-                list = calcInvoiceBtwnDatesm(beginDate, end1, list2).OrderByDescending(g => g.Percent).ToList();
-            }
-            catch
-            {
-                end1 = DateTime.Today;
-                List<tbl_customer> list2 = se.tbl_customer.Where(g => g.install_date <= end1 && g.active_status == true).ToList();
-
-                list = calcInvoiceBtwnDatesm(beginDate, end1, list2).OrderByDescending(g => g.Percent).ToList();
-            }
-            return list;
+           
         }
 
         [HttpPost]
         public List<paymentRatesClassPerClient> GetPaymentInactiveRates([FromBody] StartEndDate[] value)
         {
-            DateTime end1;
-            List<paymentRatesClassPerClient> list = new List<paymentRatesClassPerClient>();
-            try
-            {
-                //yyyy-mm-dd e.g. 2017-04-05 - date1
-                beginDate = getDate(value[0].startDate);
-                end1 = getDate(value[0].endDate);
-                List<tbl_customer> list2 = se.tbl_customer.Where(g => g.install_date <= end1 && g.active_status == false).ToList();
-
-                list = calcInvoiceBtwnDatesm(beginDate, end1, list2).OrderByDescending(g => g.Percent).ToList();
-            }
-            catch
-            {
-                string enddate = DateTime.Today.ToString();
-                end1 = Convert.ToDateTime(enddate, info);
-                List<tbl_customer> list2 = se.tbl_customer.Where(g => g.install_date <= end1 && g.active_status == false).ToList();
-
-                list = calcInvoiceBtwnDatesm(beginDate, end1, list2).OrderByDescending(g => g.Percent).ToList();
-            }
-            return list;
-            //return null;
+            
         }
-
-        public List<paymentRatesClassPerClient> calcInvoiceBtwnDatesm(DateTime start, DateTime end, List<tbl_customer> list2)
-        {
-            List<paymentRatesClassPerClient> li = new List<paymentRatesClassPerClient>();
-            foreach (var tc1 in list2)
-            {
-                string St;
-                string En;
-                string Comment = null;
-                int? Count = 0;
-                int? Paid = 0;
-                bool? status = false;
-                if (tc1.install_date >= start)
-                {
-                    St = tc1.install_date.Value.Date.ToString("dd/MM/yyyy");
-                }
-                else
-                {
-                    St = start.Date.ToString("dd/MM/yyyy");
-                }
-                En = end.Date.ToString("dd/MM/yyyy");
-
-                extraPackageInvoicing ep = new classes.extraPackageInvoicing();
-                Count += ep.extr_invoice(start, end, tc1, se);
-                Comment += "\n" + ep.Comment;
-                Paid = ep.Paid;
-
-                if (Paid == null)
-                {
-                    Paid = 0;
-                }
-
-                int? Percent = 0;
-                try
-                {
-                    Percent = (100 * Paid) / Count;
-                }
-                catch
-                {
-                    Percent = 0;
-                }
-                if (Percent == null)
-                {
-                    Percent = 0;
-                }
-
-                try
-                {
-                    tbl_system tse = se.tbl_system.FirstOrDefault(g => g.customer_id == tc1.customer_id);
-                    if (tse.active_status == true)
-                    {
-                        status = true;
-                    }
-                    else if (tse.active_status == false)
-                    {
-                        status = false;
-                    }
-                }
-                catch (Exception k)
-                {
-                    status = null;
-                }
-
-                li.Add(new paymentRatesClassPerClient
-                {
-                    Name = tc1.customer_name.ToUpper(),
-                    Id = tc1.customer_id,
-                    From = St,
-                    To = En,
-                    Amount = Paid,
-                    Invoice = Count,
-                    Percent = Percent,
-                    Comment = Comment,
-                    Phone = tc1.phone_numbers + "\n" + tc1.phone_numbers2 + "\n" + tc1.phone_numbers3,
-                    Village = tc1.village_name.ToUpper(),
-                    Status = status,
-                    Description = tc1.Description
-                });
-            }
-            return li;
-        }
-
+        
         public void sendEmail(string to, string subject, string body)
         {
             SmtpClient client = new SmtpClient();
@@ -289,46 +169,7 @@ namespace sunamiapi.Controllers.api
 
         public List<paychartclass> getPaymentChart()
         {
-            List<MonthPayBreakDown> monthPayBreakDown = new List<MonthPayBreakDown>();
-            //getting from db
-            List<int?> pvals = new List<int?>();
-            List<string> chartlabels = new List<string>();
-
-            for (DateTime endDate = beginDate; endDate < DateTime.Today; endDate = endDate.AddMonths(1))
-            {
-                DateTime formatedTime = Convert.ToDateTime(endDate.Month.ToString() + "/01/" + endDate.Year.ToString(), info);
-                DateTime endformatedTime = formatedTime.AddMonths(1).AddDays(-1);
-
-                string monthName = info.GetMonthName(formatedTime.Month).ToString();
-                string month = monthName.Substring(0, 3) + "," + formatedTime.Year.ToString();
-                chartlabels.Add(month);
-
-                List<tbl_customer> lsc = se.tbl_customer.Where(rr => rr.install_date <= endformatedTime).ToList();
-
-                List<paymentRatesClassPerClient> list = calcInvoiceBtwnDatesm(formatedTime, endformatedTime, lsc);
-                int? invoice = 0;
-                int? paid = 0;
-                int? percent = 0;
-                try
-                {
-                    invoice = list.Sum(r1 => r1.Invoice);
-                    paid = list.Sum(r2 => r2.Amount);
-                    percent = (paid * 100) / invoice;
-                }
-                catch
-                {
-                    percent = 0;
-                }
-
-                pvals.Add(percent);
-                monthPayBreakDown.Add(new MonthPayBreakDown { Month = month, DateRanges = formatedTime.ToString() + " - " + endformatedTime.ToString(), Invoice = "Ksh" + invoice.ToString(), Paid = "Ksh" + paid.ToString(), Performance = percent.ToString() + "%" });
-            }
-
-            List<chartdata> chartdata = new List<chartdata>();
-            chartdata.Add(new chartdata() { data = pvals, label = "payment rate" });
-            List<paychartclass> datatoreturn = new List<paychartclass>();
-            datatoreturn.Add(new paychartclass() { LineChartData = chartdata, LineChartLabels = chartlabels, MonthPayBreakDown = monthPayBreakDown });
-            return datatoreturn;
+            
         }
 
         public List<summaryReport> getPaymentSummaryReport(string id)
@@ -479,7 +320,7 @@ namespace sunamiapi.Controllers.api
                     else if (message.StartsWith("remind"))
                     {
                         List<tbl_customer> tc = se.tbl_customer.Where(gg => gg.customer_id == num.idnumber).ToList();
-                        List<paymentRatesClassPerClient> list = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, tc);
+                        List<paymentRatesClassPerClient> list = calcInvoiceBtwnDatesmPerCustomer(beginDate, DateTime.Today, tc[0].customer_id);
                         msg = message.Replace(@"remind", @"");
                         int? invoice = list[0].Invoice;
                         int? paid = list[0].Amount;
@@ -682,7 +523,7 @@ namespace sunamiapi.Controllers.api
                     {
                         List<tbl_customer> lst = new List<tbl_customer>();
                         lst.Add(tc);
-                        List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
+                        List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesmPerCustomer(beginDate, DateTime.Today, lst[0].customer_id);
                         sl.switch_off_payrate = res1[0].Percent.Value.ToString();
                     }
                     catch
@@ -733,7 +574,7 @@ namespace sunamiapi.Controllers.api
                     {
                         List<tbl_customer> lst = new List<tbl_customer>();
                         lst.Add(tc);
-                        List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
+                        List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesmPerCustomer(beginDate, DateTime.Today, lst[0].customer_id);
                         sl.switch_on_payrate = res1[0].Percent.Value.ToString();
                     }
                     catch
@@ -931,7 +772,7 @@ namespace sunamiapi.Controllers.api
                 //get statistics
                 List<tbl_customer> lst = new List<tbl_customer>();
                 lst = se.tbl_customer.Where(g => g.customer_id == id).ToList();
-                List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesm(beginDate, DateTime.Today, lst);
+                List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesmPerCustomer(beginDate, DateTime.Today, lst[0].customer_id);
                 daily_invoice = 0; //@TODO
                 total_invoice = res1[0].Invoice;
                 paid = res1[0].Amount;
@@ -959,93 +800,7 @@ namespace sunamiapi.Controllers.api
             prc2.Add(new payRecordClass2() { Payrecord = pd, Name = name, Daily_invoice = daily_invoice, Not_paid = not_paid, Paid = paid, Total_invoice = total_invoice, Percent = percent });
             return prc2;
         }
-
-        private async void mledger()
-        {
-            //get JSON messages
-            try
-            {
-                //request from mledger
-                string url = "https://mledger.safaricom.com/svc/2.0/my/transactions/restore?";
-                var responseString = await url
-                         // .PostUrlEncodedAsync(new { PhoneNumber = "254795271832", CutOffDate = "2015-09-18", Key = "8E463479-D819-42CD-8588-5783684CA34E", P = "aaab5c0c73f14cf887ba32d5d501abcb", U = "62b52617de6e48ae98e322eb2c502f1d", Ver = "5.0.95", DeviceID = "", OSVersion = "4.2.2", OSPlatForm = "Alps+TECNO+S9S-reallytek82_tb_jb5" })
-                         .PostUrlEncodedAsync(new { PhoneNumber = "254795271832", CutOffDate = "2017-01-01", Key = "8E463479-D819-42CD-8588-5783684CA34E", P = "aaab5c0c73f14cf887ba32d5d501abcb", U = "62b52617de6e48ae98e322eb2c502f1d" })
-                         .ReceiveStream();
-                string res;
-                using (var decompress = new GZipStream(responseString, CompressionMode.Decompress))
-                using (var sr = new StreamReader(decompress))
-                {
-                    res = sr.ReadToEnd();
-                }
-                //convert response to json array
-                JArray j = JArray.Parse(res);
-                int msgcount = j.Count();
-                //loop through all messages in the json response
-                for (int i = 0; i <= msgcount; i++)
-                {
-                    //convert to json object--retrieve and send to db
-                    JToken token = JObject.Parse(j[i].ToString());
-                    string msg1 = token.SelectToken("OriginalText").ToString();
-                    record_mpesa_msg_mledger(msg1);
-                }
-            }
-            catch
-            {
-
-            }
-        }
-
-        public static string Unzip(byte[] bytes)
-        {
-            using (var msi = new MemoryStream(bytes))
-            using (var mso = new MemoryStream())
-            {
-                using (var gs = new System.IO.Compression.GZipStream(msi, System.IO.Compression.CompressionMode.Decompress))
-                {
-                    //gs.CopyTo(mso);
-                    CopyTo(gs, mso);
-                }
-
-                return Encoding.UTF8.GetString(mso.ToArray());
-            }
-        }
-
-        ////zipping to gzip -- compressing to gzip --- for learning purposes
-        //public static byte[] Zip(string str)
-        //{
-        //    var bytes = Encoding.UTF8.GetBytes(str);
-
-        //    using (var msi = new MemoryStream(bytes))
-        //    using (var mso = new MemoryStream())
-        //    {
-        //        using (var gs = new GZipStream(mso, CompressionMode.Compress))
-        //        {
-        //            //msi.CopyTo(gs);
-        //            CopyTo(msi, gs);
-        //        }
-
-        //        return mso.ToArray();
-        //    }
-        //}
-
-        public static void CopyTo(Stream src, Stream dest)
-        {
-            byte[] bytes = new byte[4096];
-            int cnt;
-            while ((cnt = src.Read(bytes, 0, bytes.Length)) != 0)
-            {
-                dest.Write(bytes, 0, cnt);
-            }
-        }
-
-        private void record_mpesa_msg_mledger(string msg1)
-        {
-            //find in class
-            paymentRecording pr = new classes.paymentRecording();
-            pr.recordpayment(msg1, se, false);
-            string res = pr.Json;
-        }
-
+        
         [HttpPost]
         public string postReceive_mpesa([FromBody]mobilempesapaymentbody[] value)
         {
@@ -1071,16 +826,7 @@ namespace sunamiapi.Controllers.api
             }
             return res;
         }
-
-        private string record_mpesa_msg_phone(string msg1, string imei_no)
-        {
-            paymentRecording pr = new classes.paymentRecording();
-            pr.Phone_imei = imei_no;
-            pr.recordpayment(msg1, se, true);
-            string res = pr.Json;
-            return res;
-        }
-
+        
         public List<postnewcustomer> getCustomerDetails()
         {
             List<postnewcustomer> list = new List<postnewcustomer>(from i in se.tbl_customer
@@ -1737,71 +1483,7 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public string postmakePayment([FromBody]postmakepaymentbody[] value)
         {
-            string res = "";
-            paymentRecording pr = new paymentRecording();
-            try
-            {
-                string bankname = null;
-                string loggedUser = value[0].loggedUser;
-                string PayMode = value[0].PayMode;
-                string Code = value[0].Code;
-                string Id = value[0].Customer_Id;
-                try
-                {
-                    bankname = value[0].bankname;
-                }
-                catch { }
-
-                if (PayMode == "mpesa")
-                {
-                    tbl_mpesa_payments tmp = se.tbl_mpesa_payments.FirstOrDefault(g => g.transaction_code == Code);
-                    pr.Mdate = DateTime.Parse(tmp.date.ToString());
-                    pr.Mpesa_amount = tmp.amount;
-                }
-
-
-                else if (PayMode == "cash")
-                {
-                    pr.Mdate = getDate(value[0].date1);
-                    pr.Mpesa_amount = value[0].amount;
-                }
-
-                else if (PayMode == "bank")
-                {
-                    pr.Mdate = getDate(value[0].date1);
-                    pr.Mpesa_amount = value[0].amount;
-                    if (bankname.Length > 2)
-                    {
-                        PayMode = PayMode + "_" + bankname;
-                    }
-                }
-
-                else if (PayMode == "mtn_uganda")
-                {
-                    pr.Mdate = getDate(value[0].date1);
-                    pr.Mpesa_amount = value[0].amount;
-                }
-
-                else if (PayMode == "airtel_uganda")
-                {
-                    pr.Mdate = getDate(value[0].date1);
-                    pr.Mpesa_amount = value[0].amount;
-                }
-
-                pr.Loggedin = loggedUser;
-                pr.PayMode = PayMode;
-                pr.Code = Code;
-                pr.Customer_id = Id;
-                pr.process_transaction(se, true);
-                res += pr.Json;
-                return res;
-
-            }
-            catch (Exception g)
-            {
-                res = g.Message;
-                return res;
-            }
+            
         }
 
         private void logevent(string loggeduser, string customerid, DateTime date, string event1, string category)
