@@ -31,12 +31,16 @@ namespace sunamiapi.Controllers.api
         db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
         private bool allowsendsms = true;
         public DateTime beginDate;
+        //request from mledger
+        private string url;
+        private string urlParams;
         public DateTimeFormatInfo info = new CultureInfo("en-us", false).DateTimeFormat;//MMddyyyy
         public List<string> user_permissions = new List<string>();
         public List <int> user_offices = new List<int>();
         public string logedinUser = "";
         public CustomersController()
         {
+            string userOfficesLongString = null; 
             try
             {
                 user_permissions = System.Web.HttpContext.Current.Request.QueryString.Get("user_permissions").Split(',').ToList();
@@ -45,7 +49,8 @@ namespace sunamiapi.Controllers.api
             {}
             try
             {
-                string[] user_offices1 = System.Web.HttpContext.Current.Request.QueryString.Get("user_offices").Split(',');
+                userOfficesLongString = System.Web.HttpContext.Current.Request.QueryString.Get("user_offices");
+                string[] user_offices1 = userOfficesLongString.Split(',');
                 user_offices = user_offices1.Select(int.Parse).ToList();
             }
             catch
@@ -73,6 +78,12 @@ namespace sunamiapi.Controllers.api
             }
             catch
             {}
+            try
+            {
+                url = "http://blockchain.sunamiapp.net/api/customers/";
+                urlParams = "logedinUser" + logedinUser + "user_offices" + userOfficesLongString;
+            }
+            catch { }
             try
             {
                 se.Filter<tbl_customer>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
@@ -802,7 +813,7 @@ namespace sunamiapi.Controllers.api
         }
         
         [HttpPost]
-        public string postReceive_mpesa([FromBody]mobilempesapaymentbody[] value)
+        public async System.Threading.Tasks.Task<string> postReceive_mpesaAsync([FromBody]mobilempesapaymentbody[] value)
         {
             string res = "";
             // only record if message is from mpesa
