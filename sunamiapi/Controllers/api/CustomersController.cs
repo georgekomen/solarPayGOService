@@ -1764,6 +1764,10 @@ namespace sunamiapi.Controllers.api
                 {
                     pr.Mdate = getDate(value[0].date1);
                     pr.Mpesa_amount = value[0].amount;
+                    if (value[0].Code.Length > 5 && user_offices[0]==1)
+                    {
+                        PayMode = "mpesa";
+                    }
                 }
 
                 else if (PayMode == "bank")
