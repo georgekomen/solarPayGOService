@@ -246,25 +246,26 @@ namespace sunamiapi.classes
                     se.SaveChanges();
                     confirm += "registered new customer";
                 }
-
-                if (!se.tbl_extra_package_customers.Where(r => r.customer_id == id).Select(t => t.item).Contains(package))
+                if (!string.IsNullOrWhiteSpace(package))
                 {
-                    tbl_extra_package_customers epc = new tbl_extra_package_customers();
-                    epc.customer_id = id;
-                    epc.item = package;
-                    epc.agentcode = agentcode;
-                    epc.date_given = install_date;
-                    se.tbl_extra_package_customers.Add(epc);
-                    se.SaveChanges();
-                    // this.logevent(rc.RecordedBy, rc.Id, DateTime.Today, "Invoiced customer a " + item, "Invoice Customer");
+                    if (!se.tbl_extra_package_customers.Where(r => r.customer_id == id).Select(t => t.item).Contains(package))
+                    {
+                        tbl_extra_package_customers epc = new tbl_extra_package_customers();
+                        epc.customer_id = id;
+                        epc.item = package;
+                        epc.agentcode = agentcode;
+                        epc.date_given = install_date;
+                        se.tbl_extra_package_customers.Add(epc);
+                        se.SaveChanges();
+                        // this.logevent(rc.RecordedBy, rc.Id, DateTime.Today, "Invoiced customer a " + item, "Invoice Customer");
+                    }
+                    else
+                    {
+                        tbl_extra_package_customers tepc = se.tbl_extra_package_customers.FirstOrDefault(f => f.customer_id == id && f.item == package);
+                        tepc.date_given = install_date;
+                        se.SaveChanges();
+                    }
                 }
-                else
-                {
-                    tbl_extra_package_customers tepc = se.tbl_extra_package_customers.FirstOrDefault(f => f.customer_id == id && f.item == package);
-                    tepc.date_given = install_date;
-                    se.SaveChanges();
-                }
-                
             }
             catch (Exception kk)
             {
