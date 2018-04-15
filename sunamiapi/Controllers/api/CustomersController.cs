@@ -278,6 +278,7 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public string invoiceCustomer([FromBody]Invoicecustomerbody[] value)
         {
+            bool register = false;
             string result = "";
             try
             {
@@ -291,9 +292,40 @@ namespace sunamiapi.Controllers.api
                     epc.agentcode = value[0].agentcode;
                     epc.date_given = getDate(value[0].invoiceDate);
                     se.tbl_extra_package_customers.Add(epc);
-                    se.SaveChanges();
-                    result = "successfully invoiced customer";
-                    this.logevent(value[0].loogedUser, value[0].customerId, DateTime.Today, "Invoiced customer a " + value[0].item, "Invoice Customer");
+                    if (!string.IsNullOrEmpty(epc.agentcode) && !string.IsNullOrWhiteSpace(epc.agentcode))
+                    {
+                        try
+                        {
+                            tbl_agents tag = se.tbl_agents.FirstOrDefault(gg => gg.idnumber == epc.agentcode);
+                            if (tag != null)
+                            {
+                                register = true;
+                            }
+                            else
+                            {
+                                register = false;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            register = false;
+                        }
+                    }
+                    else
+                    {
+                        register = true;
+                    }
+
+                    if (register)
+                    {
+                        se.SaveChanges();
+                        result = "successfully invoiced customer";
+                        this.logevent(value[0].loogedUser, value[0].customerId, DateTime.Today, "Invoiced customer a " + value[0].item, "Invoice Customer");
+                    }
+                    else
+                    {
+                        result = "agent not registered, kindly register the agent first";
+                    }
                 }
                 else
                 {
