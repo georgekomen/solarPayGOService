@@ -210,28 +210,18 @@ namespace sunamiapi.Controllers.api
                 {
                     status = null;
                 }
-                try
-                {
-                    tbl_system ts = se.tbl_system.AsNoFilter().FirstOrDefault(i => i.customer_id == tc1.customer_id);
-                    tbl_sunami_controller tsc = se.tbl_sunami_controller.AsNoFilter().FirstOrDefault(g => g.imei == se.tbl_system.
-                        FirstOrDefault(f => f.customer_id == tc1.customer_id).imei_number);
-                    if(ts.automate_switch==true)
-                    {
-                        if(Percent >= ts.payrate_switch_threshold)
-                        {
-                            string res = switchOn(ts, tsc.sim_no, tc1.customer_id, "Automatic");
-                        }
-                        else
-                        {
-                            string res = switchOff(ts, tsc.sim_no, tc1.customer_id, "Automatic");
-                        }
-                    }
-                }
-                catch
-                {
 
+                //auto-switch
+                if(start <= tc1.install_date && end >= DateTime.Today)
+                {
+                    if(user_offices.Count() ==0)
+                    {
+                        user_offices.Add((int)tc1.office_id);
+                    }
+                    autoSwitch(tc1.customer_id, Percent);
                 }
-                
+                //end of auto-switch
+
                 li.Add(new paymentRatesClassPerClient
                 {
                     Name = tc1.customer_name.ToUpper(),
@@ -249,6 +239,31 @@ namespace sunamiapi.Controllers.api
                 });
             }
             return li;
+        }
+
+        public void autoSwitch(string customer_id, int? Percent)
+        {
+            try
+            {
+                tbl_system ts = se.tbl_system.AsNoFilter().FirstOrDefault(i => i.customer_id == customer_id);
+                tbl_sunami_controller tsc = se.tbl_sunami_controller.AsNoFilter().FirstOrDefault(g => g.imei == se.tbl_system.
+                    FirstOrDefault(f => f.customer_id == customer_id).imei_number);
+                if (ts.automate_switch == true)
+                {
+                    if (Percent >= ts.payrate_switch_threshold)
+                    {
+                        string res = switchOn(ts, tsc.sim_no, customer_id, "Automatic");
+                    }
+                    else
+                    {
+                        string res = switchOff(ts, tsc.sim_no, customer_id, "Automatic");
+                    }
+                }
+            }
+            catch
+            {
+
+            }
         }
 
         public void sendEmail(string to, string subject, string body)
@@ -1140,6 +1155,7 @@ namespace sunamiapi.Controllers.api
         {
             List<postnewcustomer> list = new List<postnewcustomer>(from i in se.tbl_customer
                                                      //where i.active_status == true
+                                                     join s in se.tbl_system on i.customer_id equals s.customer_id
                                                  orderby i.Id descending
                                                  select new postnewcustomer
                                                  {
@@ -1164,7 +1180,9 @@ namespace sunamiapi.Controllers.api
                                                      country = i.country,
                                                      agentcode = i.agentcode,
                                                      witnessnumber = i.witness_mobile_number,
-                                                     gender = i.gender
+                                                     gender = i.gender,
+                                                     switch_payrate_threshold = s.payrate_switch_threshold,
+                                                     automate_switch = s.automate_switch
                                                  }
                       );
             return list;
@@ -1175,6 +1193,7 @@ namespace sunamiapi.Controllers.api
             try
             {
                 tbl_customer i = se.tbl_customer.FirstOrDefault(t1 => t1.customer_id == id);
+                tbl_system s = se.tbl_system.AsNoFilter().FirstOrDefault(tr => tr.customer_id == id);
                 postnewcustomer customer = (new postnewcustomer
                 {
                     name = i.customer_name,
@@ -1198,7 +1217,9 @@ namespace sunamiapi.Controllers.api
                     country = i.country,
                     agentcode = i.agentcode,
                     witnessnumber = i.witness_mobile_number,
-                    gender = i.gender
+                    gender = i.gender,
+                    switch_payrate_threshold = s.payrate_switch_threshold,
+                    automate_switch = s.automate_switch
                 });
                 return customer;
             }
@@ -1780,6 +1801,22 @@ namespace sunamiapi.Controllers.api
                     res = "agent not registered, kindly register the agent first";
                 }
                 // end of invoicing
+
+                //set switch mode and threshold
+                try
+                {
+                    tbl_system ts2 = se.tbl_system.AsNoFilter().FirstOrDefault(ff => ff.customer_id==rc.Id);
+                    if (ts2 != null)
+                    {
+                        ts2.automate_switch = value[0].automate_switch;
+                        ts2.payrate_switch_threshold = value[0].switch_payrate_threshold;
+                        se.SaveChanges();
+                    }
+                }
+                catch(Exception r) {
+                    throw r;
+                }
+
             }
             catch (Exception kk)
             {

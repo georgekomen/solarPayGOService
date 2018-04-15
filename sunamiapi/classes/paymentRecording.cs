@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using sunamiapi.codeIncludes;
+using sunamiapi.Controllers.api;
 using sunamiapi.Models.DatabaseModel;
 using System;
 using System.Collections.Generic;
@@ -263,6 +264,19 @@ namespace sunamiapi.classes
                 se.SaveChanges();
                 preparesms(se, sendNotification);
                 json = "successfully recorded payment";
+
+                //auto switch
+                try
+                {
+                    CustomersController cc = new CustomersController();
+                    List<tbl_customer> tccww = new List<tbl_customer>();
+                    tccww.Add(tc1);
+                    cc.calcInvoiceBtwnDatesm(cc.beginDate, DateTime.Today, tccww);
+                }
+                catch (Exception e)
+                {
+
+                }
             }
             catch (Exception kl)
             {
