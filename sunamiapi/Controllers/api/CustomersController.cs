@@ -112,13 +112,13 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public List<paymentRatesClassPerClient> GetPaymentActiveRates([FromBody] StartEndDate[] value)
         {
-           
+            return null;
         }
 
         [HttpPost]
         public List<paymentRatesClassPerClient> GetPaymentInactiveRates([FromBody] StartEndDate[] value)
         {
-            
+            return null;
         }
         
         public void sendEmail(string to, string subject, string body)
@@ -180,7 +180,7 @@ namespace sunamiapi.Controllers.api
 
         public List<paychartclass> getPaymentChart()
         {
-            
+            return null;
         }
 
         public List<summaryReport> getPaymentSummaryReport(string id)
@@ -305,56 +305,7 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public string PostSMS([FromBody]postsmsbody[] value)
         {
-            sendSms ss = new sendSms();
-            var tc33 = se.tbl_customer.Select(ff => new { customer_id = ff.customer_id, phone_numbers = ff.phone_numbers, customer_name = ff.customer_name }).ToList();
-            string msgs = null;
-            string sim_no = null;
-            try
-            {
-                string msg = value[0].message;
-                string message = msg;
-                List<recipients> numbers = value[0].recipients;
-                foreach (var num in numbers)
-                {
-                    string cust_idd = num.idnumber;
-                    var tc3 = tc33.FirstOrDefault(g3 => g3.customer_id == cust_idd);
-                    sim_no = tc33.FirstOrDefault(o => o.customer_id == cust_idd).phone_numbers != null ? tc33.FirstOrDefault(o => o.customer_id == cust_idd).phone_numbers : "+254713014492";
-                    string customername = tc3.customer_name;
-                    string[] firstname = null;
-                    firstname = customername.Split(' ').Length > 0 ? customername.Split(' ') : new string[] { customername };
-                    if (message.StartsWith("send"))
-                    {
-                        //msgs = "Jambo " + firstname[0].ToUpper() + ", " + message.Replace(@"send", @"");
-                        msgs = message.Replace(@"send", @"");
-                        sendmsg(sim_no, msgs, cust_idd, ss);
-                    }
-                    else if (message.StartsWith("remind"))
-                    {
-                        List<tbl_customer> tc = se.tbl_customer.Where(gg => gg.customer_id == num.idnumber).ToList();
-                        List<paymentRatesClassPerClient> list = calcInvoiceBtwnDatesmPerCustomer(beginDate, DateTime.Today, tc[0].customer_id);
-                        msg = message.Replace(@"remind", @"");
-                        int? invoice = list[0].Invoice;
-                        int? paid = list[0].Amount;
-                        int? not_paid = invoice - paid;
-                        if (not_paid < 0)
-                        {
-                            msgs = "Jambo " + firstname[0].ToUpper() + msg + ", asanti kwa uaminifu wako. Malipo ni kwa Mpesa Till number 784289. Nambari ya kuhudumiwa ni 0788103403.";//. Kuudumiwa piga: 0788103403                              
-                            sendmsg(sim_no, msgs, cust_idd, ss);
-                        }
-                        else if (not_paid > 0)
-                        {
-                            msgs = "Jambo " + firstname[0].ToUpper() + msg + ", una deni la KSH" + not_paid.ToString() + ". Tafadhali tuma malipo yako kwa Mpesa Till number 784289. Nambari ya kuhudumiwa ni 0788103403.";
-                            sendmsg(sim_no, msgs, cust_idd, ss);
-                        }
-                    }
-                }
-                logevent(value[0].sender, "e.g. " + value[0].recipients[0].idnumber, DateTime.Today, "SMS sent", "SMS");
-                return "sent";
-            }
-            catch (Exception e)
-            {
-                return e.StackTrace;
-            }
+            return null;
         }
 
         private void sendmsg(string sim_no, string msgs, string cust_id, sendSms ss)
@@ -508,104 +459,12 @@ namespace sunamiapi.Controllers.api
 
         public string switchOff(tbl_system ts, string sim_no, string customer_id, string loogeduser)
         {
-            if (ts.active_status == false)
-            {
-                tbl_customer tc = new tbl_customer();
-                string res;
-                try
-                {
-                    //switch off
-                    ts.active_status = true;
-
-                    if (allowsendsms == true)
-                    {
-                        //notify the customer that he has been put on
-                        tc = se.tbl_customer.FirstOrDefault(g => g.customer_id == customer_id);
-                        var customernames = tc.customer_name.Split(' ');
-                        sendSms ss = new sendSms();
-                        ss.sendSmsThroughGateway(sim_no, "smsc$1%$+254713014492%smsd$" + customernames[0] + "%s*solar yako imewashwa#e", customer_id);
-                    }
-
-                    tbl_switch_logs sl = new tbl_switch_logs();
-                    sl.customer_id = customer_id;
-                    sl.switched_off_by = loogeduser;
-                    sl.switch_off_date = DateTime.Today;
-                    try
-                    {
-                        List<tbl_customer> lst = new List<tbl_customer>();
-                        lst.Add(tc);
-                        List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesmPerCustomer(beginDate, DateTime.Today, lst[0].customer_id);
-                        sl.switch_off_payrate = res1[0].Percent.Value.ToString();
-                    }
-                    catch
-                    {
-                        sl.switch_off_payrate = "0";
-                    }
-                    se.tbl_switch_logs.Add(sl);
-                    res = "";
-                }
-                catch (Exception g)
-                {
-                    res = g.Message;
-                }
-                return res;
-            }
-            else
-            {
-                return null;
-            }
-
+            return null;
         }
 
         public string switchOn(tbl_system ts, string sim_no, string customer_id, string loogeduser)
         {
-            if (ts.active_status == true)
-            {
-                tbl_customer tc = new tbl_customer();
-                string res;
-                try
-                {
-                    //switch on
-                    ts.active_status = false;
-
-                    if (allowsendsms == true)
-                    {
-                        //notify the customer that he has been switched off
-                        tc = se.tbl_customer.FirstOrDefault(g => g.customer_id == customer_id);
-                        var customernames = tc.customer_name.Split(' ');
-                        sendSms ss = new sendSms();
-                        ss.sendSmsThroughGateway(sim_no, "smsc$0%$+254713014492%smsd$" + customernames[0] + "%s*solar yako imezimwa#e", customer_id);
-                    }
-                    int sl1 = se.tbl_switch_logs.Where(h => h.customer_id == customer_id).Max(j => j.Id);
-                    tbl_switch_logs sl = se.tbl_switch_logs.FirstOrDefault(h => h.customer_id == customer_id && h.Id == sl1);
-                    sl.customer_id = customer_id;
-                    sl.switched_on_by = loogeduser;
-                    sl.switch_on_date = DateTime.Today;
-                    try
-                    {
-                        List<tbl_customer> lst = new List<tbl_customer>();
-                        lst.Add(tc);
-                        List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesmPerCustomer(beginDate, DateTime.Today, lst[0].customer_id);
-                        sl.switch_on_payrate = res1[0].Percent.Value.ToString();
-                    }
-                    catch
-                    {
-                        sl.switch_on_payrate = "0";
-                    }
-
-                    res = "";
-                }
-                catch (Exception g)
-                {
-                    res = g.Message;
-
-                }
-                return res;
-            }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
         public List<mpesaPayments> getmpesaPayments()
@@ -771,71 +630,13 @@ namespace sunamiapi.Controllers.api
 
         public List<payRecordClass2> getPaymentPerCustomer(string id)
         {
-            int daily_invoice = 0;
-            int? total_invoice = 0;
-            int? paid = 0;
-            int? not_paid = 0;
-            string name = "";
-            int? percent = 0;
-            List<payrecordClass> pd = new List<payrecordClass>();
-            try
-            {
-                //get statistics
-                List<tbl_customer> lst = new List<tbl_customer>();
-                lst = se.tbl_customer.Where(g => g.customer_id == id).ToList();
-                List<paymentRatesClassPerClient> res1 = calcInvoiceBtwnDatesmPerCustomer(beginDate, DateTime.Today, lst[0].customer_id);
-                daily_invoice = 0; //@TODO
-                total_invoice = res1[0].Invoice;
-                paid = res1[0].Amount;
-                not_paid = res1[0].Invoice - res1[0].Amount;
-                percent = (paid * 100) / total_invoice;
-                name = se.tbl_customer.FirstOrDefault(g => g.customer_id == id).customer_name;
-                try
-                {
-                    var list = (from tp in se.tbl_payments
-                                join tc in se.tbl_customer on tp.customer_id equals tc.customer_id
-                                orderby tp.Id descending
-                                where tp.payment_date >= beginDate && tp.payment_date <= DateTime.Today && tp.customer_id == id
-                                select new { tc.customer_name, tp.customer_id, tp.amount_payed, tp.payment_date, tp.payment_method, pp = tp.phone_number, TransactionCode = tp.transaction_code, pr = tp.person_recording }
-                              ).ToList();
-                    foreach (var it in list)
-                    {
-                        pd.Add(new payrecordClass() { Amount = it.amount_payed, PayDate = it.payment_date.Value.Date.ToString("dd/MM/yyy"), PayMethod = it.payment_method, MpesaNumber = it.pp, Code = it.TransactionCode, Receiver = it.pr });
-                    }
-                }
-                catch
-                { }
-            }
-            catch { }
-            List<payRecordClass2> prc2 = new List<payRecordClass2>();
-            prc2.Add(new payRecordClass2() { Payrecord = pd, Name = name, Daily_invoice = daily_invoice, Not_paid = not_paid, Paid = paid, Total_invoice = total_invoice, Percent = percent });
-            return prc2;
+            return null;
         }
         
         [HttpPost]
-        public async System.Threading.Tasks.Task<string> postReceive_mpesaAsync([FromBody]mobilempesapaymentbody[] value)
+        public string postReceive_mpesa([FromBody]mobilempesapaymentbody[] value)
         {
-            string res = "";
-            // only record if message is from mpesa
-            if (value[0].address == "MPESA")
-            {
-                try
-                {
-                    string imei = value[0].imei;
-                    int tblm = se.tbl_mpesa_phone_imei.Where(i => i.imei == imei).Count();
-                    if (tblm < 1)
-                    {
-                        res = null;
-                    }
-                    else
-                    {
-                        res = record_mpesa_msg_phone(value[0].msg, value[0].imei);
-                    }
-                }
-                catch (Exception k)
-                { }
-            }
-            return res;
+            return null;
         }
         
         public List<postnewcustomer> getCustomerDetails()
@@ -1494,7 +1295,7 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public string postmakePayment([FromBody]postmakepaymentbody[] value)
         {
-            
+            return null;
         }
 
         private void logevent(string loggeduser, string customerid, DateTime date, string event1, string category)
