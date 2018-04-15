@@ -210,7 +210,28 @@ namespace sunamiapi.Controllers.api
                 {
                     status = null;
                 }
+                try
+                {
+                    tbl_system ts = se.tbl_system.FirstOrDefault(i => i.customer_id == tc1.customer_id);
+                    tbl_sunami_controller tsc = se.tbl_sunami_controller.FirstOrDefault(g => g.imei == se.tbl_system.
+                        FirstOrDefault(f => f.customer_id == tc1.customer_id).imei_number);
+                    if(ts.automate_switch==true)
+                    {
+                        if(Percent >= ts.payrate_switch_threshold)
+                        {
+                            string res = switchOn(ts, tsc.sim_no, tc1.customer_id, "Automatic");
+                        }
+                        else
+                        {
+                            string res = switchOff(ts, tsc.sim_no, tc1.customer_id, "Automatic");
+                        }
+                    }
+                }
+                catch
+                {
 
+                }
+                
                 li.Add(new paymentRatesClassPerClient
                 {
                     Name = tc1.customer_name.ToUpper(),
