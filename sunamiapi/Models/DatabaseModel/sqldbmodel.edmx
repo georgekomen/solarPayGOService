@@ -282,6 +282,8 @@
           <Property Name="last_connected_to_db_date" Type="datetime" />
           <Property Name="imei_number" Type="varchar(max)" />
           <Property Name="office_id" Type="int" />
+          <Property Name="automate_switch" Type="bit" />
+          <Property Name="payrate_switch_threshold" Type="int" />
         </EntityType>
         <EntityType Name="tbl_uninstalled_systems">
           <Key>
@@ -694,6 +696,8 @@
           <Property Name="last_connected_to_db_date" Type="DateTime" Precision="3" />
           <Property Name="imei_number" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="office_id" Type="Int32" />
+          <Property Name="automate_switch" Type="Boolean" Nullable="true" />
+          <Property Name="payrate_switch_threshold" Type="Int32" Nullable="true" />
         </EntityType>
         <EntityType Name="tbl_uninstalled_systems">
           <Key>
@@ -1124,6 +1128,8 @@
           <EntitySetMapping Name="tbl_system">
             <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_system">
               <MappingFragment StoreEntitySet="tbl_system">
+                <ScalarProperty Name="payrate_switch_threshold" ColumnName="payrate_switch_threshold" />
+                <ScalarProperty Name="automate_switch" ColumnName="automate_switch" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="customer_id" ColumnName="customer_id" />
                 <ScalarProperty Name="active_status" ColumnName="active_status" />
