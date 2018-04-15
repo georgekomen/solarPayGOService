@@ -196,7 +196,7 @@ namespace sunamiapi.Controllers.api
 
                 try
                 {
-                    tbl_system tse = se.tbl_system.FirstOrDefault(g => g.customer_id == tc1.customer_id);
+                    tbl_system tse = se.tbl_system.AsNoFilter().FirstOrDefault(g => g.customer_id == tc1.customer_id);
                     if (tse.active_status == true)
                     {
                         status = true;
@@ -212,8 +212,8 @@ namespace sunamiapi.Controllers.api
                 }
                 try
                 {
-                    tbl_system ts = se.tbl_system.FirstOrDefault(i => i.customer_id == tc1.customer_id);
-                    tbl_sunami_controller tsc = se.tbl_sunami_controller.FirstOrDefault(g => g.imei == se.tbl_system.
+                    tbl_system ts = se.tbl_system.AsNoFilter().FirstOrDefault(i => i.customer_id == tc1.customer_id);
+                    tbl_sunami_controller tsc = se.tbl_sunami_controller.AsNoFilter().FirstOrDefault(g => g.imei == se.tbl_system.
                         FirstOrDefault(f => f.customer_id == tc1.customer_id).imei_number);
                     if(ts.automate_switch==true)
                     {
@@ -593,12 +593,12 @@ namespace sunamiapi.Controllers.api
             string loogeduser = id1;
             string sim_no = "";
             string res = "";
-            tbl_system ts = se.tbl_system.FirstOrDefault(i => i.customer_id == customer_id);
+            tbl_system ts = se.tbl_system.AsNoFilter().FirstOrDefault(i => i.customer_id == customer_id);
             if (ts.imei_number.Length > 2)
             {
                 try
                 {
-                    sim_no = se.tbl_sunami_controller.FirstOrDefault(g => g.imei == se.tbl_system.
+                    sim_no = se.tbl_sunami_controller.AsNoFilter().FirstOrDefault(g => g.imei == se.tbl_system.
                     FirstOrDefault(f => f.customer_id == customer_id).imei_number).sim_no;
                 }
                 catch (Exception g)
@@ -689,7 +689,7 @@ namespace sunamiapi.Controllers.api
                     if (allowsendsms == true)
                     {
                         //notify the customer that he has been put on
-                        tc = se.tbl_customer.FirstOrDefault(g => g.customer_id == customer_id);
+                        tc = se.tbl_customer.AsNoFilter().FirstOrDefault(g => g.customer_id == customer_id);
                         var customernames = tc.customer_name.Split(' ');
                         sendSms ss = new sendSms();
                         ss.sendSmsThroughGateway(sim_no, "smsc$1%$+254713014492%smsd$" + customernames[0] + "%s*solar yako imewashwa#e", customer_id);
@@ -699,6 +699,7 @@ namespace sunamiapi.Controllers.api
                     sl.customer_id = customer_id;
                     sl.switched_off_by = loogeduser;
                     sl.switch_off_date = DateTime.Today;
+                    sl.office_id = user_offices[0];
                     try
                     {
                         List<tbl_customer> lst = new List<tbl_customer>();
@@ -711,6 +712,7 @@ namespace sunamiapi.Controllers.api
                         sl.switch_off_payrate = "0";
                     }
                     se.tbl_switch_logs.Add(sl);
+                    se.SaveChanges();
                     res = "";
                 }
                 catch (Exception g)
@@ -740,13 +742,13 @@ namespace sunamiapi.Controllers.api
                     if (allowsendsms == true)
                     {
                         //notify the customer that he has been switched off
-                        tc = se.tbl_customer.FirstOrDefault(g => g.customer_id == customer_id);
+                        tc = se.tbl_customer.AsNoFilter().FirstOrDefault(g => g.customer_id == customer_id);
                         var customernames = tc.customer_name.Split(' ');
                         sendSms ss = new sendSms();
                         ss.sendSmsThroughGateway(sim_no, "smsc$0%$+254713014492%smsd$" + customernames[0] + "%s*solar yako imezimwa#e", customer_id);
                     }
-                    int sl1 = se.tbl_switch_logs.Where(h => h.customer_id == customer_id).Max(j => j.Id);
-                    tbl_switch_logs sl = se.tbl_switch_logs.FirstOrDefault(h => h.customer_id == customer_id && h.Id == sl1);
+                    int sl1 = se.tbl_switch_logs.AsNoFilter().Where(h => h.customer_id == customer_id).Max(j => j.Id);
+                    tbl_switch_logs sl = se.tbl_switch_logs.AsNoFilter().FirstOrDefault(h => h.customer_id == customer_id && h.Id == sl1);
                     sl.customer_id = customer_id;
                     sl.switched_on_by = loogeduser;
                     sl.switch_on_date = DateTime.Today;
@@ -761,7 +763,7 @@ namespace sunamiapi.Controllers.api
                     {
                         sl.switch_on_payrate = "0";
                     }
-
+                    se.SaveChanges();
                     res = "";
                 }
                 catch (Exception g)
@@ -1679,6 +1681,7 @@ namespace sunamiapi.Controllers.api
         [HttpPost]
         public string postNewCustomer([FromBody]postnewcustomer[] value)
         {
+            bool register = false;
             DateTime date2 = DateTime.Today;
             string res = "error";
             try
@@ -1709,13 +1712,41 @@ namespace sunamiapi.Controllers.api
                 rc.Location = value[0].location;
                 rc.Office_id = user_offices[0];
 
-                rc.record(se);
-                res = rc.Confirm;
-                // invoice new customer
-                //TODO - call invoice function - avoid duplication of code
-                string item = value[0].package;
-                string customer_id = value[0].id;
-               
+                if(!string.IsNullOrEmpty(rc.Agentcode) && !string.IsNullOrWhiteSpace(rc.Agentcode))
+                {
+                    try
+                    {
+                        tbl_agents tag = se.tbl_agents.FirstOrDefault(gg => gg.idnumber == rc.Agentcode);
+                        if(tag != null)
+                        {
+                            register = true;
+                        }
+                        else
+                        {
+                            register = false;
+                        }
+                    } catch (Exception e)
+                    {
+                        register = false;
+                    }
+                }
+                else
+                {
+                    register = true;
+                }
+
+                if (register)
+                {
+                    rc.record(se);
+                    res = rc.Confirm;
+                    // invoice new customer
+                    //TODO - call invoice function - avoid duplication of code
+                    string item = value[0].package;
+                    string customer_id = value[0].id;
+                } else
+                {
+                    res = "agent not registered, kindly register the agent first";
+                }
                 // end of invoicing
             }
             catch (Exception kk)
@@ -2023,8 +2054,7 @@ namespace sunamiapi.Controllers.api
             }
             catch (Exception e)
             {
-                String error = e.Message;
-                return null;
+                throw e;
             }
         }
 
