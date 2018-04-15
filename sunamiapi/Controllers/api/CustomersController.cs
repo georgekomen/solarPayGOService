@@ -33,7 +33,7 @@ namespace sunamiapi.Controllers.api
         public DateTime beginDate;
         public DateTimeFormatInfo info = new CultureInfo("en-us", false).DateTimeFormat;//MMddyyyy
         public List<string> user_permissions = new List<string>();
-        public List <int> user_offices = new List<int>();
+        public List<int> user_offices = new List<int>();
         public string logedinUser = "";
         public CustomersController()
         {
@@ -42,14 +42,14 @@ namespace sunamiapi.Controllers.api
                 user_permissions = System.Web.HttpContext.Current.Request.QueryString.Get("user_permissions").Split(',').ToList();
             }
             catch
-            {}
+            { }
             try
             {
                 string[] user_offices1 = System.Web.HttpContext.Current.Request.QueryString.Get("user_offices").Split(',');
                 user_offices = user_offices1.Select(int.Parse).ToList();
             }
             catch
-            {}
+            { }
             try
             {
                 logedinUser = System.Web.HttpContext.Current.Request.QueryString.Get("logedinUser").ToString();
@@ -62,7 +62,7 @@ namespace sunamiapi.Controllers.api
             {
                 string user = se.tbl_users.FirstOrDefault(gg => gg.email == logedinUser).email;
             }
-            catch(Exception h)
+            catch (Exception h)
             {
                 //throw h;
             }
@@ -72,7 +72,7 @@ namespace sunamiapi.Controllers.api
                 beginDate = Convert.ToDateTime(beginDate1, info);
             }
             catch
-            {}
+            { }
             try
             {
                 se.Filter<tbl_customer>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
@@ -89,7 +89,7 @@ namespace sunamiapi.Controllers.api
                 se.Filter<tbl_system>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
                 se.Filter<tbl_uninstalled_systems>(x => x.Where(c => user_offices.Contains((int)c.office_id)));
             }
-            catch { }           
+            catch { }
         }
 
         public List<Icustomer> getCustomerLocations()
@@ -212,9 +212,9 @@ namespace sunamiapi.Controllers.api
                 }
 
                 //auto-switch
-                if(start <= tc1.install_date && end >= DateTime.Today)
+                if (start <= tc1.install_date && end >= DateTime.Today)
                 {
-                    if(user_offices.Count() ==0)
+                    if (user_offices.Count() == 0)
                     {
                         user_offices.Add((int)tc1.office_id);
                     }
@@ -287,7 +287,7 @@ namespace sunamiapi.Controllers.api
         public List<Invoiceitem> invoiceItems()
         {
             List<Invoiceitem> list = new List<Invoiceitem>(se.tbl_extra_item.Select(r => new Invoiceitem { Item = r.item, Deposit = r.deposit, Amount = r.amount_per_day, PayDays = r.extra_pay_period }));
-            return list; 
+            return list;
         }
 
         [HttpPost]
@@ -479,13 +479,13 @@ namespace sunamiapi.Controllers.api
             try
             {
                 string imei = value[0].id;
-                tbl_system sc = se.tbl_system.FirstOrDefault(r => r.imei_number == imei);             
+                tbl_system sc = se.tbl_system.FirstOrDefault(r => r.imei_number == imei);
                 se.tbl_system.Remove(sc);
                 se.SaveChanges();
                 logevent(value[0].user, sc.customer_id, DateTime.Now, "unlinked imei: " + value[0].id, "unlink controller");
                 return "successfully unlinked controller";
             }
-            catch(Exception g)
+            catch (Exception g)
             {
                 return g.Message;
             }
@@ -606,13 +606,13 @@ namespace sunamiapi.Controllers.api
             }
             return li;
         }
-        
+
 
         [HttpGet]
         public List<getmessagebody> getMessagesPerCustomer(string id)
         {
             string customer_name = "";
-            var li1 = se.tbl_messages.Where(rr=>rr.customer_id == id).OrderByDescending(t => t.id).ToList();
+            var li1 = se.tbl_messages.Where(rr => rr.customer_id == id).OrderByDescending(t => t.id).ToList();
             List<getmessagebody> li = new List<getmessagebody>();
             foreach (var f in li1)
             {
@@ -690,8 +690,9 @@ namespace sunamiapi.Controllers.api
                 ts = se.tbl_system.AsNoFilter().FirstOrDefault(rr => rr.imei_number == sc.imei);
                 ts.last_connected_to_db_date = DateTime.Now;
                 tc = se.tbl_customer.AsNoFilter().FirstOrDefault(tt => tt.customer_id == ts.customer_id);
-                foreach(tbl_sunami_controller tsc in se.tbl_sunami_controller.AsNoFilter().Where(ff => ff.sim_no == switchResponse.address)){
-                    if(switchResponse.imei.Length > 10)
+                foreach (tbl_sunami_controller tsc in se.tbl_sunami_controller.AsNoFilter().Where(ff => ff.sim_no == switchResponse.address))
+                {
+                    if (switchResponse.imei.Length > 10)
                     {
                         tsc.imei = switchResponse.imei;
                     }
@@ -705,7 +706,7 @@ namespace sunamiapi.Controllers.api
                 tc = se.tbl_customer.AsNoFilter().FirstOrDefault(oo => oo.customer_id == ts.customer_id);
                 user_offices.Add((int)tc.office_id);
             }
-            logevent("system feedback: "+ tc.customer_name, tc.customer_id, DateTime.Now," Mobile: " + switchResponse.address+" IMEI: " + switchResponse.imei+ " STATUS: "+ switchResponse.status, "switch feedback");
+            logevent("system feedback: " + tc.customer_name, tc.customer_id, DateTime.Now, " Mobile: " + switchResponse.address + " IMEI: " + switchResponse.imei + " STATUS: " + switchResponse.status, "switch feedback");
             se.SaveChanges();
         }
 
@@ -872,16 +873,16 @@ namespace sunamiapi.Controllers.api
 
             var list1 = se.tbl_payments.Where(h => h.payment_method == "cash").FromCache().ToList().OrderByDescending(gh => gh.Id);
             List<mpesaPayments> mp = new List<mpesaPayments>(from i in list1
-                                               select new mpesaPayments
-                                               {
-                                                   Id = i.Id,
-                                                   Customer_Id = i.customer_id,
-                                                   Customer_Name = se.tbl_customer.FirstOrDefault(h4 => h4.customer_id == i.customer_id).customer_name,
-                                                   Date = i.payment_date,
-                                                   Reference = i.transaction_code,
-                                                   Amount = i.amount_payed,
-                                                   RecordedBy = i.person_recording
-                                               });
+                                                             select new mpesaPayments
+                                                             {
+                                                                 Id = i.Id,
+                                                                 Customer_Id = i.customer_id,
+                                                                 Customer_Name = se.tbl_customer.FirstOrDefault(h4 => h4.customer_id == i.customer_id).customer_name,
+                                                                 Date = i.payment_date,
+                                                                 Reference = i.transaction_code,
+                                                                 Amount = i.amount_payed,
+                                                                 RecordedBy = i.person_recording
+                                                             });
 
             return mp;
         }
@@ -892,17 +893,17 @@ namespace sunamiapi.Controllers.api
 
             var list1 = se.tbl_payments.Where(h => h.payment_method.Contains("bank")).FromCache().ToList().OrderByDescending(gh => gh.Id);
             List<mpesaPayments> mp = new List<mpesaPayments>(from i in list1
-                                               select new mpesaPayments
-                                               {
-                                                   Id = i.Id,
-                                                   Customer_Id = i.customer_id,
-                                                   Customer_Name = se.tbl_customer.FirstOrDefault(h4 => h4.customer_id == i.customer_id).customer_name,
-                                                   Date = i.payment_date,
-                                                   Reference = i.transaction_code,
-                                                   Amount = i.amount_payed,
-                                                   RecordedBy = i.person_recording,
-                                                   payMode = i.payment_method
-                                               });
+                                                             select new mpesaPayments
+                                                             {
+                                                                 Id = i.Id,
+                                                                 Customer_Id = i.customer_id,
+                                                                 Customer_Name = se.tbl_customer.FirstOrDefault(h4 => h4.customer_id == i.customer_id).customer_name,
+                                                                 Date = i.payment_date,
+                                                                 Reference = i.transaction_code,
+                                                                 Amount = i.amount_payed,
+                                                                 RecordedBy = i.person_recording,
+                                                                 payMode = i.payment_method
+                                                             });
 
             return mp;
         }
@@ -932,16 +933,16 @@ namespace sunamiapi.Controllers.api
 
             var list1 = se.tbl_payments.Where(h => h.payment_method == "mpesa").FromCache().ToList().OrderByDescending(gh => gh.Id);
             List<mpesaPayments> mp = new List<mpesaPayments>(from i in list1
-                                               select new mpesaPayments
-                                               {
-                                                   Id = i.Id,
-                                                   Customer_Id = i.customer_id,
-                                                   Customer_Name = se.tbl_customer.FirstOrDefault(h4 => h4.customer_id == i.customer_id).customer_name,
-                                                   Date = i.payment_date,
-                                                   Reference = i.transaction_code,
-                                                   Amount = i.amount_payed,
-                                                   RecordedBy = i.person_recording
-                                               });
+                                                             select new mpesaPayments
+                                                             {
+                                                                 Id = i.Id,
+                                                                 Customer_Id = i.customer_id,
+                                                                 Customer_Name = se.tbl_customer.FirstOrDefault(h4 => h4.customer_id == i.customer_id).customer_name,
+                                                                 Date = i.payment_date,
+                                                                 Reference = i.transaction_code,
+                                                                 Amount = i.amount_payed,
+                                                                 RecordedBy = i.person_recording
+                                                             });
 
             return mp;
         }
@@ -1154,36 +1155,36 @@ namespace sunamiapi.Controllers.api
         public List<postnewcustomer> getCustomerDetails()
         {
             List<postnewcustomer> list = new List<postnewcustomer>(from i in se.tbl_customer
-                                                     //where i.active_status == true
-                                                     join s in se.tbl_system on i.customer_id equals s.customer_id
-                                                 orderby i.Id descending
-                                                 select new postnewcustomer
-                                                 {
-                                                     name = i.customer_name,
-                                                     id = i.customer_id,
-                                                     occupation = i.occupation,
-                                                     number1 = i.phone_numbers,
-                                                     number2 = i.phone_numbers2,
-                                                     number3 = i.phone_numbers3,
-                                                     box = i.Po_Box_Address,
-                                                     package = i.package_type,
-                                                     latG = i.lat,
-                                                     lonG = i.lon,
-                                                     description = i.Description,
-                                                     village = i.village_name,
-                                                     location = i.location,
-                                                     city = i.city,
-                                                     installdate = i.install_date,
-                                                     witness = i.next_of_kin,
-                                                     witnessid = i.nok_mobile,
-                                                     status = i.active_status,
-                                                     country = i.country,
-                                                     agentcode = i.agentcode,
-                                                     witnessnumber = i.witness_mobile_number,
-                                                     gender = i.gender,
-                                                     switch_payrate_threshold = s.payrate_switch_threshold,
-                                                     automate_switch = s.automate_switch
-                                                 }
+                                                                   join s in se.tbl_system on i.customer_id equals s.customer_id into g
+                                                                   from s in g.DefaultIfEmpty()
+                                                                   orderby i.Id descending
+                                                                   select new postnewcustomer
+                                                                   {
+                                                                       name = i.customer_name,
+                                                                       id = i.customer_id,
+                                                                       occupation = i.occupation,
+                                                                       number1 = i.phone_numbers,
+                                                                       number2 = i.phone_numbers2,
+                                                                       number3 = i.phone_numbers3,
+                                                                       box = i.Po_Box_Address,
+                                                                       package = i.package_type,
+                                                                       latG = i.lat,
+                                                                       lonG = i.lon,
+                                                                       description = i.Description,
+                                                                       village = i.village_name,
+                                                                       location = i.location,
+                                                                       city = i.city,
+                                                                       installdate = i.install_date,
+                                                                       witness = i.next_of_kin,
+                                                                       witnessid = i.nok_mobile,
+                                                                       status = i.active_status,
+                                                                       country = i.country,
+                                                                       agentcode = i.agentcode,
+                                                                       witnessnumber = i.witness_mobile_number,
+                                                                       gender = i.gender,
+                                                                       switch_payrate_threshold = s.payrate_switch_threshold,
+                                                                       automate_switch = s.automate_switch
+                                                                   }
                       );
             return list;
         }
@@ -1232,18 +1233,18 @@ namespace sunamiapi.Controllers.api
         public List<getsunamisystemresponse> getSystemDetails()
         {
             List<getsunamisystemresponse> list = new List<getsunamisystemresponse>(from ts in se.tbl_system
-                                                 join tc in se.tbl_customer on ts.customer_id equals tc.customer_id
-                                                 join tsc in se.tbl_sunami_controller on ts.imei_number equals tsc.imei
-                                                 orderby tc.Id descending
-                                                 select new getsunamisystemresponse
-                                                 {
-                                                     Owner = tc.customer_name,
-                                                     installdate = "i" + tc.install_date,
-                                                     Active_Status = ts.active_status,
-                                                     Last_System_Communication = "l" + ts.last_connected_to_db_date,
-                                                     Imei = ts.imei_number,
-                                                     SystemPhoneNumber = tsc.sim_no
-                                                 });
+                                                                                   join tc in se.tbl_customer on ts.customer_id equals tc.customer_id
+                                                                                   join tsc in se.tbl_sunami_controller on ts.imei_number equals tsc.imei
+                                                                                   orderby tc.Id descending
+                                                                                   select new getsunamisystemresponse
+                                                                                   {
+                                                                                       Owner = tc.customer_name,
+                                                                                       installdate = "i" + tc.install_date,
+                                                                                       Active_Status = ts.active_status,
+                                                                                       Last_System_Communication = "l" + ts.last_connected_to_db_date,
+                                                                                       Imei = ts.imei_number,
+                                                                                       SystemPhoneNumber = tsc.sim_no
+                                                                                   });
             return list;
         }
 
@@ -1270,23 +1271,23 @@ namespace sunamiapi.Controllers.api
         public List<getswitchlogresponse> getswitchlogs()
         {
             List<getswitchlogresponse> list = new List<getswitchlogresponse>(from ts in se.tbl_switch_logs
-                                                 join tc in se.tbl_customer on ts.customer_id equals tc.customer_id
-                                                 join tsci in se.tbl_system on ts.customer_id equals tsci.customer_id
-                                                 join tscn in se.tbl_sunami_controller on tsci.imei_number equals tscn.imei
-                                                 orderby ts.Id descending
-                                                 select new getswitchlogresponse
-                                                 {
-                                                     Name = tc.customer_name,
-                                                     Id = tc.customer_id,
-                                                     Imei = tsci.imei_number,
-                                                     Sim = tscn.sim_no,
-                                                     Switch_Off_Date = ts.switch_off_date,
-                                                     Switch_Off_payrate = ts.switch_off_payrate,
-                                                     Switch_Off_by = ts.switched_off_by,
-                                                     Switch_On_Date = ts.switch_on_date,
-                                                     Switch_on_payrate = ts.switch_on_payrate,
-                                                     Switch_on_by = ts.switched_on_by
-                                                 }
+                                                                             join tc in se.tbl_customer on ts.customer_id equals tc.customer_id
+                                                                             join tsci in se.tbl_system on ts.customer_id equals tsci.customer_id
+                                                                             join tscn in se.tbl_sunami_controller on tsci.imei_number equals tscn.imei
+                                                                             orderby ts.Id descending
+                                                                             select new getswitchlogresponse
+                                                                             {
+                                                                                 Name = tc.customer_name,
+                                                                                 Id = tc.customer_id,
+                                                                                 Imei = tsci.imei_number,
+                                                                                 Sim = tscn.sim_no,
+                                                                                 Switch_Off_Date = ts.switch_off_date,
+                                                                                 Switch_Off_payrate = ts.switch_off_payrate,
+                                                                                 Switch_Off_by = ts.switched_off_by,
+                                                                                 Switch_On_Date = ts.switch_on_date,
+                                                                                 Switch_on_payrate = ts.switch_on_payrate,
+                                                                                 Switch_on_by = ts.switched_on_by
+                                                                             }
                     );
             return list;
         }
@@ -1321,16 +1322,16 @@ namespace sunamiapi.Controllers.api
         public List<getsunamicontroller> getSunamiControllers()
         {
             List<getsunamicontroller> list = new List<getsunamicontroller>(from ts in se.tbl_sunami_controller
-                                                 orderby ts.Id descending
-                                                 select new getsunamicontroller
-                                                 {
-                                                     Imei = ts.imei,
-                                                     Sim_Number = ts.sim_no,
-                                                     Provider = ts.provider,
-                                                     Version = ts.version,
-                                                     Reg_Date = ts.date_manufactured,
-                                                     Recorded_By = ts.recorded_by
-                                                 }
+                                                                           orderby ts.Id descending
+                                                                           select new getsunamicontroller
+                                                                           {
+                                                                               Imei = ts.imei,
+                                                                               Sim_Number = ts.sim_no,
+                                                                               Provider = ts.provider,
+                                                                               Version = ts.version,
+                                                                               Reg_Date = ts.date_manufactured,
+                                                                               Recorded_By = ts.recorded_by
+                                                                           }
                     );
             return list;
         }
@@ -1388,45 +1389,45 @@ namespace sunamiapi.Controllers.api
         public List<getissueresponse> getIssues()
         {
             List<getissueresponse> list = new List<getissueresponse>(from tc in se.tbl_customer
-                                                 join ti in se.tbl_issues on tc.customer_id equals ti.customer_id
-                                                 orderby ti.Id descending
-                                                 select new getissueresponse
-                                                 {
-                                                     customer = tc.customer_name,
-                                                     Id = ti.Id,
-                                                     reporter = ti.reporter,
-                                                     issue = ti.issue,
-                                                     date = ti.date,
-                                                     priority = ti.priority,
-                                                     status = ti.status,
-                                                     solvedOn = ti.solvedOn,
-                                                     solvedBy = ti.solvedBy,
-                                                     comment = ti.comments
-                                                 });
+                                                                     join ti in se.tbl_issues on tc.customer_id equals ti.customer_id
+                                                                     orderby ti.Id descending
+                                                                     select new getissueresponse
+                                                                     {
+                                                                         customer = tc.customer_name,
+                                                                         Id = ti.Id,
+                                                                         reporter = ti.reporter,
+                                                                         issue = ti.issue,
+                                                                         date = ti.date,
+                                                                         priority = ti.priority,
+                                                                         status = ti.status,
+                                                                         solvedOn = ti.solvedOn,
+                                                                         solvedBy = ti.solvedBy,
+                                                                         comment = ti.comments
+                                                                     });
             return list;
         }
 
         [HttpGet]
         public List<getissueresponse> getIssuesPerCustomer(string id)
         {
-            List<getissueresponse> list = 
+            List<getissueresponse> list =
                 new List<getissueresponse>(from tc in se.tbl_customer
-                                            where tc.customer_id == id
-                                            join ti in se.tbl_issues on tc.customer_id equals ti.customer_id
-                                            orderby ti.Id descending
-                                            select new getissueresponse
-                                            {
-                                                customer = tc.customer_name,
-                                                Id = ti.Id,
-                                                reporter = ti.reporter,
-                                                issue = ti.issue,
-                                                date = ti.date,
-                                                priority = ti.priority,
-                                                status = ti.status,
-                                                solvedOn = ti.solvedOn,
-                                                solvedBy = ti.solvedBy,
-                                                comment = ti.comments
-                                            });
+                                           where tc.customer_id == id
+                                           join ti in se.tbl_issues on tc.customer_id equals ti.customer_id
+                                           orderby ti.Id descending
+                                           select new getissueresponse
+                                           {
+                                               customer = tc.customer_name,
+                                               Id = ti.Id,
+                                               reporter = ti.reporter,
+                                               issue = ti.issue,
+                                               date = ti.date,
+                                               priority = ti.priority,
+                                               status = ti.status,
+                                               solvedOn = ti.solvedOn,
+                                               solvedBy = ti.solvedBy,
+                                               comment = ti.comments
+                                           });
             return list;
         }
 
@@ -1480,19 +1481,19 @@ namespace sunamiapi.Controllers.api
         public List<getuninstalledsystems> getUninstalledSystems()
         {
             List<getuninstalledsystems> list = new List<getuninstalledsystems>(from tu in se.tbl_uninstalled_systems
-                                                 join tc in se.tbl_customer
-                                                 on tu.customer_id equals tc.customer_id
-                                                 orderby tu.Id descending
-                                                 select new getuninstalledsystems
-                                                 {
-                                                     Name = tc.customer_name,
-                                                     Id = tc.customer_id,
-                                                     install_date = tc.install_date,
-                                                     Uninstalled_on = tu.uninstall_date,
-                                                     Reason = tu.Reason,
-                                                     unistalledBy = tu.recorded_by,
-                                                     previousRecords = tu.previousRecords
-                                                 });
+                                                                               join tc in se.tbl_customer
+                                                                               on tu.customer_id equals tc.customer_id
+                                                                               orderby tu.Id descending
+                                                                               select new getuninstalledsystems
+                                                                               {
+                                                                                   Name = tc.customer_name,
+                                                                                   Id = tc.customer_id,
+                                                                                   install_date = tc.install_date,
+                                                                                   Uninstalled_on = tu.uninstall_date,
+                                                                                   Reason = tu.Reason,
+                                                                                   unistalledBy = tu.recorded_by,
+                                                                                   previousRecords = tu.previousRecords
+                                                                               });
             return list;
         }
 
@@ -1596,7 +1597,7 @@ namespace sunamiapi.Controllers.api
                 value[0].recipient = email;
             }
             catch
-            {}
+            { }
 
             try
             {
@@ -1636,7 +1637,7 @@ namespace sunamiapi.Controllers.api
 
         public List<getexpensebody> getAllExpenses()
         {
-            var expenses = se.tbl_expenses.ToList().OrderByDescending(ff=>ff.Id);
+            var expenses = se.tbl_expenses.ToList().OrderByDescending(ff => ff.Id);
 
             List<getexpensebody> li = new List<getexpensebody>();
             foreach (var f in expenses)
@@ -1765,12 +1766,12 @@ namespace sunamiapi.Controllers.api
                 rc.Location = value[0].location;
                 rc.Office_id = user_offices[0];
 
-                if(!string.IsNullOrEmpty(rc.Agentcode) && !string.IsNullOrWhiteSpace(rc.Agentcode))
+                if (!string.IsNullOrEmpty(rc.Agentcode) && !string.IsNullOrWhiteSpace(rc.Agentcode))
                 {
                     try
                     {
                         tbl_agents tag = se.tbl_agents.FirstOrDefault(gg => gg.idnumber == rc.Agentcode);
-                        if(tag != null)
+                        if (tag != null)
                         {
                             register = true;
                         }
@@ -1778,7 +1779,8 @@ namespace sunamiapi.Controllers.api
                         {
                             register = false;
                         }
-                    } catch (Exception e)
+                    }
+                    catch (Exception e)
                     {
                         register = false;
                     }
@@ -1796,7 +1798,8 @@ namespace sunamiapi.Controllers.api
                     //TODO - call invoice function - avoid duplication of code
                     string item = value[0].package;
                     string customer_id = value[0].id;
-                } else
+                }
+                else
                 {
                     res = "agent not registered, kindly register the agent first";
                 }
@@ -1805,7 +1808,7 @@ namespace sunamiapi.Controllers.api
                 //set switch mode and threshold
                 try
                 {
-                    tbl_system ts2 = se.tbl_system.AsNoFilter().FirstOrDefault(ff => ff.customer_id==rc.Id);
+                    tbl_system ts2 = se.tbl_system.AsNoFilter().FirstOrDefault(ff => ff.customer_id == rc.Id);
                     if (ts2 != null)
                     {
                         ts2.automate_switch = value[0].automate_switch;
@@ -1813,7 +1816,8 @@ namespace sunamiapi.Controllers.api
                         se.SaveChanges();
                     }
                 }
-                catch(Exception r) {
+                catch (Exception r)
+                {
                     throw r;
                 }
 
@@ -1885,7 +1889,7 @@ namespace sunamiapi.Controllers.api
                 {
                     pr.Mdate = getDate(value[0].date1);
                     pr.Mpesa_amount = value[0].amount;
-                    if (value[0].Code.Length > 5 && user_offices[0]==1)
+                    if (value[0].Code.Length > 5 && user_offices[0] == 1)
                     {
                         PayMode = "mpesa";
                     }
@@ -1954,15 +1958,15 @@ namespace sunamiapi.Controllers.api
         {
             List<geteventlogsresponse> list = new List<geteventlogsresponse>();
             list = new List<geteventlogsresponse>(from t in se.tbl_event_logs
-                                    orderby t.Id descending
-                                    select new geteventlogsresponse
-                                    {
-                                        Category = t.category_affected,
-                                        CustomerId = t.customer_id,
-                                        Date = t.date,
-                                        Event = t.@event,
-                                        LoggedInUser = t.loggedin_user
-                                    });
+                                                  orderby t.Id descending
+                                                  select new geteventlogsresponse
+                                                  {
+                                                      Category = t.category_affected,
+                                                      CustomerId = t.customer_id,
+                                                      Date = t.date,
+                                                      Event = t.@event,
+                                                      LoggedInUser = t.loggedin_user
+                                                  });
             return list;
         }
 
@@ -1991,7 +1995,7 @@ namespace sunamiapi.Controllers.api
             {
                 List<tbl_inventory> inventory = new List<tbl_inventory>();
                 DateTime date1 = getDate(id).AddDays(1);
-               
+
                 var items = se.tbl_inventory.Select(f => f.Item).Distinct().ToList();
                 foreach (var item in items)
                 {
@@ -2012,7 +2016,7 @@ namespace sunamiapi.Controllers.api
         {
             try
             {
-                
+
                 List<tbl_inventory> inventory = new List<tbl_inventory>(se.tbl_inventory.Where(u => u.Item == id));
                 return inventory;
             }
@@ -2027,7 +2031,7 @@ namespace sunamiapi.Controllers.api
         {
             try
             {
-                
+
                 tbl_inventory ti = new tbl_inventory();
                 ti.date = DateTime.Now;
                 ti.Item = value[0].itemName;
@@ -2049,7 +2053,7 @@ namespace sunamiapi.Controllers.api
             try
             {
                 int? stock = 0;
-                
+
                 string item = value[0].item;
                 int maxinv = se.tbl_inventory.Where(y => y.Item == item).Max(f => f.Id);
                 tbl_inventory ti = se.tbl_inventory.SingleOrDefault(fr => fr.Id == maxinv && fr.Item == item);
@@ -2082,7 +2086,7 @@ namespace sunamiapi.Controllers.api
                 return f.Message;
             }
         }
-        
+
         [HttpGet]
         public List<object> getCustomerInvoicedItems(string id)
         {
@@ -2097,14 +2101,14 @@ namespace sunamiapi.Controllers.api
                                     });
             return list;
         }
-        
+
         [HttpPost]
         public tbl_agents registerAgent([FromBody]agentpayload value)
         {
             try
             {
                 string idnumber = value.idnumber;
-                
+
                 tbl_agents agent = new tbl_agents();
                 agent.dateofenrolment = value.dateofenrolment;
                 agent.firstname = value.firstname;
@@ -2117,7 +2121,7 @@ namespace sunamiapi.Controllers.api
                 agent.office_id = user_offices[0];
                 se.tbl_agents.Add(agent);
                 se.SaveChanges();
-                tbl_agents agent1  = se.tbl_agents.FirstOrDefault(gg => gg.idnumber == idnumber);
+                tbl_agents agent1 = se.tbl_agents.FirstOrDefault(gg => gg.idnumber == idnumber);
                 return agent1;
 
             }
@@ -2137,7 +2141,7 @@ namespace sunamiapi.Controllers.api
         [HttpGet]
         public List<tbl_extra_package_customers> getAgentSales(string id)
         {
-            List<tbl_extra_package_customers> list = se.tbl_extra_package_customers.Where(rr=>rr.agentcode == id).ToList();
+            List<tbl_extra_package_customers> list = se.tbl_extra_package_customers.Where(rr => rr.agentcode == id).ToList();
             return list;
         }
     }
