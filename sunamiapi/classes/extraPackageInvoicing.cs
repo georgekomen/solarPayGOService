@@ -9,6 +9,7 @@ namespace sunamiapi.classes
 {
     public class extraPackageInvoicing
     {
+        private bool deductForDaysSwitchedOff = false;
         private int invoice;
         private string comment;
         private int ext_daily_invoice;
@@ -74,32 +75,36 @@ namespace sunamiapi.classes
                         //stop invoicing when switched off
                         days_switched_off = 0;
                         //get days switched off
-                        var tsl = se.tbl_switch_logs.AsNoFilter().Where(r => r.customer_id == tc1.customer_id).ToList();
-                        foreach (var i in tsl)
+                        if (deductForDaysSwitchedOff)
                         {
-                            if (i.switch_off_date >= tp.date_given)
+                            var tsl = se.tbl_switch_logs.AsNoFilter().Where(r => r.customer_id == tc1.customer_id).ToList();
+                            foreach (var i in tsl)
                             {
-                                if (i.switch_on_date != null)
+                                if (i.switch_off_date >= tp.date_given)
                                 {
-                                    days_switched_off += ((DateTime)i.switch_on_date - (DateTime)i.switch_off_date).Days;
+                                    if (i.switch_on_date != null)
+                                    {
+                                        days_switched_off += ((DateTime)i.switch_on_date - (DateTime)i.switch_off_date).Days;
+                                    }
+                                    else
+                                    {
+                                        days_switched_off += (DateTime.Today - (DateTime)i.switch_off_date).Days;
+                                    }
                                 }
                                 else
                                 {
-                                    days_switched_off += (DateTime.Today - (DateTime)i.switch_off_date).Days;
-                                }
-                            }
-                            else
-                            {
-                                if (i.switch_on_date != null)
-                                {
-                                    days_switched_off += ((DateTime)i.switch_on_date - (DateTime)tp.date_given).Days;
-                                }
-                                else
-                                {
-                                    days_switched_off += (DateTime.Today - (DateTime)tp.date_given).Days;
+                                    if (i.switch_on_date != null)
+                                    {
+                                        days_switched_off += ((DateTime)i.switch_on_date - (DateTime)tp.date_given).Days;
+                                    }
+                                    else
+                                    {
+                                        days_switched_off += (DateTime.Today - (DateTime)tp.date_given).Days;
+                                    }
                                 }
                             }
                         }
+                       
 
                         if (days_switched_off > 0)
                         {

@@ -2102,6 +2102,15 @@ namespace sunamiapi.Controllers.api
             return list;
         }
 
+        [HttpGet]
+        public string deleteInvoice(string id, string id1)
+        {
+            tbl_extra_package_customers tep = se.tbl_extra_package_customers.Where(ff => ff.customer_id == id && ff.item == id1).Single();
+            se.tbl_extra_package_customers.Remove(tep);
+            se.SaveChanges();
+            return "successfully removed invoice item";
+        }
+
         [HttpPost]
         public tbl_agents registerAgent([FromBody]agentpayload value)
         {
