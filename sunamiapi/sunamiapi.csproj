@@ -308,7 +308,6 @@
     <Compile Include="classes\agentpayload.cs" />
     <Compile Include="classes\chartdata.cs" />
     <Compile Include="classes\chartdates.cs" />
-    <Compile Include="classes\extraPackageInvoicing.cs" />
     <Compile Include="classes\geteventlogsresponse.cs" />
     <Compile Include="classes\getexpensebody.cs" />
     <Compile Include="classes\getexpensecategory.cs" />
@@ -329,7 +328,6 @@
     <Compile Include="classes\paychartclass.cs" />
     <Compile Include="classes\paymentRatesClass.cs" />
     <Compile Include="classes\paymentRatesClassPerClient.cs" />
-    <Compile Include="classes\paymentRecording.cs" />
     <Compile Include="classes\payrecordClass.cs" />
     <Compile Include="classes\payRecordClass2.cs" />
     <Compile Include="classes\postcontrollerbody.cs" />

@@ -23,6 +23,7 @@ using System.Drawing.Imaging;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Net.Mail;
 using Z.EntityFramework.Plus;
+using System.Net.Http.Headers;
 
 namespace sunamiapi.Controllers.api
 {
@@ -38,6 +39,7 @@ namespace sunamiapi.Controllers.api
         public List<string> user_permissions = new List<string>();
         public List <int> user_offices = new List<int>();
         public string logedinUser = "";
+        private static readonly HttpClient client = new HttpClient();
         public CustomersController()
         {
             string userOfficesLongString = null; 
@@ -110,15 +112,33 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpPost]
-        public List<paymentRatesClassPerClient> GetPaymentActiveRates([FromBody] StartEndDate[] value)
+        public object GetPaymentActiveRates([FromBody] StartEndDate[] value)
         {
-            return null;
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+            client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
+
+            var stringTask = client.PostAsJsonAsync(url+"GetPaymentActiveRates",value);
+
+            var msg =  stringTask;
+            Console.Write(msg);
+            return msg;
         }
 
         [HttpPost]
-        public List<paymentRatesClassPerClient> GetPaymentInactiveRates([FromBody] StartEndDate[] value)
+        public object GetPaymentInactiveRates([FromBody] StartEndDate[] value)
         {
-            return null;
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+            client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
+
+            var stringTask = client.PostAsJsonAsync(url + "GetPaymentInactiveRates",value);
+
+            var msg = stringTask;
+            Console.Write(msg);
+            return msg;
         }
         
         public void sendEmail(string to, string subject, string body)
@@ -178,9 +198,18 @@ namespace sunamiapi.Controllers.api
         }
 
 
-        public List<paychartclass> getPaymentChart()
+        public object getPaymentChart()
         {
-            return null;
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+            client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
+
+            var stringTask = client.GetStringAsync(url + "getPaymentChart");
+
+            var msg = stringTask;
+            Console.Write(msg);
+            return msg;
         }
 
         public List<summaryReport> getPaymentSummaryReport(string id)
@@ -303,9 +332,18 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpPost]
-        public string PostSMS([FromBody]postsmsbody[] value)
+        public object PostSMS([FromBody]postsmsbody[] value)
         {
-            return null;
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+            client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
+
+            var stringTask = client.PostAsJsonAsync(url+ "PostSMS", value);
+
+            var msg = stringTask;
+            Console.Write(msg);
+            return msg;
         }
 
         private void sendmsg(string sim_no, string msgs, string cust_id, sendSms ss)
@@ -374,7 +412,7 @@ namespace sunamiapi.Controllers.api
             string customer_id = id;
             string loogeduser = id1;
             string sim_no = "";
-            string res = "";
+            object res = "";
             tbl_system ts = se.tbl_system.FirstOrDefault(i => i.customer_id == customer_id);
             if (ts.imei_number.Length > 2)
             {
@@ -386,7 +424,7 @@ namespace sunamiapi.Controllers.api
                 catch (Exception g)
                 {
                     res = g.Message;
-                    return res;
+                    return res.ToString();
                 }
                 if (ts.active_status == true)
                 {
@@ -403,7 +441,7 @@ namespace sunamiapi.Controllers.api
                 res = "customer has not controller";
             }
             se.SaveChanges();
-            return res;
+            return res.ToString();
         }
 
         //work in progress
@@ -457,14 +495,32 @@ namespace sunamiapi.Controllers.api
             }*/
         }
 
-        public string switchOff(tbl_system ts, string sim_no, string customer_id, string loogeduser)
+        public object switchOff(tbl_system ts, string sim_no, string customer_id, string loogeduser)
         {
-            return null;
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+            client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
+
+            var stringTask = client.PostAsJsonAsync(url+"switchOff?sim_no="+sim_no+"customer_id="+customer_id+"looguser="+loogeduser, ts);
+
+            var msg = stringTask;
+            Console.Write(msg);
+            return msg;
         }
 
-        public string switchOn(tbl_system ts, string sim_no, string customer_id, string loogeduser)
+        public object switchOn(tbl_system ts, string sim_no, string customer_id, string loogeduser)
         {
-            return null;
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+            client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
+
+            var stringTask = client.PostAsJsonAsync(url + "switchOn?sim_no=" + sim_no + "customer_id=" + customer_id + "looguser=" + loogeduser, ts);
+
+            var msg = stringTask;
+            Console.Write(msg);
+            return msg;
         }
 
         public List<mpesaPayments> getmpesaPayments()
@@ -628,15 +684,33 @@ namespace sunamiapi.Controllers.api
             return mp;
         }
 
-        public List<payRecordClass2> getPaymentPerCustomer(string id)
+        public object getPaymentPerCustomer(string id)
         {
-            return null;
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+            client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
+
+            var stringTask = client.GetStringAsync(url + "getPaymentPerCustomer?id=" + id);
+
+            var msg = stringTask;
+            Console.Write(msg);
+            return msg;
         }
         
         [HttpPost]
-        public string postReceive_mpesa([FromBody]mobilempesapaymentbody[] value)
+        public object postReceive_mpesa([FromBody]mobilempesapaymentbody[] value)
         {
-            return null;
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+            client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
+
+            var stringTask = client.PostAsJsonAsync(url + "postReceive_mpesa", value);
+
+            var msg = stringTask;
+            Console.Write(msg);
+            return msg;
         }
         
         public List<postnewcustomer> getCustomerDetails()
@@ -1293,9 +1367,18 @@ namespace sunamiapi.Controllers.api
         }
 
         [HttpPost]
-        public string postmakePayment([FromBody]postmakepaymentbody[] value)
+        public object postmakePayment([FromBody]postmakepaymentbody[] value)
         {
-            return null;
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+            client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
+
+            var stringTask = client.PostAsJsonAsync(url + "postmakePayment", value);
+
+            var msg = stringTask;
+            Console.Write(msg);
+            return msg;
         }
 
         private void logevent(string loggeduser, string customerid, DateTime date, string event1, string category)
