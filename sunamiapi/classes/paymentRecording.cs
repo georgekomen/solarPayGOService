@@ -81,6 +81,7 @@ namespace sunamiapi.classes
                         {
                             tbl_mpesa_payments tm = new tbl_mpesa_payments();
                             tm.message = msg;
+                            tm.status = "Active";
                             tm.amount = mpesa_amount;
                             tm.transaction_code = code;
                             tm.date = mdate;
@@ -128,6 +129,7 @@ namespace sunamiapi.classes
                             tbl_mpesa_payments tm = new tbl_mpesa_payments();
                             tm.date = mdate;
                             tm.message = msg;
+                            tm.status = "Active";
                             tm.amount = mpesa_amount;
                             tm.number = paynumber;
                             tm.office_id = 1;

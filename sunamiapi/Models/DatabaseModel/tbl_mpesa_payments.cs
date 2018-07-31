@@ -22,5 +22,6 @@ namespace sunamiapi.Models.DatabaseModel
         public string message { get; set; }
         public string phone_imei { get; set; }
         public Nullable<int> office_id { get; set; }
+        public string status { get; set; }
     }
 }

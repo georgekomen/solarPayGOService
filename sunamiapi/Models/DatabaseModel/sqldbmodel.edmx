@@ -195,6 +195,7 @@
           <Property Name="message" Type="varchar(max)" />
           <Property Name="phone_imei" Type="varchar(max)" />
           <Property Name="office_id" Type="int" />
+          <Property Name="status" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="tbl_mpesa_phone_imei">
           <Key>
@@ -255,6 +256,7 @@
           <Property Name="date_manufactured" Type="datetime" />
           <Property Name="recorded_by" Type="varchar(max)" />
           <Property Name="office_id" Type="int" />
+          <Property Name="last_topup_date" Type="datetime" />
         </EntityType>
         <EntityType Name="tbl_switch_logs">
           <Key>
@@ -605,6 +607,7 @@
           <Property Name="message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="phone_imei" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="office_id" Type="Int32" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
         </EntityType>
         <EntityType Name="tbl_mpesa_phone_imei">
           <Key>
@@ -669,6 +672,7 @@
           <Property Name="date_manufactured" Type="DateTime" Precision="3" />
           <Property Name="recorded_by" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="office_id" Type="Int32" />
+          <Property Name="last_topup_date" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="tbl_switch_logs">
           <Key>
@@ -1033,6 +1037,7 @@
           <EntitySetMapping Name="tbl_mpesa_payments">
             <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_mpesa_payments">
               <MappingFragment StoreEntitySet="tbl_mpesa_payments">
+                <ScalarProperty Name="status" ColumnName="status" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="number" ColumnName="number" />
                 <ScalarProperty Name="amount" ColumnName="amount" />
@@ -1099,6 +1104,7 @@
           <EntitySetMapping Name="tbl_sunami_controller">
             <EntityTypeMapping TypeName="db_a0a592_sunamiModel.tbl_sunami_controller">
               <MappingFragment StoreEntitySet="tbl_sunami_controller">
+                <ScalarProperty Name="last_topup_date" ColumnName="last_topup_date" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="imei" ColumnName="imei" />
                 <ScalarProperty Name="sim_no" ColumnName="sim_no" />

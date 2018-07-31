@@ -951,7 +951,7 @@ namespace sunamiapi.Controllers.api
         {
             List<mpesaPayments> mp = new List<mpesaPayments>();
             var list1 = se.tbl_payments.Select(g => new { code = g.transaction_code }).ToList();
-            var list2 = se.tbl_mpesa_payments.ToList();
+            var list2 = se.tbl_mpesa_payments.Where(gg=>gg.status != "deleted").ToList();
             //select from list2 where not in list1
             var list3 = list2.Where(p => !list1.Any(p2 => p2.code == p.transaction_code)).Select(r => new
             {
@@ -2106,7 +2106,7 @@ namespace sunamiapi.Controllers.api
         public string deleteInvoice(string id, string id1)
         {
             tbl_extra_package_customers tep = se.tbl_extra_package_customers.Where(ff => ff.customer_id == id && ff.item == id1).Single();
-            se.tbl_extra_package_customers.Remove(tep);
+            tep.date_taken = DateTime.Today;
             se.SaveChanges();
             return "successfully removed invoice item";
         }
