@@ -12,16 +12,12 @@ namespace sunamiapi.Models.DatabaseModel
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_mpesa_payments
+    public partial class sysdiagram
     {
-        public int Id { get; set; }
-        public string number { get; set; }
-        public string amount { get; set; }
-        public string transaction_code { get; set; }
-        public Nullable<System.DateTime> date { get; set; }
-        public string message { get; set; }
-        public string phone_imei { get; set; }
-        public Nullable<int> office_id { get; set; }
-        public string status { get; set; }
+        public string name { get; set; }
+        public int principal_id { get; set; }
+        public int diagram_id { get; set; }
+        public Nullable<int> version { get; set; }
+        public byte[] definition { get; set; }
     }
 }

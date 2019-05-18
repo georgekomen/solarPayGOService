@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using System.Web.Script.Serialization;
 using sunamiapi.Models.DatabaseModel;
+using System.Linq;
 
 public class AfricasTalkingGatewayException : Exception
 {
@@ -79,6 +80,7 @@ public class AfricasTalkingGateway
                 tbl_messages tm = new tbl_messages();
                 tm.customer_id = customer_id_;
                 tm.date = DateTime.Today;
+                tm.office_id = se1.tbl_customer.FirstOrDefault(tt => tt.customer_id == customer_id_).office_id != 0 ? se1.tbl_customer.FirstOrDefault(tt => tt.customer_id == customer_id_).office_id : 1;
                 tm.message = message_;
                 se1.tbl_messages.Add(tm);
                 se1.SaveChanges();

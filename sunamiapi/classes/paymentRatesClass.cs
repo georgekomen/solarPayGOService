@@ -12,56 +12,9 @@ namespace sunamiapi.classes
         private string percent;
         private List<paymentRatesClassPerClient> clientPayRates;
 
-        public string TotalPaid
-        {
-            get
-            {
-                return totalPaid;
-            }
-
-            set
-            {
-                totalPaid = value;
-            }
-        }
-
-        public string TotalInvoice
-        {
-            get
-            {
-                return totalInvoice;
-            }
-
-            set
-            {
-                totalInvoice = value;
-            }
-        }
-
-        public string Percent
-        {
-            get
-            {
-                return percent;
-            }
-
-            set
-            {
-                percent = value;
-            }
-        }
-
-        public List<paymentRatesClassPerClient> ClientPayRates
-        {
-            get
-            {
-                return clientPayRates;
-            }
-
-            set
-            {
-                clientPayRates = value;
-            }
-        }
+        public string TotalPaid { get => totalPaid; set => totalPaid = value; }
+        public string TotalInvoice { get => totalInvoice; set => totalInvoice = value; }
+        public string Percent { get => percent; set => percent = value; }
+        public List<paymentRatesClassPerClient> ClientPayRates { get => clientPayRates; set => clientPayRates = value; }
     }
 }

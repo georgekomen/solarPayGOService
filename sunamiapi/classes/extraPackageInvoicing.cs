@@ -3,11 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Z.EntityFramework.Plus;
 
 namespace sunamiapi.classes
 {
     public class extraPackageInvoicing
     {
+        private bool deductForDaysSwitchedOff = false;
         private int invoice;
         private string comment;
         private int ext_daily_invoice;
@@ -23,7 +25,7 @@ namespace sunamiapi.classes
             int days_switched_off = 0;
             comment = null;
             paid = 0;
-            foreach (tbl_extra_package_customers tp in se.tbl_extra_package_customers.Where(r => r.customer_id == tc1.customer_id))
+            foreach (tbl_extra_package_customers tp in se.tbl_extra_package_customers.AsNoFilter().Where(r => r.customer_id == tc1.customer_id))
             {
                 int itemDeposit = 0;
                 int days = 0;
@@ -31,7 +33,7 @@ namespace sunamiapi.classes
                 {
                     if ((tp.date_taken >= start || tp.date_taken == null) && tp.date_given <= end) //if customer had been given the item
                     {
-                        tbl_extra_item tep = se.tbl_extra_item.FirstOrDefault(e => e.item == tp.item);
+                        tbl_extra_item tep = se.tbl_extra_item.AsNoFilter().FirstOrDefault(e => e.item == tp.item);
                         if (start <= tp.date_given)//if invoice start date is equal to date item was issued
                         {
                             itemDeposit = (int)tep.deposit;
@@ -73,32 +75,36 @@ namespace sunamiapi.classes
                         //stop invoicing when switched off
                         days_switched_off = 0;
                         //get days switched off
-                        var tsl = se.tbl_switch_logs.Where(r => r.customer_id == tc1.customer_id).ToList();
-                        foreach (var i in tsl)
+                        if (deductForDaysSwitchedOff)
                         {
-                            if (i.switch_off_date >= tp.date_given)
+                            var tsl = se.tbl_switch_logs.AsNoFilter().Where(r => r.customer_id == tc1.customer_id).ToList();
+                            foreach (var i in tsl)
                             {
-                                if (i.switch_on_date != null)
+                                if (i.switch_off_date >= tp.date_given)
                                 {
-                                    days_switched_off += ((DateTime)i.switch_on_date - (DateTime)i.switch_off_date).Days;
+                                    if (i.switch_on_date != null)
+                                    {
+                                        days_switched_off += ((DateTime)i.switch_on_date - (DateTime)i.switch_off_date).Days;
+                                    }
+                                    else
+                                    {
+                                        days_switched_off += (DateTime.Today - (DateTime)i.switch_off_date).Days;
+                                    }
                                 }
                                 else
                                 {
-                                    days_switched_off += (DateTime.Today - (DateTime)i.switch_off_date).Days;
-                                }
-                            }
-                            else
-                            {
-                                if (i.switch_on_date != null)
-                                {
-                                    days_switched_off += ((DateTime)i.switch_on_date - (DateTime)tp.date_given).Days;
-                                }
-                                else
-                                {
-                                    days_switched_off += (DateTime.Today - (DateTime)tp.date_given).Days;
+                                    if (i.switch_on_date != null)
+                                    {
+                                        days_switched_off += ((DateTime)i.switch_on_date - (DateTime)tp.date_given).Days;
+                                    }
+                                    else
+                                    {
+                                        days_switched_off += (DateTime.Today - (DateTime)tp.date_given).Days;
+                                    }
                                 }
                             }
                         }
+                       
 
                         if (days_switched_off > 0)
                         {
@@ -119,7 +125,7 @@ namespace sunamiapi.classes
                         {
                             try
                             {
-                                paid = se.tbl_payments.Where(g => g.customer_id == tc1.customer_id && (DateTime)g.payment_date >= start && (DateTime)g.payment_date <= end).Sum(t => (int)t.amount_payed);
+                                paid = se.tbl_payments.AsNoFilter().Where(g => g.customer_id == tc1.customer_id && (DateTime)g.payment_date >= start && (DateTime)g.payment_date <= end).Sum(t => (int)t.amount_payed);
                             }
                             catch {
                                 paid = 0;

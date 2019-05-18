@@ -10,30 +10,7 @@ namespace sunamiapi.classes
         private DateTime bg;
         private DateTime en;
 
-        public DateTime Bg
-        {
-            get
-            {
-                return bg;
-            }
-
-            set
-            {
-                bg = value;
-            }
-        }
-
-        public DateTime En
-        {
-            get
-            {
-                return en;
-            }
-
-            set
-            {
-                en = value;
-            }
-        }
+        public DateTime Bg { get => bg; set => bg = value; }
+        public DateTime En { get => en; set => en = value; }
     }
 }

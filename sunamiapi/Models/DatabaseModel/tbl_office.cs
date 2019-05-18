@@ -23,7 +23,6 @@ namespace sunamiapi.Models.DatabaseModel
         public int id { get; set; }
         public string office_name { get; set; }
         public int tbl_sub_county_id { get; set; }
-        public int tbl_usersId { get; set; }
     
         public virtual tbl_sub_county tbl_sub_county { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

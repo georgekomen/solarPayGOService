@@ -7,12 +7,12 @@ namespace sunamiapi.classes
 {
     public class SwitchResponse
     {
-        private string address;
-        private string imei;
-        private string status;
+        private string _address;
+        private string _imei;
+        private string _status;
 
-        public string Address { get => address; set => address = value; }
-        public string Status { get => status; set => status = value; }
-        public string Imei { get => imei; set => imei = value; }
+        public string address { get => _address; set => _address = value; }
+        public string imei { get => _imei; set => _imei = value; }
+        public string status { get => _status; set => _status = value; }
     }
 }

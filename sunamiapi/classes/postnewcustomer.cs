@@ -31,6 +31,8 @@ namespace sunamiapi.classes
         private string _country;
         private string _package;
         private string _gender;
+        private int? _switch_payrate_threshold;
+        private bool? _automate_switch;
 
         public string id { get => _id; set => _id = value; }
         public string box { get => _box; set => _box = value; }
@@ -56,5 +58,7 @@ namespace sunamiapi.classes
         public string agentcode { get => _agentcode; set => _agentcode = value; }
         public string witnessnumber { get => _witnessnumber; set => _witnessnumber = value; }
         public string gender { get => _gender; set => _gender = value; }
+        public int? switch_payrate_threshold { get => _switch_payrate_threshold; set => _switch_payrate_threshold = value; }
+        public bool? automate_switch { get => _automate_switch; set => _automate_switch = value; }
     }
 }

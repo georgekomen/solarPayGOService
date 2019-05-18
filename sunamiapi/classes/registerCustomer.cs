@@ -32,6 +32,7 @@ namespace sunamiapi.classes
         private string description;
         private string recordedBy;
         private string gender;
+        private int office_id;
 
         public string Confirm { get => confirm; set => confirm = value; }
         public DateTime Install_date { get => install_date; set => install_date = value; }
@@ -56,10 +57,10 @@ namespace sunamiapi.classes
         public string Description { get => description; set => description = value; }
         public string RecordedBy { get => recordedBy; set => recordedBy = value; }
         public string Gender { get => gender; set => gender = value; }
+        public int Office_id { get => office_id; set => office_id = value; }
 
-        public void record()
+        public void record(db_a0a592_sunamiEntities se)
         {
-            db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
             if (string.IsNullOrWhiteSpace(id) || string.IsNullOrEmpty(id))
             {
                 confirm += "Error! Id number not entered";
@@ -79,6 +80,10 @@ namespace sunamiapi.classes
                     if (install_date != null)
                     {
                         tc.install_date = install_date;
+                    }
+                    if (office_id != null)
+                    {
+                        tc.office_id = office_id;
                     }
                     if (id != "" && id != null)
                     {
@@ -195,6 +200,7 @@ namespace sunamiapi.classes
                     tc.village_name = village;
                     tc.location = location;
                     tc.city = city;
+                    tc.office_id = office_id;
                     tc.occupation = occupation;
                     tc.Po_Box_Address = box;
                     tc.next_of_kin = witness;
@@ -240,33 +246,30 @@ namespace sunamiapi.classes
                     se.SaveChanges();
                     confirm += "registered new customer";
                 }
-
-                if (!se.tbl_extra_package_customers.Where(r => r.customer_id == id).Select(t => t.item).Contains(package))
+                if (!string.IsNullOrWhiteSpace(package))
                 {
-                    tbl_extra_package_customers epc = new tbl_extra_package_customers();
-                    epc.customer_id = id;
-                    epc.item = package;
-                    epc.agentcode = agentcode;
-                    epc.date_given = install_date;
-                    se.tbl_extra_package_customers.Add(epc);
-                    se.SaveChanges();
-                    // this.logevent(rc.RecordedBy, rc.Id, DateTime.Today, "Invoiced customer a " + item, "Invoice Customer");
+                    if (!se.tbl_extra_package_customers.Where(r => r.customer_id == id).Select(t => t.item).Contains(package))
+                    {
+                        tbl_extra_package_customers epc = new tbl_extra_package_customers();
+                        epc.customer_id = id;
+                        epc.item = package;
+                        epc.agentcode = agentcode;
+                        epc.date_given = install_date;
+                        se.tbl_extra_package_customers.Add(epc);
+                        se.SaveChanges();
+                        // this.logevent(rc.RecordedBy, rc.Id, DateTime.Today, "Invoiced customer a " + item, "Invoice Customer");
+                    }
+                    else
+                    {
+                        tbl_extra_package_customers tepc = se.tbl_extra_package_customers.FirstOrDefault(f => f.customer_id == id && f.item == package);
+                        tepc.date_given = install_date;
+                        se.SaveChanges();
+                    }
                 }
-                else
-                {
-                    tbl_extra_package_customers tepc = se.tbl_extra_package_customers.FirstOrDefault(f => f.customer_id == id && f.item == package);
-                    tepc.date_given = install_date;
-                    se.SaveChanges();
-                }
-                
             }
             catch (Exception kk)
             {
                 throw new Exception(kk.StackTrace);
-            }
-            finally
-            {
-                se.Dispose();
             }
         }
     }

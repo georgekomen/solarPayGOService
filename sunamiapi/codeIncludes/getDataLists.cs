@@ -10,8 +10,7 @@ namespace sunamiapi.codeIncludes
 {
     public class getDataLists
     {
-        db_a0a592_sunamiEntities se = new db_a0a592_sunamiEntities();
-        public List<Icustomer> getCustomerLocations()
+        public List<Icustomer> getCustomerLocations(db_a0a592_sunamiEntities se)
         {
             List<Icustomer> li = new List<Icustomer>();
             var list =
@@ -20,9 +19,7 @@ namespace sunamiapi.codeIncludes
              orderby tc.customer_name ascending
              select new { Customer_Name = tc.customer_name, Customer_Id = tc.customer_id, Customer_Lat = tc.lat, Customer_Lon = tc.lon }
             ).ToList();
-
-
-
+            
             foreach (var i in list)
             {
 
@@ -68,16 +65,8 @@ namespace sunamiapi.codeIncludes
             return li;
         }
 
-        public List<summaryReport> getPaymentSummaryReport(DateTime start, DateTime end, DateTime beginDate)
+        public List<summaryReport> getPaymentSummaryReport(DateTime start, DateTime end, DateTime beginDate, db_a0a592_sunamiEntities se)
         {
-            //get no of customers
-            //no of issues latest month
-            //no of maintenance latest month
-            //current pay rate
-            //no of installations latest month
-            //no of new customers to get system--waiting list
-            //no of uninstallations this month
-            //total no of customers with remote control system
             int customerNumber = se.tbl_customer.Where(k => k.active_status == true).Count();
             int issues = se.tbl_issues.Where(g => g.date >= start && g.date <= end).Count();
             int maintenance = se.tbl_issues.Where(g => g.date >= start && g.date <= end && g.status == "solved").Count();

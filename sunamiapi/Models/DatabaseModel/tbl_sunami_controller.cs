@@ -22,5 +22,6 @@ namespace sunamiapi.Models.DatabaseModel
         public Nullable<System.DateTime> date_manufactured { get; set; }
         public string recorded_by { get; set; }
         public Nullable<int> office_id { get; set; }
+        public Nullable<System.DateTime> last_topup_date { get; set; }
     }
 }

@@ -49,5 +49,6 @@ namespace sunamiapi.Models.DatabaseModel
         public virtual DbSet<tbl_system> tbl_system { get; set; }
         public virtual DbSet<tbl_uninstalled_systems> tbl_uninstalled_systems { get; set; }
         public virtual DbSet<tbl_users> tbl_users { get; set; }
+        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
     }
 }

@@ -22,5 +22,7 @@ namespace sunamiapi.Models.DatabaseModel
         public Nullable<System.DateTime> last_connected_to_db_date { get; set; }
         public string imei_number { get; set; }
         public Nullable<int> office_id { get; set; }
+        public Nullable<bool> automate_switch { get; set; }
+        public Nullable<int> payrate_switch_threshold { get; set; }
     }
 }
